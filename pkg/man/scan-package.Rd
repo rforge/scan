@@ -11,7 +11,7 @@ A collection of procedures for analysing single-case data of an AB-design. Some 
 \tabular{ll}{
 Package: \tab scan\cr
 Type: \tab Package\cr
-Version: \tab 0.14.3\cr
+Version: \tab 0.15\cr
 Date: \tab 2016-06-16\cr
 License: \tab GPL (version 2 or newer)\cr
 }
@@ -25,7 +25,7 @@ Faculty of Humanities
 
 University of Potsdam
 
- http://www.uni-potsdam.de/inklusion/inklusionspaedagogik/wilbert/projekte/single-case-data-analysis-with-r.html
+ http://www.uni-potsdam.de/inklusion/forschungsmethodenunddiagnostik/wilbert/projekte/single-case-data-analysis-with-r.html
 
 Maintainer: Juergen Wilbert <jwilbert@uni-potsdam.de>
 }

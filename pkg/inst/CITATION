@@ -1,4 +1,4 @@
-citHeader("To cite SCDA in publications use:")
+citHeader("To cite scan in publications use:")
 
 citEntry(entry = "Manual",
   title        = "Using the SCDA package (0.9) for analysing single and multiple case AB designs",
