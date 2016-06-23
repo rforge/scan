@@ -1,0 +1,12 @@
+citHeader("To cite SCDA in publications use:")
+
+citEntry(entry = "Manual",
+  title        = "Using the SCDA package (0.9) for analysing single and multiple case AB designs",
+  author       = person("Juergen", "Wilbert"),
+  url          = "http://www.uni-potsdam.de/inklusion/wilbert/wilbert/projekte/scda.html",
+  year 		   = 2014,
+  textVersion  =
+  paste("Wilbert, J. (2014).",
+        "Using the SCDA package (0.9) for analysing single and multiple case AB designs.",
+        "Retrieved from http://www.uni-potsdam.de/inklusion/wilbert/wilbert/projekte/scda.html")
+)
