@@ -1949,6 +1949,11 @@ print.sc <- function(x, ...) {
 		}
 		print(res)
 		cat("\n")
+		cat("Autocorrelation of the residuals\n")
+		print(data.frame(lag = 1:5,r = round(acf(residuals(x$full.model), lag.max = 5,plot = FALSE)$acf[2:6],2)))
+		cat("\n")
+		#data.frame(lag = 2:5, autocorr = acf(residuals(x$full.model), lag.max = 5,plot = FALSE)$acf[2:5]
+		
 		#cat(sprintf("Test of level: F(1) = %.2f; p = %0.3f; delta R-Square = %0.3f", x$F.level, x$p.level, x$ES.level), "\n")
 		#cat(sprintf("Test of slope: F(1) = %.2f; p = %0.3f; delta R-Square = %0.3f", x$F.slope, x$p.slope, x$ES.slope), "\n\n")
 		
