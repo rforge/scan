@@ -22,7 +22,7 @@ Defines how to handle ties. 'omit' does not include ties into the calculatioin o
 #
 }
 \value{
-  \item{table}{The differnt comparisons for estimating the tau-U effect. Tau-U can be derived as the tau value of the A vs. B + trend B - trend A comparison.}
+  \item{table}{The different comparisons for estimating the tau-U effect. Tau-U can be derived as the tau value of the A vs. B + trend B - trend A comparison.}
   \item{matrix}{The matrix for calculating tau-U}
 }
 \references{

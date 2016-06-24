@@ -26,7 +26,7 @@ If set TRUE, NA values are also interpolated.
 
 
 \examples{
-#In his study, Grosche (2011)could not realize measurements each single week for 
+#In his study, Grosche (2011) could not realize measurements each single week for 
 #all participants. During the course of 100 weeks, about 20 measurements per person 
 #at different times were administered. Here is a way to fill in the missing data:
 new.data <- fillmissingSC(Grosche2011)

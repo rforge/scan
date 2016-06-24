@@ -84,7 +84,7 @@ Indicated whether the random sample is based on a "normal" (e.g., gaussian) dist
 If set TRUE, no effects on the generated random samples are given during the computation.
 }
   \item{silent}{
-If set TRUE, the results are not printed afte computation.
+If set TRUE, the results are not printed after computation.
 }
 }
 \author{Juergen Wilbert}
@@ -92,15 +92,15 @@ If set TRUE, the results are not printed afte computation.
 #Assume you want to conduct a study with 15 measurements.
 #The test is highly reliable and you expect an intervention effect of d.level = 1.4.
 #The starting point of the intevention phase is randomly set between the 
-#5th and the 12th measurement Can you expect to identify the effect with a 
-#plm or a randomization test (for a more precise estimation, set n = 1000)
+#5th and the 12th measurement. Can you expect to identify the effect with a 
+#plm or a randomization test (for a more precise estimation, set n = 1000)?
 
 
 power.testSC(MT = 15, B.start = round(runif(100,5,12)), test.parameter = "level", 
              d.level = 1.4, rtt = 0.8, n = 10)
 
-### would the testpower be higher if you would set up a multiple baseline design? 
-#(for a more precise estimation, set n = 1000)
+# Would the testpower be higher if you would set up a multiple baseline design (for
+# a more precise estimation, set n = 1000)?
 
 power.testSC(cases = 3, MT = 15, stat = c("rand.test","hplm"), 
              B.start = round(runif(300,5,12)), test.parameter = "level", 

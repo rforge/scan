@@ -39,7 +39,7 @@ Juergen Wilbert
 }
 \examples{
 #To 'clean' the original data from Grosche (2011) without the outliers and using 
-#Cook's distance greater 4/n as a criteria, type:
+#Cook's distance greater 4/n as a criterion, type:
 (res <- outlierSC(Grosche2011, criteria = c("Cook", "4/n")))
 plotSC(Grosche2011, marks = list(positions = res$dropped.mt))
 

@@ -15,7 +15,7 @@ A data frame or a list of data frames.
 }
 
   \item{FUN}{
-Function to compute the smoothing. Default is a lag 1 moving Median functioon (see details).
+Function to compute the smoothing. Default is a lag 1 moving Median function (see details).
 }
   \item{intensity}{
 In the case of movingMean or movingMedian it is the lag (i.e., the range of values around the target value) that is used for computing the average (default is 1). In case of localRegression it is the proportion of data influencing each data point (default is 0.2).

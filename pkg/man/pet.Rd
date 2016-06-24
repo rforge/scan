@@ -5,7 +5,7 @@
 Percent exceeding the trend
 }
 \description{
-The function pet return the percentage of the B-phase data exceeding the predicted values on basis of the trend of the A-phase. A binomial test against a 50/50 distribution is computed. Furthermore, the percent of data points in the B-phase exceeding the upper (or lower) threshold of the 95 percent confidence interval of the predicted values is returned. If you expect a decrease in the B-phase, set the parameter decreasing = TRUE.
+The function pet returns the percentage of the B-phase data exceeding the prediction based on the A-phase trend. A binomial test against a 50/50 distribution is computed. Furthermore, the percent of data points in the B-phase exceeding the upper (or lower) threshold of the 95 percent confidence interval of the predicted values is returned. If you expect a decrease in the B-phase, set the parameter decreasing = TRUE.
 }
 \usage{
 pet(data, ci = 0.95, decreasing = FALSE)

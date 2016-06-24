@@ -2,11 +2,11 @@
 \alias{pnd}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Percent non-overlapping data
+Percentage of non-overlapping data
 
 }
 \description{
-The function pnd return the percentage non-overlapping data. If you expect a decrease in the B-phase, set the parameter decreasing = TRUE. Due to its error-proneness you should not use PND but NAP or PAND instead (see Parker & Vannest, 2009).
+The function pnd returns the percentage of non-overlapping data. If you expect a decrease in the B-phase, set the parameter decreasing = TRUE. Due to its error-proneness you should not use PND, but NAP or PAND instead (see Parker & Vannest, 2009).
 }
 \usage{
 pnd(data, decreasing = FALSE)

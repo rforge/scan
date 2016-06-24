@@ -19,7 +19,7 @@ A vector with measurements.
 The start of the B phase.
 }
   \item{MT}{
-A vector defining measurement times. Defaut is MT = (1,2,3,...,n).
+A vector defining measurement times. Default is MT = (1,2,3,...,n).
 }
 }
 

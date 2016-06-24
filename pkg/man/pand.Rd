@@ -20,7 +20,7 @@ A data frame or a list of data frames.
 If you expect the data to be lower in the B phase, set decreasing = TRUE (default is FALSE).
 }
   \item{correction}{
-If set TRUE, the frequency matrix is corrected for ties. A tie is counted as a half-measuremnt in each phase.  
+If set TRUE, the frequency matrix is corrected for ties. A tie is counted as a half-measurement in each phase.  
 }
 }
 
