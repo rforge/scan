@@ -22,7 +22,7 @@ A data frame or a list of data frames. If data are provided, the power-analysis 
 Defines the statistics the power analysis is computed for. The default stat = c("rand.test","plm") computes a power-analysis for the randomization and the plm analysis.Further possibilities are "hplm" for a hierarchiacal linear regression model and "plm.poisson" for a generalized piecewise-regression model with the assumption of Poisson distributed error terms.
 }
   \item{test.parameter}{
-Indicated whether the power and alpha error for a level effect, a slope effect, or both effects should be estimated.
+Indicates whether the power and alpha error for a level effect, a slope effect, or both effects should be estimated.
 }
   \item{rand.test.stat}{
 Defines the statistic a randomization test is based on. The first values stipulates the statistic for the level-effect computation and the second value for the slope-effect computation. Deafult is rand.test.stat = c("Mean B-A","B").

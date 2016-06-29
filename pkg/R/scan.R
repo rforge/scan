@@ -113,13 +113,14 @@
 
 .estimate.d.SC <- function(data = NULL, model = NULL, s = NULL) {
 
-	if(is.null(s)) stop("Parameter s (standard deviation) must be specified!\n")
-
-	if(is.null(model)) model <- plm(data)$full
-	b <- summary(model)$coef[-1, 1]
-    out <- b/s
-	names(out) <- c("d.trend","d.level","d.slope")
-	round(out,4)
+  if(is.null(s)) stop("Parameter s (standard deviation) must be specified!\n")
+  
+  if(is.null(model)) model <- plm(data)$full
+  b <- summary(model)$coef[-1, 1]
+  out <- b/s
+  out <- c(out,summary(model)$coef[1, 1])
+  names(out) <- c("d.trend","d.level","d.slope", "intercept")
+  round(out,4)
 }
 
 makesingleSC <- function(data, scale = FALSE, type = "add") {
@@ -818,9 +819,9 @@ trendSC <- function(data, B.offset = -1,model = NA) {
 	data.B <- subset(data, phase == "B")
 	data.B$mt <- data.B$mt - min(data.B$mt) + 1 + B.offset
 	
-	rows <- 6
 	row.names <- c("Linear.AB","Linear.A","Linear.B","Squared.AB","Squared.A","Squared.B")
-
+	rows <- length(row.names)
+	
 	out <- c(
 		.SCbeta(lm(values~mt, data = data)), 
 		.SCbeta(lm(values~mt, data = data.A)),
@@ -2218,11 +2219,19 @@ power.testSC <- function(data = NULL, stat = c("rand.test","plm"), test.paramete
 			m <- mean(means[1:cases], na.rm = TRUE)
 		if(cases > 2)
 			s <- sd(means[1:cases], na.rm = TRUE)
-
-		res <- .estimate.d.SC(data = data, s = s)
-		if(is.null(d.level)) d.level <- res[2]
-		if(is.null(d.slope)) d.slope <- res[3]
-		if(is.null(d.trend)) d.trend <- res[1]
+    
+		d.level <- c()
+		d.slope <- c()
+		d.trend <- c()
+		means <- c()
+		
+		for(i in 1:cases) {
+  		res <- .estimate.d.SC(data = data[i], s = s)
+  		if(is.null(d.level)) d.level <- c(d.level,res[2])
+  		if(is.null(d.slope)) d.slope <- c(d.slope,res[3])
+  		if(is.null(d.trend)) d.trend <- c(d.trend,res[1])
+  		m <- c(means,res[4])
+		}
 	}
 	if(is.null(data)) {
 		if(is.null(d.level)) d.level <- 0
@@ -2242,7 +2251,7 @@ power.testSC <- function(data = NULL, stat = c("rand.test","plm"), test.paramete
 		cat("M\t\t",m,"\n")
 		cat("SD\t\t",s,"\n")
 		cat("MT\t\t",MT,"\n")
-		cat("B.start\t\t",B.start,"\n")
+		cat("B.start\t\t",sort(unique(B.start)),"\n")
 		cat("rtt\t\t",rtt,"\n")
 		cat("d level\t\t",d.level,"\n")
 		cat("d slope\t\t",d.slope,"\n")
