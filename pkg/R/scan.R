@@ -725,6 +725,8 @@ describeSC <- function(data, decreasing = FALSE) {
 		d.f$misAB[i] <- d.f$misA[i] + d.f$misB[i]
 		d.f$mA[i] <- mean(A,na.rm = TRUE)
 		d.f$mB[i] <- mean(B,na.rm = TRUE)
+		d.f$mdA[i] <- median(A,na.rm = TRUE)
+		d.f$mdB[i] <- median(B,na.rm = TRUE)
 		d.f$minA[i] <- min(A,na.rm = TRUE)
 		d.f$minB[i] <- min(B,na.rm = TRUE)
 		d.f$maxA[i] <- max(A,na.rm = TRUE)
@@ -760,6 +762,8 @@ describeSC <- function(data, decreasing = FALSE) {
 		d.f$mA[N] <- mean(d.f$mA,na.rm = TRUE)
 		d.f$mB[N] <- mean(d.f$mB,na.rm = TRUE)
 		d.f$dif[N] <- mean(d.f$dif,na.rm = TRUE)
+		d.f$mdA[N] <- median(d.f$mdA,na.rm = TRUE)
+		d.f$mdB[N] <- median(d.f$mdB,na.rm = TRUE)
 		d.f$minA[N] <- min(d.f$minA,na.rm = TRUE)
 		d.f$minB[N] <- min(d.f$minB,na.rm = TRUE)
 		d.f$maxA[N] <- max(d.f$maxA,na.rm = TRUE)
@@ -1998,7 +2002,7 @@ print.sc <- function(x, ...) {
 	if(value == "describe") {
 		cat("Describe single-case data\n\n")
 		#x$descriptives <- x$descriptives[,!names(x$descriptives)%in%c("smd2","smd3")]
-		#colnames(x$descriptives) <- c("n A", "n B", "n AB", "Missing A", "Missing B", "Missing AB","Mean A", "Mean B", "Mean dif", "Min A", "Min B", "Max A", "Max B", "SD A", "SD B", "SD AB", "SMD", "Autocor A", "Autocor B", "Trend A", "Trend B", "Trend AB", "Trend dif","PND", "PEM", "NAP", "PAND", "TAU-U")
+		#colnames(x$descriptives) <- c("n A", "n B", "n AB", "Missing A", "Missing B", "Missing AB","Mean A", "Mean B", "Mean dif", "Median A", "Median B", "Min A", "Min B", "Max A", "Max B", "SD A", "SD B", "SD AB", "SMD", "Autocor A", "Autocor B", "Trend A", "Trend B", "Trend AB", "Trend dif","PND", "PEM", "NAP", "PAND", "TAU-U")
 		out <- data.frame(
 		  "n A" = x$descriptives$nA, 
       "n B"  = x$descriptives$nB, 
@@ -2008,7 +2012,9 @@ print.sc <- function(x, ...) {
       "Missing AB" = x$descriptives$misAB,
       "Mean A" = x$descriptives$mA, 
       "Mean B" = x$descriptives$mB, 
-      "Mean dif" =  x$descriptives$dif, 
+      "Mean dif" = x$descriptives$dif,
+		  "Median A" = x$descriptives$mdA,
+		  "Median B" = x$descriptives$mdB,
       "Min A" = x$descriptives$minA, 
       "Min B" = x$descriptives$minB, 
       "Max A" = x$descriptives$maxA, 
