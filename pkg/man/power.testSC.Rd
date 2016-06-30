@@ -9,7 +9,7 @@ power.testSC(data = NULL, stat = c("rand.test", "plm"),
              test.parameter = c("level", "slope"), rand.test.stat = c("Mean B-A", "B"),
              cases = NULL, rtt = 0.8, d.level = NULL, 
              d.slope = NULL, MT = NULL, B.start = NULL, d.trend = NULL, n = 100, 
-             limit = 5, m = 50, s = 10, startpoints = NA, extreme.p = 0, 
+             limit = 5, m = NULL, s = NULL, startpoints = NA, extreme.p = 0, 
              extreme.d = c(-4, -3), exclude.equal = "auto", alpha = 0.05, 
              distribution = "normal", concise = TRUE, silent = FALSE)
 }

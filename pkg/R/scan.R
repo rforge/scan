@@ -110,19 +110,6 @@
 	data
 }
 
-
-.estimate.d.SC <- function(data = NULL, model = NULL, s = NULL) {
-
-  if(is.null(s)) stop("Parameter s (standard deviation) must be specified!\n")
-  
-  if(is.null(model)) model <- plm(data)$full
-  b <- summary(model)$coef[-1, 1]
-  out <- b/s
-  out <- c(out,summary(model)$coef[1, 1])
-  names(out) <- c("d.trend","d.level","d.slope", "intercept")
-  round(out,4)
-}
-
 makesingleSC <- function(data, scale = FALSE, type = "add") {
 	warning("This function is deprecated. Please don't use it anymore.\n")
   data <- .SCprepareData(data)
@@ -2204,7 +2191,7 @@ readSC <- function(filename, sep = ",", dec = ".", sort.labels = FALSE, phase.na
 	out
 }
 
-power.testSC <- function(data = NULL, stat = c("rand.test","plm"), test.parameter = c("level", "slope"), rand.test.stat = c("Mean B-A","B"), cases = NULL, rtt = 0.8, d.level = NULL, d.slope = NULL, MT = NULL, B.start = NULL, d.trend = NULL, n = 100, limit = 5,  m = 50, s = 10, startpoints = NA, extreme.p = 0, extreme.d = c(-4,-3), exclude.equal = "auto", alpha = 0.05, distribution = "normal", concise = TRUE, silent = FALSE) {
+power.testSC <- function(data = NULL, stat = c("rand.test","plm"), test.parameter = c("level", "slope"), rand.test.stat = c("Mean B-A","B"), cases = NULL, rtt = 0.8, d.level = NULL, d.slope = NULL, MT = NULL, B.start = NULL, d.trend = NULL, n = 100, limit = 5,  m = NULL, s = NULL, startpoints = NA, extreme.p = 0, extreme.d = c(-4,-3), exclude.equal = "auto", alpha = 0.05, distribution = "normal", concise = TRUE, silent = FALSE) {
   
   return.distribution <- FALSE # depricated parameter 	
 	
@@ -2213,37 +2200,48 @@ power.testSC <- function(data = NULL, stat = c("rand.test","plm"), test.paramete
 		cases <- length(data)
 		B.start <- unlist(lapply(data, function(x) sum(x$phase == "A") + 1))
 		MT <- unlist(lapply(data, function(x) length(x$mt)))
-		MT <- MT #to be extended later
-		means <- describeSC(data)$descriptives$mA
-		if(cases > 1)
-			m <- mean(means[1:cases], na.rm = TRUE)
-		if(cases > 2)
-			s <- sd(means[1:cases], na.rm = TRUE)
-    
+
 		d.level <- c()
 		d.slope <- c()
 		d.trend <- c()
-		means <- c()
+		m <- c()
 		
 		for(i in 1:cases) {
-  		res <- .estimate.d.SC(data = data[i], s = s)
-  		if(is.null(d.level)) d.level <- c(d.level,res[2])
-  		if(is.null(d.slope)) d.slope <- c(d.slope,res[3])
-  		if(is.null(d.trend)) d.trend <- c(d.trend,res[1])
-  		m <- c(means,res[4])
+		  res <- coef(plm(data[i])$full)
+		  m <- c(m,res[1])
+		  d.trend <- c(d.trend,res[2])
+  		d.level <- c(d.level,res[3])
+  		d.slope <- c(d.slope,res[4])
 		}
+		if(cases == 2 && is.null(s))
+		  stop("Standard deviation could not be estimated with less than two cases. Please provide a value.\n")
+		if(cases > 2)
+		  s <- sd(m, na.rm = TRUE)
+		d.level <- d.level / s
+		d.slope <- d.slope / s
+		d.trend <- d.trend / s
+		
 	}
 	if(is.null(data)) {
 		if(is.null(d.level)) d.level <- 0
 		if(is.null(d.slope)) d.slope <- 0
 		if(is.null(d.trend)) d.trend <- 0
 		if(is.null(cases)) cases <- 1
+		if(is.null(m)) m <- 50
+		if(is.null(s)) s <- 10
+		
 	
 	}
+
+  if(cases == 1 && is.null(s))
+    stop("Standard deviation could not be estimated with less than two cases. Please provide a value.\n")
+  if (any(stat %in% c("plm","plm.poissonm")) && cases > 1)
+    stop("plm models can not be calculated with more than one case. Consider using hplm\n")
+  
 	if(exclude.equal == "auto") 
 		exclude.equal <- ifelse(cases == 1, TRUE, FALSE)
 
-		if(!silent)	{
+	if(!silent)	{
 		cat("Compute Monte-Carlo power-analyses with the following parameters:\n\n")
 		cat("Stats:\t\t",stat,"\n")
 		cat("Sample studies\t",n,"\n")
@@ -2258,7 +2256,6 @@ power.testSC <- function(data = NULL, stat = c("rand.test","plm"), test.paramete
 		cat("d trend\t\t",d.trend,"\n")	
 		cat("Extreme.p\t",extreme.p,"\n")	
 		cat("Extreme.d\t",extreme.d,"\n")	
-
 		cat("Alpha level\t",alpha,"\n")	
 		cat("Exclude equal\t",exclude.equal,"\n")
 		if (is.na(startpoints[1])) {
