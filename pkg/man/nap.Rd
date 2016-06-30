@@ -1,8 +1,8 @@
 \name{nap}
 \alias{nap}
-\title{Non-overlap of all Pairs}
+\title{Nonoverlap of all Pairs}
 \description{
-The index Nonoverlapping of all pairs was developed by Parker and colleagues (Parker & Vannest, 2009). It is recommended as an overlapping measurement.
+The index Nonoverlap of all pairs was developed by Parker and Vannest (2009). It is recommended as overlapping measurement.
 }
 \usage{
 nap(data, decreasing = FALSE)
@@ -10,15 +10,16 @@ nap(data, decreasing = FALSE)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data}{
-A data frame or a list of data frames.
+A single-case data frame.
 }
   \item{decreasing}{
 If you expect the data to be lower in the B phase, set decreasing = TRUE (default is FALSE).
 }
 }
 \value{
-  \item{NAP}{Nonoverlap of all pairs.}
   \item{N}{Number of cases.}
+  \item{NAP}{Nonoverlap of all pairs.}
+  \item{Rescaled NAP}{???}
 }
 \references{
 Parker, R. I., & Vannest, K. (2009). An improved effect size for single-case research: Nonoverlap of all pairs. Behavior Therapy, 40(4), 357-367.
