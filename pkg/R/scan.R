@@ -36,13 +36,13 @@
 	mx <- mean(x)
 	my <- mean(y)
 	ss.xy <- sum( (x-mx)*(y-my) )
-	ss.xx <- sum ( (x-mx)^2 )
+	ss.xx <- sum( (x-mx)^2 )
 	b <- ss.xy/ss.xx
-	return(b)
+	b
 }
 
 .SCbeta <- function(model) {
-	b <- summary(model)$coef[-1, 1]
+	  b <- model$coefficients[-1]
     sx <- apply(model$model[-1],2,sd)
     sy <- apply(model$model[1],2,sd)
     return(c(model$coefficients,b * sx/sy))
@@ -93,21 +93,6 @@
 		if(ncol(data[[i]]) == 2) data[[i]]$mt <- 1:nrow(data[[i]])
 		
 	return(data)
-}
-
-.remove.levelSC <-function(data, type = "B.start") {
-	for(i in 1:length(data)) {
-		mA  <- mean(data[[i]][data[[i]][,1] == "A",2], na.rm = TRUE)
-		if(type == "mean")
-			mB  <- mean(data[[i]][data[[i]][,1] == "B",2], na.rm = TRUE)
-		if(type == "B.start") {
-			B.start <- sum(data[[i]][,1] == "A") + 1
-			corrB  <- data[[i]][B.start ,2]
-			data[[i]] <- data[[i]][-B.start,]
-		}
-		data[[i]][data[[i]][,1] == "B",2] <- data[[i]][data[[i]][,1] == "B",2] - (corrB-mA)
-	}
-	data
 }
 
 makesingleSC <- function(data, scale = FALSE, type = "add") {
@@ -314,9 +299,6 @@ randSC <- function (data, statistic = "Mean B-A", number = 500, complete = FALSE
 
 	data <- .SCprepareData(data)
 
-	if(statistic == "B" || statistic == "Bdecrease")
-		data <- .remove.levelSC(data)
-	
 	a <- lapply(data, function(x) x[,2][x[,1] == "A"])
 	b <- lapply(data, function(x) x[,2][x[,1] == "B"])
 	obs <- lapply(data, function(x) x[,2])
@@ -340,18 +322,9 @@ randSC <- function (data, statistic = "Mean B-A", number = 500, complete = FALSE
 	
 	if(!complete) {
 		startpts <- matrix(unlist(lapply(pos.startpts, function(x) sample(x, number, replace = TRUE))), nrow = number, ncol = N)
-		#while(nrow(startpts) < number) {
-		#	n.new <- number - nrow(startpts) 
-		#	new.startpts <- matrix(unlist(lapply(pos.startpts, function(x) sample(x, n.new, replace = TRUE))), nrow = n.new, ncol = N)		
-		#	skip <- apply(new.startpts, 1, function(x) !all(x==obs.B.start))
-		#	new.startpts <- as.data.frame(new.startpts[skip,])
-		#	startpts <- (rbind(startpts, new.startpts))
-		#}
 	}
 	if(complete) {
 		startpts <- expand.grid(pos.startpts)
-		#skip <- apply(startpts, 1, function(x) !all(x==obs.B.start))
-		#startpts <- as.data.frame(startpts[skip,])
 		number <- nrow(startpts)
 	}
 	
@@ -433,56 +406,7 @@ randSC <- function (data, statistic = "Mean B-A", number = 500, complete = FALSE
 		obs.stat <- mean(ma,na.rm = TRUE)
 	}
 
-	if (statistic == "B") {
-		b.b <- unlist(lapply(rnd.b, function(x) lapply(x,function(x) .SClm(y = x))))
-		b.a <- unlist(lapply(rnd.a, function(x) lapply(x,function(x) .SClm(y = x))))
-		ma <- matrix(b.b-b.a, ncol = N, nrow = number, byrow = TRUE)
 
-		dist <- apply(ma,1,mean,na.rm = TRUE)
-		b.b <- unlist(lapply(b, function(x) .SClm(y = x)))
-		b.a <- unlist(lapply(a, function(x) .SClm(y = x)))
-		ma <- matrix(b.b-b.a, ncol = N, nrow = 1, byrow = TRUE)
-		obs.stat <- mean(ma,na.rm = TRUE)
-		statistic <- "linear slope B - linear slope A"
-	}
-
-	if (statistic == "Bdecrease") {
-		b.b <- unlist(lapply(rnd.b, function(x) lapply(x,function(x) .SClm(y = x))))
-		b.a <- unlist(lapply(rnd.a, function(x) lapply(x,function(x) .SClm(y = x))))
-		ma <- matrix(b.a-b.b, ncol = N, nrow = number, byrow = TRUE)
-
-		dist <- apply(ma,1,mean,na.rm = TRUE)
-		b.b <- unlist(lapply(b, function(x) .SClm(y = x)))
-		b.a <- unlist(lapply(a, function(x) .SClm(y = x)))
-		ma <- matrix(b.a-b.b, ncol = N, nrow = 1, byrow = TRUE)
-		obs.stat <- mean(ma,na.rm = TRUE)
-		statistic <- "linear slope A - linear slope B"
-	}
-	
-	if(statistic == "t plm level") {
-		dist <- numeric(number)
-		for (i in 1:number) {
-			tmp.dat <- list()
-			for(case in 1:N)
-				tmp.dat[[case]] <- makeSCDF(c(rnd.a[[i]][[case]], rnd.b[[i]][[case]]), B.start = length(rnd.a[[i]][[case]]) + 1)
-			dist[i] <- .plm.mt(tmp.dat, type = 3)
-		}
-		obs.stat <- .plm.mt(data, type = 3)
-		statistic <- "t-value of the level parameter in a piecewise-regression model"
-	}
-
-	if(statistic == "t plm slope") {
-		dist <- numeric(number)
-		for (i in 1:number) {
-			tmp.dat <- list()
-			for(case in 1:N)
-				tmp.dat[[case]] <- makeSCDF(c(rnd.a[[i]][[case]], rnd.b[[i]][[case]]), B.start = length(rnd.a[[i]][[case]]) + 1)
-			dist[i] <- .plm.mt(tmp.dat, type = 4)
-		}
-		obs.stat <- .plm.mt(data, type = 4)
-		statistic <- "t-value of the slope parameter in a piecewise-regression model"
-	}	
-	
 	if (!exclude.equal)
 		test <- dist >= obs.stat
 	else
@@ -1724,7 +1648,7 @@ print.sc <- function(x, ...) {
 
 	if(value == "power") {	
 		cat("Test-Power in percent:\n")
-		ma <- matrix(unlist(x[1:16])*100,byrow = FALSE, ncol = 2, dimnames = list(c(paste0("Rand-Test: ",x$rand.test.stat[1]), paste0("Rand-Test: ",x$rand.test.stat[2]), "PLM.Norm: Level", "PLM.Norm: Slope", "PLM.Poisson: Level", "PLM.Poisson: Slope", "HPLM: Level", "HPLM: Slope"), c("Power", "Alpha-error")))
+		ma <- matrix(unlist(x[1:14])*100,byrow = FALSE, ncol = 2, dimnames = list(c(paste0("Rand-Test: ",x$rand.test.stat[1]),  "PLM.Norm: Level", "PLM.Norm: Slope", "PLM.Poisson: Level", "PLM.Poisson: Slope", "HPLM: Level", "HPLM: Slope"), c("Power", "Alpha-error")))
 		print(ma)
 	}
 		
@@ -1813,8 +1737,6 @@ print.sc <- function(x, ...) {
 		if (x$N > 1)
 			cat("Multiple-Baseline test for", x$N, "cases.\n\n")
 		cat("Statistic: ",x$statistic,"\n")
-		#cat("Length A-phase", x$n1, "\n")
-		#cat("Length B-phase", x$n2, "\n")
 		if(is.na(x$startpoints[1])) {
 			cat("Minimal length of each phase: ", x$limit, "\n")
 		} else {
@@ -1888,13 +1810,7 @@ print.sc <- function(x, ...) {
 	  out$random.effects <- data.frame(Parameter = c("Intercept", "Trend","Level", "Slope","Residual"),"EstimateSD" = round(c(as.numeric(VarCorr(x$random.trend.level.slope$model)[,2])),3), L = round(c(x$random.nointercept.trend.level.slope$LR.test$L.Ratio[2],x$random.trend$LR.test$L.Ratio[2], x$random.level$LR.test$L.Ratio[2], x$random.slope$LR.test$L.Ratio[2], NA),1), p = round(c(x$random.nointercept.trend.level.slope$LR.test$"p-value"[2],x$random.trend$LR.test$"p-value"[2], x$random.level$LR.test$"p-value"[2], x$random.slope$LR.test$"p-value"[2], NA),3))
 	  
 	  print(out$random.effects)
-	  # cat("\n")
-      # out$random.trend <- sprintf("Random trend		: L = %.1f; p = %.3f\n", x$random.trend$LR.test$L.Ratio[2], x$random.trend$LR.test$"p-value"[2])
-      # cat(out$random.trend)
-      # out$random.level <- sprintf("Random level		: L = %.1f; p = %.3f\n", x$random.level$LR.test$L.Ratio[2], x$random.level$LR.test$"p-value"[2])
-      # cat(out$random.level)
-      # out$random.slope <- sprintf("Random slope		: L = %.1f; p = %.3f\n", x$random.slope$LR.test$L.Ratio[2], x$random.slope$LR.test$"p-value"[2])
-      # cat(out$random.slope)
+
     }
     invisible(out)
   }
@@ -2125,7 +2041,6 @@ readSC <- function(filename, sep = ",", dec = ".", sort.labels = FALSE, phase.na
 .power.testSC <- function(n = NA, MT = NA, B.start = NA, d.level = NA, d.slope = NA, cases = NA, d.trend = NA, extreme.p = 0, rand.test.stat, extreme.d = c(-4,-3),rtt = NA, alpha = NA, m = NA, s = NA, limit = NA, startpoints = NA, exclude.equal = NA, concise = NA, return.distribution = FALSE, stat, test.parameter, distribution) {
 	
 	out <- list()
-	out$rand.slope <- NA
 	out$rand.level <- NA
 	out$plm.slope <- NA
 	out$plm.level <- NA
@@ -2140,14 +2055,9 @@ readSC <- function(filename, sep = ",", dec = ".", sort.labels = FALSE, phase.na
 
 	if(any(stat == "rand.test")) {
 		if(any(test.parameter == "level")) {
-			p.rand.level <- unlist(lapply(rand.sample, function(x) rand.test(x, statistic = rand.test.stat[1], number = 100, exclude.equal = exclude.equal, limit = limit, startpoints = startpoints, output = "p")))
+			p.rand.level <- unlist(lapply(rand.sample, function(x) randSC(x, statistic = rand.test.stat[1], number = 100, exclude.equal = exclude.equal, limit = limit, startpoints = startpoints, output = "p")))
 			out$rand.level <- mean(p.rand.level <= alpha, na.rm = TRUE)
 		} else out$rand.level <- NA
-
-		if(any(test.parameter == "slope")) {
-			p.rand.slope <- unlist(lapply(rand.sample, function(x) rand.test(x, statistic = rand.test.stat[2], number = 100, exclude.equal = exclude.equal, limit = limit,  startpoints = startpoints, output = "p")))
-			out$rand.slope <- mean(p.rand.slope <= alpha, na.rm = TRUE)
-		} else out$rand.slope <- NA
 	}
 
 	if(any(stat == "plm")) {
@@ -2273,7 +2183,6 @@ power.testSC <- function(data = NULL, stat = c("rand.test","plm"), test.paramete
 	out <- list()
 
 	out$power.rand.level <- NA
-	out$power.rand.slope <- NA
 	out$power.plm.level <- NA
 	out$power.plm.slope <- NA
 	out$power.plm.poisson.level <- NA
@@ -2283,7 +2192,6 @@ power.testSC <- function(data = NULL, stat = c("rand.test","plm"), test.paramete
 	out$power.hplm.slope <- NA
   
 	out$alphaerror.rand.level <- NA
-	out$alphaerror.rand.slope <- NA
 	out$alphaerror.plm.level <- NA
 	out$alphaerror.plm.slope <- NA
 	out$alphaerror.plm.poisson.level <- NA
@@ -2324,8 +2232,6 @@ power.testSC <- function(data = NULL, stat = c("rand.test","plm"), test.paramete
 
 	
 	if(all(d.slope == 0)) {
-		if(any(stat == "rand.test"))
-			out$alphaerror.rand.slope <- res$rand.slope
 		if(any(stat == "plm"))
 			out$alphaerror.plm.slope <- res$plm.slope
 		if(any(stat == "plm.poisson"))
@@ -2333,8 +2239,6 @@ power.testSC <- function(data = NULL, stat = c("rand.test","plm"), test.paramete
 		if(any(stat == "hplm"))
 		  out$alphaerror.hplm.slope <- res$hplm.slope
   } else {
-		if(any(stat == "rand.test"))
-			out$power.rand.slope <- res$rand.slope
 		if(any(stat == "plm"))
 			out$power.plm.slope <- res$plm.slope
 		if(any(stat == "plm.poisson"))
@@ -2359,8 +2263,6 @@ power.testSC <- function(data = NULL, stat = c("rand.test","plm"), test.paramete
 	
 	if(any(d.slope != 0)) {
 		res <- .power.testSC(n = n, MT = MT, B.start = B.start, rand.test.stat = rand.test.stat, d.level = d.level, d.slope = 0, extreme.p = extreme.p, extreme.d = extreme.d,m = m, s = s, cases = cases, d.trend = d.trend, rtt = rtt, alpha = alpha, limit = limit,  startpoints = startpoints, exclude.equal = exclude.equal, concise = concise, stat = stat, test.parameter = test.parameter, distribution = distribution)
-		if(any(stat == "rand.test"))
-			out$alphaerror.rand.slope <- res$rand.slope
 		if(any(stat == "plm"))
 			out$alphaerror.plm.slope <- res$plm.slope
 		if(any(stat == "plm.poisson"))
