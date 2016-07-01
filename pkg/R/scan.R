@@ -1140,7 +1140,7 @@ nap <- function(data, decreasing = FALSE) {
 	ties <- sum(sapply(A,function(x)x==B), na.rm = TRUE)
 	NAP <- (pos + (0.5 * ties)) / pairs 
 	
-	out <- list(NAP = NAP*100, N = N)
+	out <- list(NAP = NAP*100)
 	class(out) <- c("sc","NAP")
 	out
 }
@@ -1675,8 +1675,6 @@ print.sc <- function(x, ...) {
 	
 	if(value == "NAP") {
 		cat("Non-overlap of All Pairs\n\n")
-		cat("N persons = ", x$N,"\n")
-		cat("\n")
 		cat("NAP = ", x$NAP, "%\n")
 		cat("Rescaled NAP = ", 2 * x$NAP - 100, "%\n")
 	}
