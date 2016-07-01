@@ -1647,6 +1647,23 @@ plotSC <- function(data, ylim = NULL, xlim = NULL, fill = "", lines = "", marks 
 print.sc <- function(x, ...) {
 	value <- class(x)[2]
 
+	
+	if(value == "overlap") {
+	  cat("Overlap indices\n\n")
+	  x <- x$overlap
+	  out <- data.frame(
+	    "PND" = x$PND, 
+	    "PEM" = x$PEM,
+	    "PET" = x$PET,
+	    "NAP" = x$NAP, 
+	    "PAND" = x$PAND,
+	    "TAU-U" = x$TAU_U
+	  )
+
+	  row.names(out) <- row.names(x)
+	  print(round(t(out),2),...)
+	}
+	
 	if(value == "TAU-U") {	
 	  cat("Tau-U = ", x$tau_u,"\n")
 	  
