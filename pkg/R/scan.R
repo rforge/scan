@@ -154,7 +154,7 @@ truncateSC <- function (data, A = c(0,0), B = c(0,0)){
   return(data)
 }
 
-rSC <- function(n = 1, MT = 20, B.start = 6, m = 50, s = 10, prob = 0.5, d.trend = 0, d.level = 0.0, d.slope = 0.0, rtt = 0.80, concise = FALSE, cases = 1, round = NA, extreme.p = 0, extreme.d = c(-4,-3), missing.p = 0, distribution = "normal", random.names = FALSE, output.long = FALSE) {
+rSC <- function(n = 1, MT = 20, B.start = 6, m = 50, s = 10, prob = 0.5, d.trend = 0, d.level = 0.0, d.slope = 0.0, rtt = 0.80, concise = TRUE, cases = 1, round = NA, extreme.p = 0, extreme.d = c(-4,-3), missing.p = 0, distribution = "normal", start.values.fixed = FALSE, random.names = FALSE, output.long = FALSE) {
 
   MT <- rep(MT, length.out = n * cases)
   m <- rep(m, length.out = n * cases)
@@ -186,7 +186,10 @@ rSC <- function(n = 1, MT = 20, B.start = 6, m = 50, s = 10, prob = 0.5, d.trend
     for (j in 1:cases) {
       B <- (i - 1) * cases + j
       if(distribution == "normal") {
-        start_values <- rep(rnorm(1, m[B], s[B]), MT[B])	
+        if(start.values.fixed)
+          start_values <- rep(m[B], MT[B])
+        else
+          start_values <- rep(rnorm(1, m[B], s[B]), MT[B])	
         slope_values <- c(rep(0, B.start[B] - 1), 1:(MT[B] - B.start[B] + 1) * d.slope[B] * s[B])
         level_values <- c(rep(0, B.start[B] - 1), rep(d.level[B] * s[B], MT[B] - B.start[B] + 1))
         trend_values <- c(0 :(MT[B]-1) * d.trend[B] * s[B])
@@ -194,9 +197,10 @@ rSC <- function(n = 1, MT = 20, B.start = 6, m = 50, s = 10, prob = 0.5, d.trend
         error_values <- rnorm(MT[B], mean = 0, sd = error[B])
         measured_values <- true_values + error_values
       } else if(distribution == "poisson") {
-        start_values <- rep(m[B], MT[B])	
-        #start_values <- rep(rnorm(1, m[B], s), MT[B])
-        #start_values[start_values < 0] <- 0				
+        if(start.values.fixed)
+          start_values <- rep(m[B], MT[B])	
+        else
+          start_values <- rep(rpois(1, m[B]), MT[B])	
         slope_values <- c(rep(0, B.start[B] - 1), 1:(MT[B] - B.start[B] + 1) * d.slope[B])
         level_values <- c(rep(0, B.start[B] - 1), rep(d.level[B], MT[B] - B.start[B] + 1))
         trend_values <- 0 :(MT[B]-1) * d.trend[B]
@@ -204,9 +208,11 @@ rSC <- function(n = 1, MT = 20, B.start = 6, m = 50, s = 10, prob = 0.5, d.trend
         true_values[true_values < 0] <- 0
         measured_values <- rpois(length(true_values), true_values)
       } else if(distribution == "binomial") {
-        start_values <- rep(m[B], MT[B])
-        #start_values <- rep(rnorm(1, m[B], s), MT[B])
-        #start_values[start_values < 0] <- 0				
+        if(start.values.fixed)
+          start_values <- rep(m[B], MT[B])
+        else
+          start_values <- rep(rbinom(1, size = round(m[B] * (1/prob)), prob = prob), MT[B])	
+        
         slope_values <- c(rep(0, B.start[B] - 1), 1:(MT[B] - B.start[B] + 1) * d.slope[B])
         level_values <- c(rep(0, B.start[B] - 1), rep(d.level[B], MT[B] - B.start[B] + 1))
         trend_values <- 0 :(MT[B]-1) * d.trend[B]

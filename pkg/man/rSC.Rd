@@ -6,9 +6,9 @@ Generate random single- and multiple-baseline samples.
 }
 \usage{
 rSC(n = 1, MT = 20, B.start = 6, m = 50, s = 10, prob = 0.5, d.trend = 0, d.level = 0, 
-    d.slope = 0, rtt = 0.8, concise = FALSE, cases = 1, round = NA, extreme.p = 0, 
+    d.slope = 0, rtt = 0.8, concise = TRUE, cases = 1, round = NA, extreme.p = 0, 
     extreme.d = c(-4, -3), missing.p = 0, distribution = "normal", 
-    random.names = FALSE, output.long = FALSE)
+    start.values.fixed = FALSE, random.names = FALSE, output.long = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -24,6 +24,10 @@ Starting values of the B-phase. A single value (e.g., B.start = 6) defines the B
   \item{m}{
 Mean of the sample distribution the data are drawn from. A vector of values defines alterating values for each case. If the number of n*cases surpasses the length of the vector, values are repeated.
 }
+  \item{start.values.fixed}{
+If set TRUE, the true value at the first measurement of each case is set to the value defined in the m argument. If set FALSE, the true values of each case is drawn from a distribution (defined in the argument distribution) with the expected value of the argument m. Default is FALSE.
+}
+
   \item{s}{
 Standard deviation of the sample distribution the data are drawn from. A vector of values defines alterating values for each case. If the number of n*cases surpasses the length of the vector, values are repeated.
 }
@@ -42,7 +46,7 @@ A single level increase with the beginning of the B-Phase in standard deviations
 Amount of increase in standard deviations per measurement time starting with the Beginning of the B-phase (e.g., d.slope = 0.1 generates an incremental increase of 0.1 standard deviations for each measurement of the B-phase). A vector of values defines alterating values for each case. If the number of n*cases surpasses the length of the vector, values are repeated. In case of a binomial or poisson distribution, d.slope indicates the increase in points/counts. 
 }
   \item{rtt}{
-Reliability of the underlying simulated measurements (default is rtt = 0.8). A vector of values defines alterating values for each case. If the number of n*cases surpasses the length of the vector, values are repeated. In case of a binomial or poisson distribution rtt does have no effect onthe generated data. 
+Reliability of the underlying simulated measurements (default is rtt = 0.8). A vector of values defines alterating values for each case. If the number of n*cases surpasses the length of the vector, values are repeated. In case of a binomial or poisson distribution rtt does have no effect on the generated data. 
 }
   \item{concise}{
 If set TRUE, no information about the generated sample is given.
@@ -62,8 +66,6 @@ Range of an extreme value in d (e.g., extreme.d = c(-7,-6) results in extreme va
   \item{missing.p}{
 Proportion of missing values (e.g., missing.p = 0.1 renders 10 percent of all values as missing). A vector of values defines alterating values for each case. If the number of n*cases surpasses the length of the vector, values are repeated.   
 }
-
-
 
 
   \item{distribution}{
@@ -87,5 +89,9 @@ set.seed(1234)
 dat <- rSC(n = 50, rtt = 0.6, round = 1, d.trend = 0.05, 
            d.level = 0.5, d.slope = 0.1)
 hplm(dat)
+
+
+set.seed(1234)
+dat <- rSC(n = 3, B.start = c(6,10,14),MT = c(12,20,22),m = 10, distribution = "poisson", d.level = 5)
 
 }
