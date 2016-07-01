@@ -4,7 +4,7 @@
 Descriptive statistics for single-case data
 }
 \description{
-The describeSC function provides important descriptive statistics for single-case data including trends, standardized mean differences, measures of overlap, and autocorrelation.
+The describeSC function provides important descriptive statistics for each dataset seperated for A- and B-phase.
 }
 \usage{
 describeSC(data, decreasing = FALSE)
@@ -44,11 +44,6 @@ If you expect the data to be lower in the B-phase, set decreasing = TRUE.
   \item{Trend.AB}{}
   \item{Trend.dif}{}
   \item{SMD}{}
-  \item{PND}{}
-  \item{PEM}{}
-  \item{NAP}{Nonoverlap of all pairs}
-  \item{PAND}{}
-  \item{TAU.U}{}
 }
 \author{
 Juergen Wilbert

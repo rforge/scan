@@ -674,11 +674,11 @@ describeSC <- function(data, decreasing = FALSE) {
 		d.f$smd1[i] <- d.f$dif[i]/d.f$sdA[i]
 		d.f$smd2[i] <- d.f$dif[i]/d.f$sdB[i]
 		d.f$smd3[i] <- d.f$dif[i]/d.f$sdAB[i]
-		d.f$PND[i] <- pnd(data, decreasing = decreasing)$PND
-		d.f$PEM[i] <- pem(data, decreasing = decreasing, binom.test = FALSE, chi.test = FALSE)$PEM
-		d.f$NAP[i] <- nap(data, decreasing = decreasing)$NAP
-		d.f$PAND[i] <- pand(data, decreasing = decreasing)$PAND
-		d.f$TAU_U[i] <- tauUSC(data)$tau_u
+		#d.f$PND[i] <- pnd(data, decreasing = decreasing)$PND
+		#d.f$PEM[i] <- pem(data, decreasing = decreasing, binom.test = FALSE, chi.test = FALSE)$PEM
+		#d.f$NAP[i] <- nap(data, decreasing = decreasing)$NAP
+		#d.f$PAND[i] <- pand(data, decreasing = decreasing)$PAND
+		#d.f$TAU_U[i] <- tauUSC(data)$tau_u
 		}
 
 	if(N > 1) {
@@ -711,11 +711,11 @@ describeSC <- function(data, decreasing = FALSE) {
 		d.f$bB[N] <- mean(d.f$bB,na.rm = TRUE)
 		d.f$bC[N] <- mean(d.f$bC,na.rm = TRUE)
 		d.f$bdif[N] <- mean(d.f$bdif,na.rm = TRUE)
-		d.f$PND[N] <- mean(d.f$PND,na.rm = TRUE)
-		d.f$PEM[N] <- mean(d.f$PEM,na.rm = TRUE)
-		d.f$NAP[N] <- mean(d.f$NAP,na.rm = TRUE)
-		d.f$PAND[N] <- mean(d.f$PAND,na.rm = TRUE)
-		d.f$TAU_U[N] <- mean(d.f$TAU_U,na.rm = TRUE)
+		#d.f$PND[N] <- mean(d.f$PND,na.rm = TRUE)
+		#d.f$PEM[N] <- mean(d.f$PEM,na.rm = TRUE)
+		#d.f$NAP[N] <- mean(d.f$NAP,na.rm = TRUE)
+		#d.f$PAND[N] <- mean(d.f$PAND,na.rm = TRUE)
+		#d.f$TAU_U[N] <- mean(d.f$TAU_U,na.rm = TRUE)
 		rownames(d.f) <- c(case.names, "total")
 	}
 	if(N == 1)
@@ -1939,8 +1939,6 @@ print.sc <- function(x, ...) {
 
 	if(value == "describe") {
 		cat("Describe single-case data\n\n")
-		#x$descriptives <- x$descriptives[,!names(x$descriptives)%in%c("smd2","smd3")]
-		#colnames(x$descriptives) <- c("n A", "n B", "n AB", "Missing A", "Missing B", "Missing AB","Mean A", "Mean B", "Mean dif", "Median A", "Median B", "Min A", "Min B", "Max A", "Max B", "SD A", "SD B", "SD AB", "SMD", "Autocor A", "Autocor B", "Trend A", "Trend B", "Trend AB", "Trend dif","PND", "PEM", "NAP", "PAND", "TAU-U")
 		out <- data.frame(
 		  "n A" = x$descriptives$nA, 
       "n B"  = x$descriptives$nB, 
@@ -1966,17 +1964,16 @@ print.sc <- function(x, ...) {
       "Trend B" = x$descriptives$bB, 
       "Trend AB" = x$descriptives$bC, 
       "Trend dif" = x$descriptives$bdif,
-		  "SMD" = x$descriptives$smd1, 
-      "PND" = x$descriptives$PND, 
-      "PEM" = x$descriptives$PEM, 
-      "NAP" = x$descriptives$NAP, 
-      "PAND" = x$descriptives$PAND,
-		  "TAU-U" = x$descriptives$TAU_U
+		  "SMD" = x$descriptives$smd1   #,
+      #"PND" = x$descriptives$PND, 
+      #"PEM" = x$descriptives$PEM, 
+      #"NAP" = x$descriptives$NAP, 
+      #"PAND" = x$descriptives$PAND,
+		  #"TAU-U" = x$descriptives$TAU_U
 		)
-    #print(t(x$descriptives), digits = 2, ...)
-		#print(round(t(x$descriptives),2))
+   
 		row.names(out) <- row.names(x$descriptives)
-    print(round(t(out),2))
+    print(round(t(out),2), ...)
 	}	
   
 	if(value == "outlier") {
