@@ -92,6 +92,7 @@ hplm(dat)
 
 
 set.seed(1234)
-dat <- rSC(n = 3, B.start = c(6,10,14),MT = c(12,20,22),m = 10, distribution = "poisson", d.level = 5)
-
+dat <- rSC(n = 3,B.start = c(6,10,14),MT = c(12,20,22),m = 10, distribution = "poisson", 
+           d.level = 5, missing.p = 0.1)
+pand(dat, correction = FALSE)
 }
