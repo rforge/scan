@@ -233,10 +233,9 @@ rSC <- function(n = 1, MT = 20, B.start = 6, m = 50, s = 10, prob = 0.5, d.trend
       }
 
       if(missing.p[B] > 0){
-		measured_values[sample(1:MT[B], missing.p[B]*MT[B])] <- NA
+		    measured_values[sample(1:MT[B], missing.p[B]*MT[B])] <- NA
       }
 
-      
       if(!is.na(round))
         measured_values <- round(measured_values, round) 
       
@@ -277,6 +276,8 @@ rSC <- function(n = 1, MT = 20, B.start = 6, m = 50, s = 10, prob = 0.5, d.trend
     cat("M\t",unique(m),"\n")
     if(distribution == "normal")
       cat("SD\t",unique(s),"\n")
+    if(distribution == "binomial")
+      cat("Probab.\t",prob,"\n")
     cat("MT\t",unique(MT),"\n")
     cat("B.start\t",unique(B.start),"\n")
     if(distribution == "normal")
