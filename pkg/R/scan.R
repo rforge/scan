@@ -86,12 +86,6 @@
 	return(data)
 }
 
-makeSCDF <- function (data, B.start = NULL, MT = NULL){
-	out <- .SCprepareData(data = data, B.start = B.start, MT = MT)
-  if(length(out) == 1)
-    return(out[[1]])
-	return(out)
-}
 
 longSCDF <- function(data) {
   dat <- .SCprepareData(data)
@@ -107,13 +101,6 @@ longSCDF <- function(data) {
   colnames(outdat)[1] <- "case"
   return(outdat)
 }
-
-
-writeSC <- function(dat, filename, sep = ",", dec = ".", ...) {
-	write.table(longSCDF(dat), filename, sep = sep, row.names = FALSE, dec = dec, ...)
-}
-
-
 
 
 .onAttach()
