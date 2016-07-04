@@ -13,8 +13,8 @@ describeSC <- function(data, decreasing = FALSE) {
     data <- data.list[[i]]
     A <- data[,2][data[,1] == "A"]
     B <- data[,2][data[,1] == "B"]
-    d.f$acA[i] <- .SCac(A,1)
-    d.f$acB[i] <- .SCac(B,1)
+    #d.f$acA[i] <- .SCac(A,1)
+    #d.f$acB[i] <- .SCac(B,1)
     d.f$nA[i] <- length(A)
     d.f$nB[i] <- length(B)
     d.f$nAB[i] <- d.f$nA[i] + d.f$nB[i]

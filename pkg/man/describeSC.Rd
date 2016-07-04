@@ -19,7 +19,9 @@ If you expect the data to be lower in the B-phase, set decreasing = TRUE.
 }
 }
 \value{
-  \item{A list of descriptive statistics.}
+  \item{descriptives}{
+A data frame of descriptive statistics.
+}
 }
 \author{
 Juergen Wilbert
