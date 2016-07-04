@@ -1,6 +1,13 @@
 
 print.sc <- function(x, ...) {
   value <- class(x)[2]
+
+  
+  if(value == "autocorr") {
+    cat("Autocorrelations\n\n")
+    x <- x$autocorr
+    print(x)
+  }
   
   
   if(value == "overlap") {
