@@ -88,7 +88,7 @@ print.sc <- function(x, ...) {
     x$trend <- round(x$trend,3)
     cat("Trend in A and B-Phase\n\n")
     #cat("N persons = ", x$N,"\n")
-    cat("\n")
+    #cat("\n")
     print(x$trend)
     cat("\n")
     cat("Note. Measurement-times of the B-Phase start at", 1+x$B.offset, "\n")
