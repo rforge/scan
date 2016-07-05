@@ -87,7 +87,7 @@ print.sc <- function(x, ...) {
   if(value == "trend") {
     x$trend <- round(x$trend,3)
     cat("Trend in A and B-Phase\n\n")
-    cat("N persons = ", x$N,"\n")
+    #cat("N persons = ", x$N,"\n")
     cat("\n")
     print(x$trend)
     cat("\n")

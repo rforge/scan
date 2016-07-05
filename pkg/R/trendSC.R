@@ -41,7 +41,7 @@ trendSC <- function(data, B.offset = -1,model = NA) {
   }
   
   out <- matrix(out,rows,3, byrow = TRUE, dimnames = list(row.names, c("Intercept", "B","Beta")))
-  out <- list(trend = out, N = N, B.offset = B.offset)
+  out <- list(trend = out, B.offset = B.offset)
   class(out) <- c("sc","trend")
   out
 }
