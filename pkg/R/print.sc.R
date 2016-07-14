@@ -191,8 +191,8 @@ print.sc <- function(x, ...) {
     print(md)
     if(x$analyze.random.slopes) {
       cat("\nRandom effects\n\n")
-      out$random.effects <- data.frame(Parameter = c("Intercept", "Trend","Level", "Slope","Residual"),"EstimateSD" = round(c(as.numeric(VarCorr(x$random.trend.level.slope$model)[,2])),3), L = round(c(x$random.nointercept.trend.level.slope$LR.test$L.Ratio[2],x$random.trend$LR.test$L.Ratio[2], x$random.level$LR.test$L.Ratio[2], x$random.slope$LR.test$L.Ratio[2], NA),1), p = round(c(x$random.nointercept.trend.level.slope$LR.test$"p-value"[2],x$random.trend$LR.test$"p-value"[2], x$random.level$LR.test$"p-value"[2], x$random.slope$LR.test$"p-value"[2], NA),3))
-      
+      out$random.effects <- data.frame("EstimateSD" = round(c(as.numeric(VarCorr(x$random.trend.level.slope$model)[,2])),3), L = round(c(x$random.nointercept.trend.level.slope$LR.test$L.Ratio[2],x$random.trend$LR.test$L.Ratio[2], x$random.level$LR.test$L.Ratio[2], x$random.slope$LR.test$L.Ratio[2], NA),1), p = round(c(x$random.nointercept.trend.level.slope$LR.test$"p-value"[2],x$random.trend$LR.test$"p-value"[2], x$random.level$LR.test$"p-value"[2], x$random.slope$LR.test$"p-value"[2], NA),3))
+      rownames(out$random.effects) <- c("Intercept", "Trend","Level", "Slope","Residual")
       print(out$random.effects)
       
     }
