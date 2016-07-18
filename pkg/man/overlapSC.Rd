@@ -4,7 +4,7 @@
 Overlap indices for single-case data
 }
 \description{
-The overlapSC function provides an overview of the most common overlap indices for single-case data.
+The overlapSC function provides the most common overlap indices for single-case data.
 }
 \usage{
 overlapSC(data, decreasing = FALSE)
@@ -12,7 +12,7 @@ overlapSC(data, decreasing = FALSE)
 
 \arguments{
   \item{data}{
-A single-case data frame or a list of single-case data frames. See makeSCDF to learn about this format.
+A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.
 }
   \item{decreasing}{
 If you expect the data to be lower in the B-phase, set \code{decreasing = TRUE}.
@@ -25,15 +25,20 @@ If you expect the data to be lower in the B-phase, set \code{decreasing = TRUE}.
   \item{PET}{Percent exceeding the trend}
   \item{NAP}{Nonoverlap of all pairs}
   \item{PAND}{Percent all non-overlapping data}
-  \item{TAU.U}{Tau-U}
+  \item{TAU.U}{Tau-U (A vs. B + Trend B - Trend A)}
 }
 \author{
 Juergen Wilbert
 }
 \examples{
-set.seed(1235)
-dat <- rSC(8, B.start = round(runif(5,5,10)), d.level = 0.5, round = 0, random.names = TRUE)
-overlapSC(dat)
+## overlap indices for one single-case
+overlapSC(Huitema2000, decreasing = TRUE)
 
+## descriptive statistics for a list of six single-cases
+describeSC(GruenkeWilbert2014)
+
+## write overlap indices to .csv-file
+overl <- overlapSC(Waddell2011)
+write.csv(overl$overlap, file = "overlap_indices.csv")
 }
 
