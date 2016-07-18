@@ -19,7 +19,7 @@ If you expect the data to be lower in the B phase, set decreasing = TRUE (defaul
 \value{
   \item{N}{Number of cases.}
   \item{NAP}{Nonoverlap of all pairs.}
-  \item{Rescaled NAP}{???}
+  \item{Rescaled NAP}{NAP rescaled to 0-100\%.}
 }
 \references{
 Parker, R. I., & Vannest, K. (2009). An improved effect size for single-case research: Nonoverlap of all pairs. Behavior Therapy, 40(4), 357-367.

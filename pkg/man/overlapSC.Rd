@@ -1,10 +1,10 @@
 \name{overlapSC}
 \alias{overlapSC}
 \title{
-Overlap for single-case data
+Overlap indices for single-case data
 }
 \description{
-The overlapSC function provides an overview of the most common overlap indices.
+The overlapSC function provides an overview of the most common overlap indices for single-case data.
 }
 \usage{
 overlapSC(data, decreasing = FALSE)
@@ -15,7 +15,7 @@ overlapSC(data, decreasing = FALSE)
 A single-case data frame or a list of single-case data frames. See makeSCDF to learn about this format.
 }
   \item{decreasing}{
-If you expect the data to be lower in the B-phase, set decreasing = TRUE.
+If you expect the data to be lower in the B-phase, set \code{decreasing = TRUE}.
 }
 }
 \value{

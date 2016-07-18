@@ -1,9 +1,8 @@
 \name{tauUSC}
 \alias{tauUSC}
-\title{Tau-U}
+\title{Tau-U for single-case data}
 \description{
-The tau-U index was proposed by Parker and colleagues.
-
+This function calculates indices of the Tau-U family as proposed by Parker et al. (2011).
 }
 \usage{
 tauUSC(data, ties.method = "omit")
@@ -11,19 +10,16 @@ tauUSC(data, ties.method = "omit")
 
 \arguments{
   \item{data}{
-A data frame or a list of data frames.
+A single-case data frame.
 }
   \item{ties.method}{
-Defines how to handle ties. 'omit' does not include ties into the calculatioin of tau-u, 'positive' and 'negative' are two further possibilities. 
+Defines how to handle ties. \code{"omit"} excludes all ties from the calculation. \code{"positive"} counts all ties as positive comparisons, while \code{"negative"} counts them as negative comparisons.
+}
 }
 
-}
-\details{
-#
-}
 \value{
-  \item{table}{The different comparisons for estimating the tau-U effect. Tau-U can be derived as the tau value of the A vs. B + trend B - trend A comparison.}
-  \item{matrix}{The matrix for calculating tau-U}
+  \item{table}{Descriptives and comparisons from the Tau-U family.}
+  \item{matrix}{The matrix used for calculating the indices.}
 }
 \references{
 Parker, R. I., Vannest, K. J., Davis, J. L., & Sauber, S. B. (2011). Combining Nonoverlap and Trend for Single-Case Research: Tau-U. Behavior Therapy, 42, 284-299.  
@@ -32,8 +28,11 @@ Parker, R. I., Vannest, K. J., Davis, J. L., & Sauber, S. B. (2011). Combining N
 Juergen Wilbert
 }
 \examples{
-#example of Parker et al. 2011
-exa <- makeSCDF(c(2, 3, 5, 3, 4, 5, 5, 7, 6),5)
-tauUSC(exa)
+## Tau-U for the example from Parker et al. (2011)
+bob <- makeSCDF(c(2, 3, 5, 3, 4, 5, 5, 7, 6), B.start = 5)
+tauUSC(bob)
+
+## Tau-U with ties counted as positive
+tauUSC(Grosche2011$Eva)
 }
 

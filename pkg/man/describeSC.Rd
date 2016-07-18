@@ -15,7 +15,7 @@ describeSC(data, decreasing = FALSE)
 A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.
 }
   \item{decreasing}{
-If you expect the data to be lower in phase B, set decreasing = TRUE.
+If you expect the data to be lower in phase B, set \code{decreasing = TRUE}. At the moment describeSC only reports indices not sensible to decreasing phase B scores, so this does not change the output.
 }
 }
 \value{
@@ -36,15 +36,9 @@ describeSC(Waddell2011)
 ## descriptive statistics for a list of three single-cases
 describeSC(Grosche2011)
 
-## descriptive statistics for one single-case with expected lower scores in phase B
-set.seed(1234)
-dat <- rSC(1, B.start = round(runif(5,5,10)), d.level = 1.0, d.slope = 0.1, d.trend = 0.05, 
-rtt = 0.75, round = 0, random.names = TRUE)
-describeSC(dat, decreasing = TRUE)
-
 ## write descriptive statistics to .csv-file
 descr <- describeSC(Waddell2011)
-writeSC(descr$descriptives, filename = "descriptives.csv")
+write.csv(descr$descriptives, file = "descriptives.csv")
 
 }
 
