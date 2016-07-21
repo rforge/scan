@@ -15,7 +15,7 @@ describeSC(data, decreasing = FALSE)
 A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.
 }
   \item{decreasing}{
-If you expect the data to be lower in phase B, set \code{decreasing = TRUE}. At the moment describeSC only reports indices not sensible to decreasing phase B scores, so this does not change the output.
+If you expect data to be lower in phase B, set \code{decreasing = TRUE}. At the moment describeSC only reports indices not sensible to decreasing phase B scores, so this does not change the output.
 }
 }
 \value{
