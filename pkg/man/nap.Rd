@@ -2,18 +2,17 @@
 \alias{nap}
 \title{Nonoverlap of all Pairs}
 \description{
-The index Nonoverlap of all pairs was developed by Parker and Vannest (2009). It is recommended as overlapping measurement.
+Calculates the nonoverlap of all pairs (NAP; Parker & Vannest, 2009). NAP summarizes the overlap between all pairs of phase A and phase B datapoints. If an increase of phase B scores is expected, a non-overlapping pair has a higher phase B datapoint. The NAP equals \eqn{number of pairs showing no overlap / number of pairs}. Because NAP can only take values between 50 and 100 percent, a rescaled and more intuitive NAP (0-100\%) is displayed.
 }
 \usage{
 nap(data, decreasing = FALSE)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data}{
-A single-case data frame.
+A single-case data frame. See \code{\link{makeSCDF}} to learn about this format.
 }
   \item{decreasing}{
-If you expect the data to be lower in the B phase, set decreasing = TRUE (default is FALSE).
+If you expect data to be lower in the B phase, set \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.
 }
 }
 \value{
@@ -22,15 +21,15 @@ If you expect the data to be lower in the B phase, set decreasing = TRUE (defaul
   \item{Rescaled NAP}{NAP rescaled to 0-100\%.}
 }
 \references{
-Parker, R. I., & Vannest, K. (2009). An improved effect size for single-case research: Nonoverlap of all pairs. Behavior Therapy, 40(4), 357-367.
+Parker, R. I., & Vannest, K. (2009). An improved effect size for single-case research: Nonoverlap of all pairs. Behavior Therapy, 40, 357-367.
 }
 \author{
 Juergen Wilbert
 }
 
 \examples{
-set.seed(1234)
-dat <- rSC(1, d.level = -1.0)
-nap(dat, decreasing = TRUE)
+## Calculate NAP for a study with expected lower phase B scores (e.g. aggressive behavior)
+gretchen <- makeSCDF(c(12,14,9,10,10,6,4,5,3,4), B.start = 5)
+nap(gretchen, decreasing = TRUE)
 }
 
