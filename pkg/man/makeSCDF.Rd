@@ -41,9 +41,9 @@ emmi <- makeSCDF(c(5, 7, NA, 5, 7, 12, 16, 18, NA, 14, 19), B.start = 6)
 describeSC(emmi)
 
 ## In a MBD over three persons, data were again collected eleven days in a row. Intervention starting points differ between subjects as they were randomly assigned. The three SCDFs are then combined in a list for further conjoined analyses.
-charlotte <- makeSCDF(c(5, 7, 8, 5, 7, 12, 16, 18, 15, 14, 19), 6)
-theresa <- makeSCDF(c(3, 4, 3, 5, 7, 8, 7, 9, 8, 10, 12),5)
-antonia <- makeSCDF(c(9, 8, 8, 7, 5, 7, 13, 14, 15, 12, 16), 7)
+charlotte <- makeSCDF(c(5, 7, 10, 5, 12, 7, 10, 18, 15, 14, 19), 6)
+theresa <- makeSCDF(c(3, 4, 3, 5, 7, 4, 7, 9, 8, 10, 12),5)
+antonia <- makeSCDF(c(9, 8, 8, 7, 5, 7, 6, 14, 15, 12, 16), 7)
 mbd <- list(charlotte, theresa, antonia)
 names(mbd) <- c("Charlotte", "Theresa", "Antonia")
 overlapSC(mbd)
