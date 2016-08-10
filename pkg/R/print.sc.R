@@ -40,7 +40,7 @@ print.sc <- function(x, ...) {
   
   if(value == "PET") {	
     cat("Percent Exceeding the Trend\n\n")
-    cat("N persons = ", x$N,"\n")
+    cat("N cases = ", x$N,"\n")
     cat("\n")
     ma <- cbind(x$PET, x$p, x$PET.ci)
     colnames(ma) <- c("PET","binom.p", "PET CI")
@@ -87,7 +87,7 @@ print.sc <- function(x, ...) {
   if(value == "trend") {
     x$trend <- round(x$trend,3)
     cat("Trend in A and B-Phase\n\n")
-    #cat("N persons = ", x$N,"\n")
+    #cat("N cases = ", x$N,"\n")
     #cat("\n")
     print(x$trend)
     cat("\n")
@@ -98,7 +98,7 @@ print.sc <- function(x, ...) {
   if(value == "rci") {
     cat("Under development, not yet ready for use !!!\n\n")
     cat("Reliable Change Index\n\n")
-    cat("N persons = ", x$N,"\n")
+    cat("N cases = ", x$N,"\n")
     cat("Mean difference = ", x$descriptives[2,2] - x$descriptives[1,2], "\n")
     
     cat("Standardized difference = ", x$stand.dif, "\n")
@@ -258,11 +258,11 @@ print.sc <- function(x, ...) {
     cat("Percent all non-overlapping data\n\n")
     cat("PAND = ", round(x$PAND,1), "%\n")
     cat("Phi = ", round(x$phi,3), " ; Phi-square = ", round(x$phi^2,3), "\n\n")
-    cat("Number of persons: ", x$N, "\n")
+    cat("Number of cases: ", x$N, "\n")
     cat("Total measurements: ", x$n, "\n")
     cat("in phase A: ", x$nA, "\n")
     cat("in phase B: ", x$nB, "\n")
-    cat("n Overlapping data per person: ")
+    cat("n Overlapping data per case: ")
     cat(x$OD.PP, sep = ", ")
     cat("\n")
     cat("n Overlapping data: ",x$OD, "\n")

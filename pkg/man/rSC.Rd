@@ -52,7 +52,7 @@ Reliability of the underlying simulated measurements (default is rtt = 0.8). A v
 If set TRUE, no information about the generated sample is given.
 }
   \item{cases}{
-Number of cases per study. E.g., n = 10, cases = 3, B.start = c(7,9,11) creates 10 multiple-baseline designs with 3 persons (Starting point of the B-phase at 7, 9, 11, respectively) each.
+Number of cases per study. E.g., n = 10, cases = 3, B.start = c(7,9,11) creates 10 multiple-baseline designs with 3 cases (Starting point of the B-phase at 7, 9, 11, respectively) each.
 }
 
 \item{round}{

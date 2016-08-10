@@ -15,7 +15,7 @@ outlierSC <- function(data, criteria = c("SD", "2")){
   cook <- list()
   
   if(is.null(case.names))
-    case.names <- paste("Person", 1:N, sep = "")
+    case.names <- paste("Case", 1:N, sep = "")
   
   for(i in 1:N) {
     data <- data.list[[i]]
