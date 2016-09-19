@@ -24,7 +24,7 @@ A vector defining measurement times. Default is \code{MT = (1,2,3,...,n)}.
 }
 
 \value{
-Returns a data frame formated as a single-case dataset suitable for all functions of the \code{scan} package. Multiple datasets (e.g. from MBDs) can be listed. 
+Returns a data frame formatted as a single-case data frame suitable for all functions of the \code{scan} package. Multiple datasets (e.g. from Multiple Baseline Designs) can be listed. 
 }
 
 \author{

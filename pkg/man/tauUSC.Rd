@@ -18,8 +18,9 @@ Defines how to handle ties. \code{"omit"} excludes all ties from the calculation
 }
 
 \value{
-  \item{table}{Descriptives and comparisons from the Tau-U family.}
-  \item{matrix}{The matrix used for calculating the indices.}
+  \item{table}{Statistics of the Tau-U family.}
+  \item{matrix}{The matrix of comparisons used for calculating the statistics.}
+  \item{tau_u}{Tau-U value.}
 }
 \references{
 Parker, R. I., Vannest, K. J., Davis, J. L., & Sauber, S. B. (2011). Combining Nonoverlap and Trend for Single-Case Research: Tau-U. Behavior Therapy, 42, 284-299.  
@@ -33,6 +34,5 @@ bob <- makeSCDF(c(2, 3, 5, 3, 4, 5, 5, 7, 6), B.start = 5)
 tauUSC(bob)
 
 ## Tau-U with ties counted as positive
-tauUSC(Grosche2011$Eva)
+tauUSC(Grosche2011$Eva, ties.method = "positive")
 }
-

@@ -20,7 +20,7 @@ If you expect data to be lower in phase B, set \code{decreasing = TRUE}. At the 
 }
 \value{
   \item{descriptives}{
-A data frame of descriptive statistics.
+A data frame of descriptive statistics (for each single-case).
 }
 }
 \author{
@@ -37,8 +37,8 @@ describeSC(Waddell2011)
 describeSC(Grosche2011)
 
 ## write descriptive statistics to .csv-file
-descr <- describeSC(Waddell2011)
-write.csv(descr$descriptives, file = "descriptives.csv")
+study <- describeSC(Waddell2011)
+write.csv(study$descriptives, file = "descriptives.csv")
 
 }
 

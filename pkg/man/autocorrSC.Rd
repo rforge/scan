@@ -19,7 +19,7 @@ The lag up to which autocorrelations will be computed. Default is \code{lag.max 
 }
 }
 \value{
-  \item{autocorr}{A data frame containing seperate autocorrelations of phase A, phase B and the complete data (AB) for each single-case. If \code{lag.max} exceeds the length of a phase minus one, NA is returned for this cell.}
+  \item{autocorr}{A data frame containing seperate autocorrelations of phase A, phase B and the complete data (for each single-case). If \code{lag.max} exceeds the length of a phase minus one, NA is returned for this cell.}
 }
 \author{
 Juergen Wilbert

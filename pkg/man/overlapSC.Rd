@@ -19,13 +19,7 @@ If you expect data to be lower in the B phase, set \code{decreasing = TRUE}. Def
 }
 }
 \value{
-  \item{overlap}{A data frame consisting of the following indices for each single-case as well as the average for all cases}
-  \item{PND}{Percent non-overlapping data}
-  \item{PEM}{Percent exceeding the median}
-  \item{PET}{Percent exceeding the trend}
-  \item{NAP}{Nonoverlap of all pairs}
-  \item{PAND}{Percent all non-overlapping data}
-  \item{TAU.U}{Tau-U (A vs. B + Trend B - Trend A)}
+  \item{overlap}{A data frame consisting of the following indices for each single-case as well as the average for all cases: PND, PEM, PET, NAP, PAND, Tau-U.}
 }
 \author{
 Juergen Wilbert

@@ -16,7 +16,6 @@ If you expect data to be lower in the B phase, set \code{decreasing = TRUE}. Def
 }
 }
 \value{
-  \item{N}{Number of cases.}
   \item{NAP}{Nonoverlap of all pairs.}
   \item{Rescaled NAP}{NAP rescaled to 0-100\%.}
 }
