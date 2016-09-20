@@ -62,7 +62,7 @@ print.sc <- function(x, ...) {
   if(value == "NAP") {
     cat("Nonoverlap of All Pairs\n\n")
     cat("NAP = ", x$NAP, "%\n")
-    cat("Rescaled NAP = ", 2 * x$NAP - 100, "%\n")
+    cat("Rescaled NAP = ", x$NAP.rescaled, "%\n")
   }
   
   if(value == "PEM") {

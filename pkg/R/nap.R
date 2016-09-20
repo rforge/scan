@@ -23,7 +23,7 @@ nap <- function(data, decreasing = FALSE) {
   ties <- sum(sapply(A,function(x)x==B), na.rm = TRUE)
   NAP <- (pos + (0.5 * ties)) / pairs 
   
-  out <- list(NAP = NAP*100)
+  out <- list(NAP = NAP*100, NAP.rescaled = 2 * (NAP*100) - 100)
   class(out) <- c("sc","NAP")
   out
 }
