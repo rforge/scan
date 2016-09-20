@@ -20,19 +20,19 @@ overlapSC <- function(data, decreasing = FALSE) {
     d.f$TAU_U[i] <- tauUSC(data)$tau_u
   }
   
-  if(N > 1) {
-    N <- N + 1
-    d.f[N,"tmp"] <- NA
-    d.f$PND[N] <- mean(d.f$PND,na.rm = TRUE)
-    d.f$PEM[N] <- mean(d.f$PEM,na.rm = TRUE)
-    d.f$PET[N] <- mean(d.f$PET,na.rm = TRUE)
-    d.f$NAP[N] <- mean(d.f$NAP,na.rm = TRUE)
-    d.f$NAP.rescaled[N] <- mean(d.f$NAP.rescaled,na.rm = TRUE)
-    d.f$PAND[N] <- mean(d.f$PAND,na.rm = TRUE)
-    d.f$TAU_U[N] <- mean(d.f$TAU_U,na.rm = TRUE)
-    rownames(d.f) <- c(case.names, "total")
-  }
-  if(N == 1)
+  #if(N > 1) {
+  #  N <- N + 1
+  #  d.f[N,"tmp"] <- NA
+  #  d.f$PND[N] <- mean(d.f$PND,na.rm = TRUE)
+  #  d.f$PEM[N] <- mean(d.f$PEM,na.rm = TRUE)
+  #  d.f$PET[N] <- mean(d.f$PET,na.rm = TRUE)
+  #  d.f$NAP[N] <- mean(d.f$NAP,na.rm = TRUE)
+  #  d.f$NAP.rescaled[N] <- mean(d.f$NAP.rescaled,na.rm = TRUE)
+  #  d.f$PAND[N] <- mean(d.f$PAND,na.rm = TRUE)
+  #  d.f$TAU_U[N] <- mean(d.f$TAU_U,na.rm = TRUE)
+  #  rownames(d.f) <- c(case.names, "total")
+  #}
+  #if(N == 1)
     rownames(d.f) <- c(case.names)
   
   out <- list(overlap = d.f[,-1])
