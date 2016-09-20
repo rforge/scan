@@ -11,10 +11,11 @@
 \alias{Waddell2011}
 \alias{Borckardt2014}
 
-\title{Exampe single-case data}
+\title{Single-case data examples}
 \description{
-This is a list of example single case data sets implemented in the package. 
+This is a list of example single-case data sets implemented in the package. 
 }
+########################add citations##################################
 \details{
 example1
 

@@ -1,47 +1,42 @@
 \name{outlierSC}
 \alias{outlierSC}
-\title{Cleaning outliers}
+\title{Handle outliers in single-case data}
 \description{
-Identifies and drops outliers for each case of your data file. The function returns a new data file without the outlier data. Criteria for outlier identification can be standard deviations, confidence intervals, and Cook's distance (based on a piecewise linear regression model).
-}
+Identifies and drops outliers within a single-case data frame or a list of single-case data frames.}
 \usage{
 outlierSC(data, criteria = c("SD", "2"))
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data}{
-A data frame or a list of data frames.
+A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.
 }
   \item{criteria}{
-Specifies criteria for dropping data.
-SD for standard deviations (e.g., criteria = c("SD", 2)).
-CI for Confidence interval (e.g., criteria = c("CI", 0.99) represents a 99 percent confidence interval.
-Cook for Cook's distance based on the piecewise-linear-regression model. To exclude cases where cook exceeds 4/n set: criteria = c("Cook", "4/n").
+Specifies the criteria for outlier identification. Set \code{criteria = c("SD", 2)} to define two standard deviations as limit. This is also the default setting. To use the 99\% Confidence Interval use \code{criteria = c("CI", 0.99)}. Set \code{criteria = c("Cook", "4/n")} to define any data point with a Cook's Distance greater than 4/n as an outlier, based on the Piecewise Linear Regression Model.
 }
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-\item{data}{Cleaned up data file.}
-\item{dropped.n}{A list with the number of dropped values for each case.}
-\item{dropped.mt}{A list with the measuremt-times of dropped cases for each case (values are based on the mt variable of each data frame).}
-\item{ci.matrix}{A list with a matrix for each case with values for the upper and lower boundaries based on the confidence interval.}
-\item{sd.matrix}{A list with a matrix for each case with values for the upper and lower boundaries based on the standard deviation.}
-\item{cook}{A list with the cook values for each measuremnt-time of each case.}
-\item{criteria}{Method and criteria used for outlier analysis.}
-\item{N}{Number of cases in the design.}
-\item{case.names}{Identifier of the cases.}
-
+  \item{data}{A data frame (for each single-case) without outliers.}
+  \item{dropped.n}{A list with the number of dropped data points for each single-case.}
+  \item{dropped.mt}{A list with the measuremt-times of dropped data points for each single-case (values are based on the \code{mt} variable of each single-case data frame).}
+  \item{sd.matrix}{A list with a matrix for each case with values for the upper and lower boundaries based on the standard deviation.}
+  \item{ci.matrix}{A list with a matrix for each single-case with values for the upper and lower boundaries based on the confidence interval.}
+  \item{cook}{A list of Cook's Distances for each measurement of each single-case.}
+  \item{criteria}{Criteria used for outlier analysis.}
+  \item{N}{Number of single-cases.}
+  \item{case.names}{Case identifier.}
 }
 
 \author{
 Juergen Wilbert
 }
 \examples{
-#To 'clean' the original data from Grosche (2011) without the outliers and using 
-#Cook's distance greater 4/n as a criterion, type:
-(res <- outlierSC(Grosche2011, criteria = c("Cook", "4/n")))
+## identify outliers using 1.5 standard deviations as criterion
+set.seed(1234)
+Susanne <- rSC(d.level = 1.0)
+res <- outlierSC(Susanne, criteria = c("SD", 1.5))
+plotSC(Susanne, marks = list(positions = res$dropped.mt))
+
+## identify outliers in the original data from Grosche (2011) using Cook's Distance above 4/n as criterion
+res <- outlierSC(Grosche2011, criteria = c("Cook", "4/n"))
 plotSC(Grosche2011, marks = list(positions = res$dropped.mt))
-
-
 }
