@@ -17,7 +17,8 @@ print.sc <- function(x, ...) {
       "PND" = x$PND, 
       "PEM" = x$PEM,
       "PET" = x$PET,
-      "NAP" = x$NAP, 
+      "NAP" = x$NAP,
+      "NAP rescaled" = x$NAP.rescaled,
       "PAND" = x$PAND,
       "TAU-U" = x$TAU_U
     )

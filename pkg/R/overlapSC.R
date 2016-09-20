@@ -15,6 +15,7 @@ overlapSC <- function(data, decreasing = FALSE) {
     d.f$PEM[i] <- pem(data, decreasing = decreasing, binom.test = FALSE, chi.test = FALSE)$PEM
     d.f$PET[i] <- pet(data, decreasing = decreasing)$PET
     d.f$NAP[i] <- nap(data, decreasing = decreasing)$NAP
+    d.f$NAP.rescaled[i] <- nap(data, decreasing = decreasing)$NAP.rescaled
     d.f$PAND[i] <- pand(data, decreasing = decreasing)$PAND
     d.f$TAU_U[i] <- tauUSC(data)$tau_u
   }
