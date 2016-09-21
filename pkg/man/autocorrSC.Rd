@@ -25,7 +25,7 @@ The lag up to which autocorrelations will be computed. Default is \code{lag.max 
 Juergen Wilbert
 }
 \examples{
-## autocorrelations for a list of four single-cases with max.lag = 2
+## Autocorrelations for a list of four single-cases with max.lag = 2
 autocorrSC(Huber2014, lag.max = 2)
 }
 

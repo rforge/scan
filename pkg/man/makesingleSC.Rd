@@ -1,19 +1,18 @@
 \name{makesingleSC}
 \alias{makesingleSC}
-\title{Aggregate multiple cases into one case}
+\title{Aggregate multiple single-cases into one case.}
 \description{
-The makesingleSC command combines multiple single cases into one single case which can be used for further analysis. 
+The makesingleSC function combines multiple single-case data frames into one single-case data frame.
 }
 \usage{
 makesingleSC(data, scale = FALSE, type = "add")
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data}{
 A vector with measurements, a data frame or a list of data frames.
 }
   \item{scale}{Unused}
-  \item{type}{By default values with the same measurement-time are added. If type is set to mean or median, values of the same MT are replaced with their mean or median. Default is add.
+  \item{type}{By default values with the same measurement are added. If type is set to "mean" or "median", values of the same measurement are replaced with their mean or median. Default is "add".
 }
 }
 \details{

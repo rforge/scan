@@ -2,7 +2,7 @@
 \alias{fillmissingSC}
 \title{Replace missing measurement times in single-case data}
 \description{
-This function replaces missing measurement times in single-case data.
+The fillmissingSC function replaces missing measurements in single-case data.
 }
 \usage{
 fillmissingSC(data, interpolation = "linear", na.rm = TRUE)
@@ -28,13 +28,13 @@ If set \code{TRUE}, \code{NA} values are also interpolated. Default is \code{na.
 ## all participants. During the course of 100 weeks, about 20 measurements per person 
 ## at different times were administered.
 
-## fill missing values in a single-case dataset with discontinuous measurement times
+## Fill missing values in a single-case dataset with discontinuous measurement times
 Grosche2011filled <- fillmissingSC(Grosche2011)
 ## graphical comparison of the two datasets
 plotSC(c(Original = Grosche2011[2], Filled = Grosche2011filled[2]))
 
 
-## fill missing values in a single-case dataset that are NA
+## Fill missing values in a single-case dataset that are NA
 set.seed(1234)
 Maggie <- rSC(d.level = 1.0)
 Maggie_n <- Maggie
@@ -44,4 +44,3 @@ Maggie_f <- fillmissingSC(Maggie_n)
 plotSC(c("original" = Maggie, "missing" = Maggie_n, "interpolated" = Maggie_f),
        marks = list(positions = replace.positions))
 }
-

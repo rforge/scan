@@ -4,7 +4,7 @@
 Create a single case data frame for further analyses
 }
 \description{
-This function is used to create the basic data structure for storing one or multiple single-cases. This basic data structure is required in all \code{scan} functions.
+The makeSCDF function creates the basic data structure for storing one or multiple single-cases. This basic data structure is required in all \code{scan} functions.
 }
 \usage{
 makeSCDF(data, B.start = NULL, MT = NULL)
@@ -32,7 +32,7 @@ Juergen Wilbert
 }
 
 \examples{
-## Scores on a letter naming task were collected on eleven days in a row. The intervention started after the fifth measurement, so the first B pahse measurement was 6 (\code{B.start = 6}).
+## Scores on a letter naming task were collected on eleven days in a row. The intervention started after the fifth measurement, so the first B phase measurement was 6 (\code{B.start = 6}).
 klaas <- makeSCDF(c(5, 7, 8, 5, 7, 12, 16, 18, 15, 14, 19), B.start = 6)
 plotSC(klaas)
 
@@ -53,4 +53,3 @@ frida <- makeSCDF(c(3, 2, 4, 2, 2, 3, 5, 6, 8, 10, 8, 12, 14, 13, 12), B.start =
 plotSC(frida)
 describeSC(frida)
 }
-

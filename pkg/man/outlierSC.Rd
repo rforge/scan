@@ -2,7 +2,8 @@
 \alias{outlierSC}
 \title{Handle outliers in single-case data}
 \description{
-Identifies and drops outliers within a single-case data frame or a list of single-case data frames.}
+Identifies and drops outliers within a single-case data frame or a list of single-case data frames.
+}
 \usage{
 outlierSC(data, criteria = c("SD", "2"))
 }

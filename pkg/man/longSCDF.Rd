@@ -1,9 +1,9 @@
 \name{longSCDF}
 \alias{longSCDF}
-\title{
-Create a single data frame of a list of single-case dataframes
+\title{Create a single data frame from several single-case data frames.
 }
-\description{This functions helps you to create a single data frame from a list of multiple single cases.
+\description{
+The longSCDF function transposes a list of single-case data frames (wide) into one (long) data frame.
 }
 \usage{
 longSCDF(data)
@@ -11,13 +11,18 @@ longSCDF(data)
 
 \arguments{
   \item{data}{
-A list with single-case dataframes
+A list of single-case data frames
 }
 }
 \value{
-Returns a data frame with one or multiple single-cases divided by the variabele 'case'. 
+Returns one data frame with data from all single-cases structured by the variable 'case'. 
 }
 \author{
 Juergen Wilbert
 }
-
+\examples{
+## Convert the list of three single-case data frames from Grosche (2011) into one long data frame
+Grosche2011
+Grosche2011_long <- longSCDF(Grosche2011)
+Grosche2011_long
+}

@@ -30,15 +30,13 @@ Juergen Wilbert
 \code{\link{writeSC}}.
 }
 \examples{
-## descriptive statistics for one single-case
+## Descriptive statistics for one single-case
 describeSC(Waddell2011)
 
-## descriptive statistics for a list of three single-cases
+## Descriptive statistics for a list of three single-cases
 describeSC(Grosche2011)
 
-## write descriptive statistics to .csv-file
+## Write descriptive statistics to .csv-file
 study <- describeSC(Waddell2011)
 write.csv(study$descriptives, file = "descriptives.csv")
-
 }
-
