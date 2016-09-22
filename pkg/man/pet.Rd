@@ -1,35 +1,40 @@
 \name{pet}
 \alias{pet}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-Percent exceeding the trend
-}
+\title{Percent exceeding the trend}
 \description{
-The function pet returns the percentage of the B-phase data exceeding the prediction based on the A-phase trend. A binomial test against a 50/50 distribution is computed. Furthermore, the percent of data points in the B-phase exceeding the upper (or lower) threshold of the 95 percent confidence interval of the predicted values is returned. If you expect a decrease in the B-phase, set the parameter decreasing = TRUE.
+This function provides the percentage of phase B data points exceeding the prediction based on the phase A trend. A binomial test against a 50/50 distribution is computed. Furthermore, the percentage of phase B data points exceeding the upper (or lower) 95 percent confidence interval of the predicted progress is computed.
 }
 \usage{
 pet(data, ci = 0.95, decreasing = FALSE)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data}{
-A data frame or a list of data frames.
+A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.
 }
   \item{decreasing}{
-If you expect the data to be lower in the B phase, set decreasing = TRUE (default is FALSE).
+If you expect data to be lower in the B phase, set \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.
 }
   \item{ci}{
-The size of the confidence interval (by default ci = .95).
+Width of the confidence interval. Default is \code{ci = .95}.
 }
-
+}
+\value{
+  \item{PET}{Percent exceeding the trend.}
+  \item{PET.ci}{Percent exceeding the upper / lower 95\%-CI boundary.}
+  \item{p}{P value of Binomial Test.}
+  \item{ci.percent}{Width of confidence interval in percent.}
+  \item{se.factors}{Standard error.}
+  \item{N}{Number of cases.}
+  \item{decreasing}{Logical argument from function call (see \code{Arguments} above).}
+  \item{case.names}{Assigned name of single-case.}
 }
 \author{
 Juergen Wilbert
 }
 \examples{
+## Calculate the PET and use a 99\%-CI for the additional calculation
 set.seed(1234)
 dat <- rSC(5, d.slope = 0.2)
-pet(dat)
-
+pet(dat, ci = .99)
 }
-
