@@ -1,47 +1,48 @@
 \name{hplm}
 \alias{hplm}
-\title{ 
-Hierarchical Piecewise linear model/Piecewise Regression
-}
+\title{Hierarchical piecewise linear model / Piecewise regression}
 \description{
-The hplm function computes a hierarchical piecewise regression model.
+The \code{hplm} function computes a hierarchical piecewise regression model.
 }
+
 \usage{
-hplm(data, model = "B&L-B", method = "ML", control = list(opt = "optim"), 
-     random.slopes = TRUE, ICC = TRUE)
+hplm(data, model = "B&L-B", method = "ML", control = list(opt = "optim"), random.slopes = TRUE, ICC = TRUE)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
-  \item{data}{
-A data frame or a list of data frames.
+  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
+  \item{model}{Regression model used for computation (see Huitema & McKean, 2000). Default is \code{model = "B&L-B"}. Possible values are: \code{"B&L-B"}, \code{"H-M"}, \code{"Mohr#1"}, "Mohr#2", and "Manly".}
+  \item{method}{Method used to fit your model. Pass \code{"REML"} to maximize the restricted log-likelihood or \code{"ML"} the log-likelihood is maximized. Default is \code{"ML"}.}
+  \item{control}{A list of settings for the estimation algorithm, replacing the default values returned by the function lmeControl of the nlme package.}
+  \item{random.slopes}{If \code{random.slopes = TRUE} random slope effects of the level, trend, and treatment parameter are estimated.}
+\item{ICC}{If \code{ICC = TRUE} an intraclass-correlation is estimated.}
 }
 
-  \item{model}{
-Regression model used for computation (see Huitema & Mckean, 2000). Default is model = "B&L-B". Possible values are: B&L-B, H-M, Mohr#1, Mohr#2, Manly.
+\value{
+  \item{model}{Character string from function call (see \code{Arguments} above).}
+  \item{method}{Character string from function call (see \code{Arguments} above).}
+  \item{N}{Number of single-cases.}
+  \item{analyze.random.slopes}{Logical argument from function call (see \code{Arguments} above).}
+  \item{analyze.ICC}{Logical argument from function call (see \code{Arguments} above).}
+  \item{random.trend.level}{}
+  \item{random.trend.slope}{}
+  \item{random.level.slope}{}
+  \item{random.trend.level.slope}{}
+  \item{random.nointercept.trend.level.slope}{}
+  \item{random.trend}{}
+  \item{random.level}{}
+  \item{random.slope}{}
+  \item{model.0}{}
+  \item{ICC}{}
+  \item{model.without}{}
+  \item{L.ICC}{}
+  \item{p.ICC}{}
 }
 
-  \item{method}{
-a character string. If "REML" the model is fit by maximizing the restricted log-likelihood. If "ML" the log-likelihood is maximized. Defaults to "ML".
-}
-
-
-\item{control}{
-a list of control values for the estimation algorithm to replace the default values returned by the function lmeControl of the nlme package.
-}
-
-  \item{random.slopes}{
-If TRUE random slope effects of the level, trend, and treatment parameter are estimated.
-}
-
-\item{ICC}{
-If TRUE an intraclass-correlation is estimated.
-}
-
-
-}
 \author{
 Juergen Wilbert
 }
+
 \examples{
 set.seed(1000)
 
@@ -52,7 +53,4 @@ set.seed(1000)
 
 dat <- rSC(15, MT = 30, B.start = 11, d.level = 1.0, d.slope = runif(15,0,0.2), d.trend = 0.05)
 hplm(dat)
-
-
 }
-

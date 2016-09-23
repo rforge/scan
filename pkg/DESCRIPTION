@@ -3,7 +3,7 @@ Type: Package
 Title: Single-Case Data Analyses for Single and Multiple AB Designs
 Version: 0.17
 Date: 2016-07-04
-Author: Juergen Wilbert
+Author: Juergen Wilbert [aut, cre]
 Maintainer: Juergen Wilbert <jwilbert@uni-potsdam.de>
 Imports: stats, nlme, utils, graphics
 Depends: R (>= 1.8.0)

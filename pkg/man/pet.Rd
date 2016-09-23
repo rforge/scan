@@ -1,6 +1,5 @@
 \name{pet}
 \alias{pet}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Percent exceeding the trend}
 \description{
 This function provides the percentage of phase B data points exceeding the prediction based on the phase A trend. A binomial test against a 50/50 distribution is computed. Furthermore, the percentage of phase B data points exceeding the upper (or lower) 95 percent confidence interval of the predicted progress is computed.

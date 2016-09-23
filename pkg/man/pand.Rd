@@ -4,9 +4,11 @@
 \description{
 This function calculates the percentage of all non-overlapping data (PAND; Parker, Hagan-Burke, & Vannest, 2007), an index for quantifying a level increase (or decrease) in performance after the onset of an intervention.
 }
+
 \usage{
 pand(data, decreasing = FALSE, correction = TRUE)
 }
+
 \arguments{
   \item{data}{
 A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.
@@ -18,6 +20,7 @@ If you expect data to be lower in the B phase, set \code{decreasing = TRUE}. Def
 The default \code{correction = TRUE} makes \code{pand} use a frequency matrix, which is corrected for ties. A tie is counted as the half of a measurement in both phases. Set \code{correction = FALSE} to use the uncorrected matrix, which is not recommended.
 }
 }
+
 \value{
   \item{PAND}{Percentage of all non-overlapping data.}
   \item{phi}{Effect size Phi based on expected and observed values.}
@@ -34,16 +37,20 @@ The default \code{correction = TRUE} makes \code{pand} use a frequency matrix, w
   \item{correlation}{A list of the \code{correlation} values: statistic, parameter, p.value, estimate, null.value, alternative, method, data.name, correction.}
   \item{correction}{Logical argument from function call (see \code{Arguments} above).}
 }
+
 \details{
 The PAND indicates nonoverlap between phase A and B data (like \code{PND}), but uses all data and is therefore not based on one single (probably unrepresentative) datapoint. Furthermore, PAND allows the comparison of real and expected associations (Chi-square test) and estimation of the effect size Phi, which equals Pearsons r for dichotomous data. Thus Phi-Square is the amount of explained variance. The original procedure for computing the PAND (Parker, Hagan-Burke, & Vannest, 2007) does not account for ambivalent datapoints (ties). The newer \code{NAP} overcomes this problem and has better precision-power (Parker, Vannest, & Davis, 2014).
 }
+
 \references{
-Parker, R. I., Hagan-Burke, S., & Vannest, K. (2007). Percentage of All Non-Overlapping Data (PAND): An Alternative to PND. The Journal of Special Education, 40, 194-204.
-Parker, R. I., & Vannest, K. (2009). An Improved Effect Size for Single-Case Research: Nonoverlap of All Pairs. Behavior Therapy, 40, 357-367.
+Parker, R. I., Hagan-Burke, S., & Vannest, K. (2007). Percentage of All Non-Overlapping Data (PAND): An Alternative to PND. \emph{The Journal of Special Education, 40}, 194-204.
+Parker, R. I., & Vannest, K. (2009). An Improved Effect Size for Single-Case Research: Nonoverlap of All Pairs. \emph{Behavior Therapy, 40}, 357-367.
 }
+
 \author{
 Juergen Wilbert
 }
+
 \examples{
 ## PAND for a Multiple Baseline Design
 gunnar <- makeSCDF(c(2,3,1,5,3,4,2,6,4,7), B.start = 5)

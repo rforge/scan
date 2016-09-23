@@ -9,7 +9,6 @@ The overlapSC function provides the most common overlap indices for single-case 
 \usage{
 overlapSC(data, decreasing = FALSE)
 }
-
 \arguments{
   \item{data}{
 A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.
@@ -35,4 +34,3 @@ describeSC(GruenkeWilbert2014)
 overl <- overlapSC(Waddell2011)
 write.csv(overl$overlap, file = "overlap_indices.csv")
 }
-

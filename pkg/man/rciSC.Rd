@@ -25,7 +25,7 @@ If set \code{TRUE}, a box plot of phase A and B scores is displayed. \code{graph
 }
 }
 \references{
-Wise, E. A. (2004). Methods for analyzing psychotherapy outcomes: A review of clinical significance, reliable change, and recommendations for future directions. Journal of Personality Assessment, 82, 50 - 59.
+Wise, E. A. (2004). Methods for analyzing psychotherapy outcomes: A review of clinical significance, reliable change, and recommendations for future directions. \emph{Journal of Personality Assessment, 82}, 50 - 59.
 }
 \value{
   \item{RCI}{A list of three RCI calculations (Jacobson et al., Christenden et al., Hageman et al.).}

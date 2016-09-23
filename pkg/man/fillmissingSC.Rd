@@ -4,9 +4,11 @@
 \description{
 The fillmissingSC function replaces missing measurements in single-case data.
 }
+
 \usage{
 fillmissingSC(data, interpolation = "linear", na.rm = TRUE)
 }
+
 \arguments{
   \item{data}{
 A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.
@@ -18,11 +20,17 @@ Alternative options not yet included. Default is \code{interpolation = "linear"}
 If set \code{TRUE}, \code{NA} values are also interpolated. Default is \code{na.rm = TRUE}.
 }
 }
+
 \details{This procedure is recommended if there are gaps between measurement times (e.g. MT: 1, 2, 3, 4, 5, ... 8, 9) or explicitly missing values in your single-case data set and you want to calculate overlap indices (\code{overlapSC}) or a randomization test (\code{randSC}).
 }
-\value{A data frame (for each single-case) with missing data points interpolated.
+
+\value{
+A data frame (for each single-case) with missing data points interpolated.
 }
-\author{Juergen Wilbert}
+\author{
+Juergen Wilbert
+}
+
 \examples{
 ## In his study, Grosche (2011) could not realize measurements each single week for 
 ## all participants. During the course of 100 weeks, about 20 measurements per person 

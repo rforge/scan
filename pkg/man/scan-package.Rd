@@ -3,10 +3,9 @@
 \alias{scan}
 \alias{print.sc}
 \docType{package}
-\title{Single-Case Data Analyses
-}
+\title{Single-Case Data Analyses}
 \description{
-A collection of procedures for analysing single-case data of an AB-design. Some procedures support multiple-baseline designs.}
+A collection of procedures for analyzing single-case data of from AB-designs. Some procedures support multiple-baseline designs.}
 \details{
 \tabular{ll}{
 Package: \tab scan\cr
@@ -16,16 +15,5 @@ Date: \tab 2016-07-04\cr
 License: \tab GPL (version 2 or newer)\cr
 }
 }
-\author{
-Juergen Wilbert
 
-Department of Teacher Education
-
-Faculty of Humanities
-
-University of Potsdam
-
- http://www.uni-potsdam.de/inklusion/forschungsmethodenunddiagnostik/wilbert/projekte/single-case-data-analysis-with-r.html
-
-Maintainer: Juergen Wilbert <jwilbert@uni-potsdam.de>
-}
+\author{Juergen Wilbert [aut, cre]}

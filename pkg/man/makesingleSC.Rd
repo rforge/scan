@@ -17,16 +17,18 @@ A vector with measurements, a data frame or a list of data frames.
 }
 \details{
 The algorithm works the following way:
-1)  All measurements of each single-case are mean-centred with respect to the mean of the A-phase of each single-case.
-2)  The values of the A-phases of all single-cases are combined and ordered ascending with respect to the measurement times.
-3)  The values of the B-phases are combined and ordered as well.
-4)	The measurements of the B-phases are attached behind the A-phase measurements. The measurement times of the B-phase are shifted to start one measurement time after the A-phase.
+\enumerate{
+  \item{All values of each single-case are centred with respect to each case's phase A mean.}
+  \item{The phase A values of all single-cases are combined in ascending order of their measurement times.}
+  \item{The phase B values of all single-cases are combined in ascending order of their measurement times.}
+  \item{Phase B values are appended to phase A values. The measurement times of phase B are shifted to start with the next MT after the end of phase A.}
 }
-
+}
 \author{
 Juergen Wilbert
 }
 \examples{
+## aggregate three random single-case data sets into one
 study1 <- rSC(3, d.level = 0.8, d.slope = 0.1, round = 0)
 new.sc <- makesingleSC(study1)
 plotSC(new.sc, type = "p", lines = "trend")

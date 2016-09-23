@@ -20,12 +20,11 @@ If you expect data to be lower in the B phase, set \code{decreasing = TRUE}. Def
 %  \item{Rescaled NAP}{NAP rescaled to 0-100\%.}
 }
 \references{
-Parker, R. I., & Vannest, K. (2009). An improved effect size for single-case research: Nonoverlap of all pairs. Behavior Therapy, 40, 357-367.
+Parker, R. I., & Vannest, K. (2009). An improved effect size for single-case research: Nonoverlap of all pairs. \emph{Behavior Therapy, 40}, 357-367.
 }
 \author{
 Juergen Wilbert
 }
-
 \examples{
 ## Calculate NAP for a study with expected lower phase B scores (e.g. aggressive behavior)
 gretchen <- makeSCDF(c(12,14,9,10,10,6,4,5,3,4), B.start = 5)

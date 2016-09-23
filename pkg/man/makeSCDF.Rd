@@ -6,10 +6,10 @@ Create a single case data frame for further analyses
 \description{
 The makeSCDF function creates the basic data structure for storing one or multiple single-cases. This basic data structure is required in all \code{scan} functions.
 }
+
 \usage{
 makeSCDF(data, B.start = NULL, MT = NULL)
 }
-
 
 \arguments{
   \item{data}{
