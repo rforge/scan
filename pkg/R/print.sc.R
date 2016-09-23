@@ -11,7 +11,7 @@ print.sc <- function(x, ...) {
   
   
   if(value == "overlap") {
-    cat("Overlap indices\n\n")
+    cat("Overlap Indices\n\n")
     x <- x$overlap
     out <- data.frame(
       "PND" = x$PND, 
@@ -20,7 +20,7 @@ print.sc <- function(x, ...) {
       "NAP" = x$NAP,
       "NAP rescaled" = x$NAP.rescaled,
       "PAND" = x$PAND,
-      "TAU-U" = x$TAU_U
+      "Tau-U" = x$TAU_U
     )
     
     row.names(out) <- row.names(x)
@@ -63,7 +63,7 @@ print.sc <- function(x, ...) {
   if(value == "NAP") {
     cat("Nonoverlap of All Pairs\n\n")
     cat("NAP = ", x$NAP, "%\n")
-    cat("Rescaled NAP = ", x$NAP.rescaled, "%\n")
+    cat("NAP rescaled = ", x$NAP.rescaled, "%\n")
   }
   
   if(value == "PEM") {
@@ -87,29 +87,29 @@ print.sc <- function(x, ...) {
   
   if(value == "trend") {
     x$trend <- round(x$trend,3)
-    cat("Trend in A and B-Phase\n\n")
+    cat("Trend in phases A and B\n\n")
     #cat("N cases = ", x$N,"\n")
     #cat("\n")
     print(x$trend)
     cat("\n")
-    cat("Note. Measurement-times of the B-Phase start at", 1+x$B.offset, "\n")
+    cat("Note. Measurement-times of phase B start at", 1+x$B.offset, "\n")
   }
   
   
   if(value == "rci") {
-    cat("Under development, not yet ready for use !!!\n\n")
+    cat("!!! Caution! This function is under development and not yet ready for use!!!\n\n")
     cat("Reliable Change Index\n\n")
-    cat("N cases = ", x$N,"\n")
-    cat("Mean difference = ", x$descriptives[2,2] - x$descriptives[1,2], "\n")
+    cat("N Cases = ", x$N,"\n")
+    cat("Mean Difference = ", x$descriptives[2,2] - x$descriptives[1,2], "\n")
     
-    cat("Standardized difference = ", x$stand.dif, "\n")
+    cat("Standardized Difference = ", x$stand.dif, "\n")
     cat("\n")
     cat("Descriptives:\n")
     print(x$descriptives)
     cat("\n")
     cat("Reliability = ", x$reliability, "\n")
     cat("\n")
-    cat(x$conf.percent*100,"% confidence intervals:\n")
+    cat(x$conf.percent*100,"% Confidence Intervals:\n")
     print(x$conf)
     cat("\n")
     cat("Reliable Change Indices:\n")
@@ -118,19 +118,19 @@ print.sc <- function(x, ...) {
   }
   
   if(value == "rand") {
-    cat("Randomization test\n\n")
+    cat("Randomization Test\n\n")
     if (x$N > 1)
-      cat("Multiple-Baseline test for", x$N, "cases.\n\n")
+      cat("Multiple-Baseline Test for", x$N, "cases.\n\n")
     cat("Statistic: ",x$statistic,"\n")
     if(is.na(x$startpoints[1])) {
       cat("Minimal length of each phase: ", x$limit, "\n")
     } else {
-      cat("Possible startpoints of B-phase: ", x$startpoints, "\n")
+      cat("Possible starting points of phase B: ", x$startpoints, "\n")
     }
     cat("Observed statistic = ", x$observed.statistic, "\n")
     cat("\n")
     if(x$auto.corrected.number)
-      cat("Warning! Assigned number of random permutation exceeds the number of possible permutations.\nAnalysis is restricted to all possible permutations.\n")
+      cat("Warning! The assigned number of random permutations exceeds the number of possible permutations.\nAnalysis is restricted to all possible permutations.\n")
     if(x$complete) {
       cat("\nDistribution based on all", x$possible.combinations,"possible combinations.\n")
     } else 
@@ -149,21 +149,21 @@ print.sc <- function(x, ...) {
       cat("p   = ", x$p.value, "\n")
     if(x$number > 3 & x$number < 5001) {
       sh <- shapiro.test(x$distribution)
-      cat(sprintf("\nShapiro-Wilk normality test: W = %0.3f; p = %0.3f",sh[[1]], sh$p.value))
+      cat(sprintf("\nShapiro-Wilk Normality Test: W = %0.3f; p = %0.3f",sh[[1]], sh$p.value))
       if (sh$p.value > .05)
-        cat("  (hypothesis of normality maintained)\n")
+        cat("  (Hypothesis of Normality maintained)\n")
       else
-        cat("  (hypothesis of normality rejected)\n")
-    } else cat("\nSample size must be between 3 and 5000 to perform a shapiro test.\n")
+        cat("  (Hypothesis of Normality rejected)\n")
+    } else cat("\nSample size must be between 3 and 5000 to perform a Shapiro-Wilk Test.\n")
     cat(sprintf("z = %0.4f, p = %0.4f (single sided)\n", x$Z, x$p.Z.single))
   }
   
   if(value == "hplm") {
     
-    cat("Hierarchical piecewise linear regression\n\n")
+    cat("Hierarchical Piecewise Linear Regression\n\n")
     
     cat("Method",x$method,"\n")
-    cat(x$N,"cases\n\n")
+    cat(x$N,"Cases\n\n")
     
     out <- list()
     
@@ -219,7 +219,7 @@ print.sc <- function(x, ...) {
       DF <- x$full$df.null - x$full$df.residual
       cat(sprintf("X-Square(%d) = %.2f; p = %0.3f; AIC = %.0f\n\n", DF, Chi, 1 - pchisq(Chi, df = DF), x$full$aic))	
     } else {
-      cat(sprintf("F(%d, %d) = %.2f; p = %0.3f; R-Square = %0.3f; adjusted R-Square = %0.3f\n\n", x$df1, x$df2, x$F, x$p, x$R2, x$R2.adj))	
+      cat(sprintf("F(%d, %d) = %.2f; p = %0.3f; R-Square = %0.3f; Adjusted R-Square = %0.3f\n\n", x$df1, x$df2, x$F, x$p, x$R2, x$R2.adj))	
     }
     
     
@@ -238,11 +238,11 @@ print.sc <- function(x, ...) {
       OR <- exp(res[,1:3])
       Q <- (OR-1)/(OR+1)
       res <- cbind(res[,-7], round(OR,3), round(Q,2))
-      colnames(res) <- c("B","2.5%","97.5%","SE", "t","p", "Odd Ratio","2.5%", "97.5%","Yule's Q","2.5%", "97.5%")		
+      colnames(res) <- c("B","2.5%","97.5%","SE", "t","p", "Odds Ratio","2.5%", "97.5%","Yule's Q","2.5%", "97.5%")		
     }
     print(res)
     cat("\n")
-    cat("Autocorrelation of the residuals\n")
+    cat("Autocorrelation of the Residuals\n")
     print(data.frame(lag = 1:5,r = round(acf(residuals(x$full.model), lag.max = 5,plot = FALSE)$acf[2:6],2)))
     cat("\n")
     #data.frame(lag = 2:5, autocorr = acf(residuals(x$full.model), lag.max = 5,plot = FALSE)$acf[2:5]
@@ -256,14 +256,14 @@ print.sc <- function(x, ...) {
   }
   
   if(value == "PAND") {
-    cat("Percent all non-overlapping data\n\n")
+    cat("Percentage of all non-overlapping data\n\n")
     cat("PAND = ", round(x$PAND,1), "%\n")
-    cat("Phi = ", round(x$phi,3), " ; Phi-square = ", round(x$phi^2,3), "\n\n")
-    cat("Number of cases: ", x$N, "\n")
+    cat("Phi = ", round(x$phi,3), " ; Phi-Square = ", round(x$phi^2,3), "\n\n")
+    cat("Number of Cases: ", x$N, "\n")
     cat("Total measurements: ", x$n, "\n")
     cat("in phase A: ", x$nA, "\n")
     cat("in phase B: ", x$nB, "\n")
-    cat("n Overlapping data per case: ")
+    cat("n overlapping data per case: ")
     cat(x$OD.PP, sep = ", ")
     cat("\n")
     cat("n Overlapping data: ",x$OD, "\n")
@@ -296,12 +296,12 @@ print.sc <- function(x, ...) {
     if(x$correction)
       cat("\nNote. Matrix is corrected for ties\n")
     cat("\nCorrelation based analysis:\n\n")
-    out <- sprintf("z = %.3f, p = %.3f, tau = %.3f",x$correlation$statistic, x$correlation$p.value, x$correlation$estimate)
+    out <- sprintf("z = %.3f, p = %.3f, Tau = %.3f",x$correlation$statistic, x$correlation$p.value, x$correlation$estimate)
     cat(out,"\n")
   }
   
   if(value == "describe") {
-    cat("Describe single-case data\n\n")
+    cat("Describe Single-Case Data\n\n")
     out <- data.frame(
       "n A" = x$descriptives$nA, 
       "n B"  = x$descriptives$nB, 
@@ -340,25 +340,24 @@ print.sc <- function(x, ...) {
   }	
   
   if(value == "outlier") {
-    cat("Outlier analysis for single case data\n\n")
+    cat("Outlier Analysis for Single-Case Data\n\n")
     
     if (x$criteria[1] == "CI") {
       names(x$ci.matrix) <- x$case.names
-      cat("Criteria: Exceeds", as.numeric(x$criteria[2])*100,"% confidence intervall\n\n")
+      cat("Criteria: Exceeds", as.numeric(x$criteria[2])*100,"% Confidence Interval\n\n")
       print(x$ci.matrix)
     }
     if (x$criteria[1] == "SD") {
       names(x$sd.matrix) <- x$case.names
-      cat("Criteria: Exceeds", x$criteria[2], "standard deviations\n\n")
+      cat("Criteria: Exceeds", x$criteria[2], "Standard Deviations\n\n")
       print(x$sd.matrix)
     }
     if (x$criteria[1] == "Cook") {
-      cat("Criteria: Cook's distance based on piecewise-linear-regression exceeds", x$criteria[2],"\n\n")
+      cat("Criteria: Cook's Distance based on piecewise-linear-regression exceeds", x$criteria[2],"\n\n")
     }
     for(i in 1:length(x$dropped.n)) {
       cat("Case",x$case.names[i],": Dropped",x$dropped.n[[i]],"\n")
     }
     cat("\n")
   }
-  
 }
