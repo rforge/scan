@@ -32,7 +32,7 @@ matthea <- rSC(d.slope = 0.5)
 trendSC(matthea)
 
 ## besides the linear and squared regression models compute two custom models:
-a) a cubic model, and b) the values predicted by the natural logarithm of the measurement time.
+## a) a cubic model, and b) the values predicted by the natural logarithm of the measurement time.
 set.seed(1508)
 ben <- rSC(d.slope = 0.3)
 trendSC(ben, B.offset = 0, model = c("Cubic" = "values ~ I(mt^3)", "Log Time" = "values ~ log(mt)"))

@@ -14,8 +14,9 @@
 \title{Single-case data examples}
 \description{
 This is a list of example single-case data sets implemented in the package. 
-}
 ########################add citations##################################
+}
+
 \details{
 example1
 

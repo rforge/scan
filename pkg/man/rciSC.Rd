@@ -3,8 +3,7 @@
 \alias{rCi}
 \title{Reliable change index}
 \description{
-CAUTION! This function is still under development and not ready for use! \n \n
-This function computes three indices of reliable change (Wise, 2004) and corresponding descriptive statistics.
+CAUTION! This function is still under development and not ready for use! This function computes three indices of reliable change (Wise, 2004) and corresponding descriptive statistics.
 }
 \usage{
 rciSC(data, rel = 0.8, ci = 0.95, graph = FALSE)
