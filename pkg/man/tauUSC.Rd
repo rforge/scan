@@ -18,7 +18,7 @@ Defines how to handle ties. \code{"omit"} excludes all ties from the calculation
 }
 
 \value{
-  \item{table}{Statistics of the Tau-U family.}
+  \item{table}{A data frame containing statistics from the Tau-U family.}
   \item{matrix}{The matrix of comparisons used for calculating the statistics.}
   \item{tau_u}{Tau-U value.}
 }

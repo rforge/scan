@@ -1,41 +1,39 @@
 \name{trendSC}
 \alias{trendSC}
-\title{Trends in single Cases}
+\title{Trends in single-cases data}
 \description{
-If you want to get an overview of linear trends in the different phases of a single-case you can use the trendSC command. By default, it gives you the intercept and slope of a linear and a squared regression model of the measurement-time on the values. Models are computed for the A phase, the B-phase (with correcting the measurement-time to start at one), and the combined A and B-Phase. For a more advanced application, you can add further regression models using the R specific formula class, which will be applied again to the A-phase, the B-phase, and the combined A and B-phase.
+The function provides an overview of linear trends in single-case data. By default, it gives you the intercept and slope of a linear and a squared regression of measurement-time on scores. Models are computed separately for the A phase, the B-phase, and the whole data. For a more advanced application, you can add regression models using the R specific formula class.
 }
 \usage{
 trendSC(data, B.offset = -1, model = NA)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data}{
-A data frame or a list of data frames.
+A single-case data frame. See \code{\link{makeSCDF}} to learn about this format.
 }
-
   \item{B.offset}{
-An offset for the first measurement-time (MT) of the B-phase. If set 0, the first MT of the B-phase is set to 1. The default is -1, so the MT of the B-phase begin with 0.
+An offset for the first phase B measurement-time (MT). If set \code{B.offset = 0}, the first phase B measurement is handled as MT 1. Default is \code{B.offset = -1}, making the first value of phase B MT = 0.
 }
   \item{model}{
-A string or a chain of (named) strings each depicting one regression model. This is a formula expression of the standard R class. The parameters of the model are values, mt and phase. 
+A string or a list of (named) strings each depicting one regression model. This is a formula expression of the standard R class. The parameters of the model are \code{values}, \code{mt} and \code{phase}. 
 }
+}
+\value{
+  \item{trend}{A matrix containing the results (Intercept, B and beta) of separate regression models for phase A, phase B, and the whole data.}
+  \item{B.offset}{Numeric argument from function call (see \code{Arguments} section).}
 }
 \author{
 Juergen Wilbert
 }
 \examples{
-set.seed(1000)
-dat <- rSC(1, d.slope = 0.5)
-trendSC(dat)
+## compute the linear and squared regression for a random single-case
+set.seed(1408)
+matthea <- rSC(d.slope = 0.5)
+trendSC(matthea)
 
-#In addition to the linear and squared regression model, two further models are computed:
-#a) a cubic model, and b) the values predicted by the natural 
-#logarithm of the measurement time. Additionally, the data of eight 
-#single-cases are aggregated.
-set.seed(1000)
-dat <- rSC(1, d.slope = 0.3)
-trendSC(dat, B.offset = 0, model = c("Cubic" = "values ~ I(mt^3)",
-        "Log Time" = "values ~ log(mt)"))
-
+## besides the linear and squared regression models compute two custom models:
+a) a cubic model, and b) the values predicted by the natural logarithm of the measurement time.
+set.seed(1508)
+ben <- rSC(d.slope = 0.3)
+trendSC(ben, B.offset = 0, model = c("Cubic" = "values ~ I(mt^3)", "Log Time" = "values ~ log(mt)"))
 }
-

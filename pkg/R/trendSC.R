@@ -6,7 +6,7 @@ trendSC <- function(data, B.offset = -1,model = NA) {
   
   N <- length(data)
   if(N > 1)
-    stop("Multiple single-cases are given. Calculatioins could only be applied to a single data set.\n")
+    stop("Multiple single-cases are given. Calculations can only be applied to one single-case data set.\n")
   
   data <- data[[1]]
   

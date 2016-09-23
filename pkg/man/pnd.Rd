@@ -1,30 +1,26 @@
 \name{pnd}
 \alias{pnd}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-Percentage of non-overlapping data
-
-}
+\title{Percentage of non-overlapping data}
 \description{
-The function pnd returns the percentage of non-overlapping data. If you expect a decrease in the B-phase, set the parameter decreasing = TRUE. Due to its error-proneness you should not use PND, but NAP or PAND instead (see Parker & Vannest, 2009).
+This function returns the percentage of non-overlapping data. Due to its error-proneness the PND should not be used, but NAP or PAND instead (see Parker & Vannest, 2009).
 }
 \usage{
 pnd(data, decreasing = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{data}{
-A data frame or a list of data frames.
+  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
+  \item{decreasing}{If you expect data to be lower in the B phase, set \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.}
 }
-  \item{decreasing}{
-If you expect the data to be lower in the B phase, set decreasing = TRUE (default is FALSE).
-}
-
+\value{
+  \item{PND}{Percentage of non-overlapping data.}
 }
 \author{
 Juergen Wilbert
 }
 \examples{
-#
+## Calculate PEM for multiple single-case data
+pnd(Huber2014)
 }
 

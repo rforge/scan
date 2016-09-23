@@ -2,7 +2,7 @@
 \alias{pem}
 \title{Percent exceeding the median}
 \description{
-This function returns the Percentage of the B-phase data exceeding the median of the A-phase data. Additionally, a chi square test against a 50/50 distribution is computed. Different measures of central tendency could be addressed for alternative analyses. If you expect a decrease in the B-phase, set the parameter decreasing = TRUE.
+This function returns the Percentage of the B-phase data exceeding the median of the A-phase data. Additionally, a chi square test against a 50/50 distribution is computed. Different measures of central tendency could be addressed for alternative analyses.
 }
 \usage{
 pem(data, decreasing = FALSE, binom.test = TRUE, chi.test = FALSE, FUN = median, ...)

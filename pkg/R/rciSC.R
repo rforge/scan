@@ -6,7 +6,7 @@ rciSC <- function(data, rel = 0.80, ci = 0.95, graph = FALSE) {
   data <- .SCprepareData(data)
   N <- length(data)
   if(N > 1)
-    stop("Multiple single-cases are given. Calculations could only be applied to a single data set.\n")
+    stop("Multiple single-cases are given. Calculations can only be applied to one single-case data set.\n")
   A <- lapply(data, function(x) x[,2][x[,1] == "A"])
   B <- lapply(data, function(x) x[,2][x[,1] == "B"])
   A <- unlist(A)
