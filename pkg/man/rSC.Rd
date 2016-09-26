@@ -1,98 +1,62 @@
 \name{rSC}
 \alias{rSC}
-\title{Random sample generator}
+\title{Single-case data generator}
 \description{
-Generate random single- and multiple-baseline samples.
+Generate random (multiple) single-case data frames for test and demonstration purposes.
 }
+
 \usage{
 rSC(n = 1, MT = 20, B.start = 6, m = 50, s = 10, prob = 0.5, d.trend = 0, d.level = 0, 
     d.slope = 0, rtt = 0.8, concise = TRUE, cases = 1, round = NA, extreme.p = 0, 
     extreme.d = c(-4, -3), missing.p = 0, distribution = "normal", 
     start.values.fixed = FALSE, random.names = FALSE, output.long = FALSE)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
-  \item{n}{
-Number of studies to be created (default is n = 1).
-}
-  \item{MT}{
-Measurement times of single cases in each study.
-}
-  \item{B.start}{
-Starting values of the B-phase. A single value (e.g., B.start = 6) defines the B.start for all studies and cases. A vector of starting values is given with the chain command (e.g., B.start = c(6, 7, 8)). If the number of n*cases surpasses the length of the vector, values are repeated. 
-}
-  \item{m}{
-Mean of the sample distribution the data are drawn from. A vector of values defines alterating values for each case. If the number of n*cases surpasses the length of the vector, values are repeated.
-}
-  \item{start.values.fixed}{
-If set TRUE, the true value at the first measurement of each case is set to the value defined in the m argument. If set FALSE, the true values of each case is drawn from a distribution (defined in the argument distribution) with the expected value of the argument m. Default is FALSE.
-}
-
-  \item{s}{
-Standard deviation of the sample distribution the data are drawn from. A vector of values defines alterating values for each case. If the number of n*cases surpasses the length of the vector, values are repeated.
-}
-  \item{prob}{
-When the paramter distribution is set to "binomial", prob indicates the probability of the occurence of an event.
-}
-
-
-  \item{d.trend}{
-Defines a trend in d per measurement across all measurements. A vector of values defines alterating values for each case. If the number of n*cases surpasses the length of the vector, values are repeated. E.g., d.trend = 0.1 is an increase of 0.1 standard deviations per measurement. In case of a binomial or poisson distribution, d.trend indicates the increase in points/counts per measurement.  
-}
-  \item{d.level}{
-A single level increase with the beginning of the B-Phase in standard deviations. A vector of values defines alterating values for each case. If the number of n*cases surpasses the length of the vector, values are repeated. In case of a binomial or poisson distribution, d.level indicates the increase in points/counts. 
-}
-  \item{d.slope}{
-Amount of increase in standard deviations per measurement time starting with the Beginning of the B-phase (e.g., d.slope = 0.1 generates an incremental increase of 0.1 standard deviations for each measurement of the B-phase). A vector of values defines alterating values for each case. If the number of n*cases surpasses the length of the vector, values are repeated. In case of a binomial or poisson distribution, d.slope indicates the increase in points/counts. 
-}
-  \item{rtt}{
-Reliability of the underlying simulated measurements (default is rtt = 0.8). A vector of values defines alterating values for each case. If the number of n*cases surpasses the length of the vector, values are repeated. In case of a binomial or poisson distribution rtt does have no effect on the generated data. 
-}
-  \item{concise}{
-If set TRUE, no information about the generated sample is given.
-}
-  \item{cases}{
-Number of cases per study. E.g., n = 10, cases = 3, B.start = c(7,9,11) creates 10 multiple-baseline designs with 3 cases (Starting point of the B-phase at 7, 9, 11, respectively) each.
+  \item{n}{Number of cases to be created (Default is \code{n = 1}).}
+  \item{MT}{Number of measurements (in each study). Default is \code{MT = 20}.}
+  \item{B.start}{Phase B starting point. The default setting \code{B.start = 6} would assign the first five scores (of each case) to phase A, and all following scores to phase B. To assign different starting points for a set of multiple single-cases, use a vector of starting values (e.g. \code{B.start = c(6, 7, 8)}). If the number of cases exceeds the length of the vector, values will be repeated.}
+  \item{m}{Mean of the sample distribution the scores are drawn from. Default is \code{m = 50}. To assign different means to several single-cases, use a vector of values (e.g. \code{m = c(50, 42, 56)}). If the number of cases exceeds the length of the vector, values are repeated.}
+  \item{s}{Standard deviation of the sample distribution the scores are drawn from. Set to \code{s = 10} by default. To assign different variances to several single-cases, use a vector of values (e.g. \code{s = c(5, 10, 15)}). If the number of cases exceeds the length of the vector, values are repeated.}
+  \item{prob}{If \code{distribution} (see below) is set \code{"binomial"}, \code{prob} passes the probability of occurrence.}
+  \item{d.trend}{Defines the effect size \emph{d} of a trend per MT added across the whole data-set. To assign different trends to several single-cases, use a vector of values (e.g. \code{d.trend = c(.1, .3, .5)}). If the number of cases exceeds the length of the vector, values are repeated. While using a binomial or poisson distribution, \code{d.trend} indicates an increase in points / counts per MT.}
+  \item{d.level}{Defines the level increase (effect size \emph{d}) at the beginning of phase B. To assign different level effects to several single-cases, use a vector of values (e.g. \code{d.level = c(.2, .4, .6)}). If the number of cases exceeds the length of the vector, values are repeated. While using a binomial or poisson distribution, \code{d.level} indicates an increase in points / counts per MT.}
+  \item{d.slope}{Defines the increase in scores - starting with phase B - expressed as effect size \emph{d} per MT. \code{d.slope = .1} generates an incremental increase of 0.1 standard deviations per MT for all phase B measurements. To assign different slope effects to several single-cases, use a vector of values (e.g. \code{d.slope = c(.1, .2, .3)}). If the number of cases exceeds the length of the vector, values are repeated. While using a binomial or poisson distribution, \code{d.slope} indicates an increase in points / counts per MT.}
+  \item{rtt}{Reliability of the underlying simulated measurements. Set \code{rtt = .8} by default. To assign different reliabilities to several single-cases, use a vector of values (e.g. \code{rtt = c(.6, .7, .8)}). If the number of cases exceeds the length of the vector, values are repeated. \code{rtt} has no effect when you're using binomial or poisson distributed scores.}
+  \item{concise}{\code{TRUE} by default. If set \code{concise = FALSE}, input parameters (see above) for the sampling distribution are printed to the output.}
+  \item{cases}{Number of cases per study. \code{rSC(n = 10, cases = 3, B.start = c(7,9,11)} creates 10 multiple-baseline designs, each with three cases (with phase B starting points at MT 7, 9, and 11).}
+  \item{round}{Rounds the scores to the defined decimal. To round to the second decimal, set \code{round = 2}.}
+  \item{extreme.p}{Probability of extreme values. \code{extreme.p = .05} gives a five percent probability of an extreme value. A vector of values assigns different probabilities to multiple cases. If the number of cases exceeds the length of the vector, values are repeated.}
+  \item{extreme.d}{Range for extreme values, expressed as effect size \emph{d}. \code{extreme.d = c(-7,-6)} uses extreme values within a range of -7 and -6 standard deviations. In case of a binomial or poisson distribution, \code{extreme.d} indicates points / counts. Caution: the first value must be smaller than the second, otherwise the procedure will fail.}
+  \item{missing.p}{Portion of missing values. \code{missing.p = 0.1} creates 10\% of all values as missing). A vector of values assigns different probabilities to multiple cases. If the number of cases exceeds the length of the vector, values are repeated.}
+  \item{distribution}{Distribution of the scores. Default is \code{distribution = "normal"}. Possible values are "normal", "binomial", and "poisson". If set to \code{"normal"}, the sample of scores will be normally distrubuted with the parameters \code{m} and \code{s} as mean and standard deviation of the sample, including a measurement error defined by \code{rtt}. If set to \code{"binomial"}, data are drawn from a binomial distribution with the expectation value \code{m}. This setting is useful for generating criterial data like correct answers in a test. If set to \code{"poisson"}, data are drawn from a poisson distribution, which is very common for count-data like behavioral observations. There's no measurement error is included. \code{m} defines the expectation value of the poisson distribution, lambda.}
+  \item{start.values.fixed}{If set \code{TRUE}, the true value at the first measurement of each case is set to \code{m}. The default setting is \code{start.value.fixed = FALSE}, which results in a true value for each case drawn from a distribution (defined above: \code{distribution}) with the expected value \code{m} and standard deviation \code{s}.}
+  \item{random.names}{Is \code{FALSE} by default. If set \code{random.names = TRUE} cases are assigned random first names. The names are drawn from the 2,000 most popular names for newborns in 2012 in the U.S. (1,000 male and 1,000 female names).}
+  \item{output.long}{If set \code{TRUE}, the true value, implemented trend, level and slope effect, as well as error values are included for each MT. Default is \code{output.long = FALSE}.}
 }
 
-\item{round}{
-Rounds the measurement values to a specific decimal position (e.g., round = 2).
-}
-  \item{extreme.p}{
-Probability of extreme values (e.g., extreme.p = 0.05 gives a 5 percent probability of an extreme value. A vector of values defines alterating values for each case. If the number of n*cases surpasses the length of the vector, values are repeated.   
-}
-  \item{extreme.d}{
-Range of an extreme value in d (e.g., extreme.d = c(-7,-6) results in extreme values within a range of -7 and -6 standard deviations).  In case of a binomial or poisson distribution, extreme.d indicates points/counts. Caution: the first value must be smaller than the second, otherwise the procedure will fail.}
-  \item{missing.p}{
-Proportion of missing values (e.g., missing.p = 0.1 renders 10 percent of all values as missing). A vector of values defines alterating values for each case. If the number of n*cases surpasses the length of the vector, values are repeated.   
+\value{
+A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.
 }
 
+\author{
+Juergen Wibert
+}
 
-  \item{distribution}{
-Possible values are "normal", "binomial", or "poisson". If set to normal, the sample is created based on the assumption of a normal distribution of values (with the parameters m and s as the mean and the standard deviation), including a measurement error defined in the parameter rtt. If set to "binomial", data are drawn from a binomial distribution with the expectation value defined by the m parameter. This setting is useful for generating criterial data like correct answers in a test. If set to "poisson", data are drawn from a poisson distribution representing count-data as are often collected in behavioural observations. A measurement error is not included and the m parameter is used as the expectation value of the poisson distribution lambda.
-}
-  \item{random.names}{
-Just a gimmick. If set TRUE cases have random first names. The selection of names is drawn from a list of the 2000 most popular names for births in the U.S.A. 2012 (1000 names for boys and 1000 names for girls). 
-}
-  \item{output.long}{
-If set TRUE, true, trend, level, slope, and error values are included for each case.
-}
-}
-\author{Juergen Wibert}
 \examples{
-set.seed(1234)
-dat <- rSC(n = 3, rtt = 0.75, round = 1, d.slope = 0.1, extreme.p = 0.1, 
-           missing.p = 0.1, random.names = TRUE)
-describeSC(dat)
+## create random single-case data and inspect it
 
 set.seed(1234)
-dat <- rSC(n = 50, rtt = 0.6, round = 1, d.trend = 0.05, 
-           d.level = 0.5, d.slope = 0.1)
+dat <- rSC(n = 3, rtt = 0.75, round = 1, d.slope = 0.1, extreme.p = 0.1, missing.p = 0.1, random.names = TRUE)
+describeSC(dat)
+plotSC(dat)
+
+## Please note that this might take a while. Have a break! ;)
+set.seed(4321)
+dat <- rSC(n = 50, rtt = 0.6, round = 1, d.trend = 0.05, d.level = 0.5, d.slope = 0.1)
 hplm(dat)
 
-
-set.seed(1234)
-dat <- rSC(n = 3,B.start = c(6,10,14),MT = c(12,20,22),m = 10, distribution = "poisson", 
-           d.level = 5, missing.p = 0.1)
+set.seed(1408)
+dat <- rSC(n = 3, B.start = c(6,10,14), MT = c(12,20,22), m = 10, distribution = "poisson", d.level = -5, missing.p = 0.1)
 pand(dat, correction = FALSE)
 }
