@@ -38,7 +38,8 @@ Susanne <- rSC(d.level = 1.0)
 res <- outlierSC(Susanne, criteria = c("SD", 1.5))
 plotSC(Susanne, marks = list(positions = res$dropped.mt))
 
-## identify outliers in the original data from Grosche (2011) using Cook's Distance above 4/n as criterion
+## identify outliers in the original data from Grosche (2011) using Cook's Distance above 4/n
+## as criterion
 res <- outlierSC(Grosche2011, criteria = c("Cook", "4/n"))
 plotSC(Grosche2011, marks = list(positions = res$dropped.mt))
 }

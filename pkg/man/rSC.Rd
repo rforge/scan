@@ -47,7 +47,8 @@ Juergen Wibert
 ## create random single-case data and inspect it
 
 set.seed(1234)
-dat <- rSC(n = 3, rtt = 0.75, round = 1, d.slope = 0.1, extreme.p = 0.1, missing.p = 0.1, random.names = TRUE)
+dat <- rSC(n = 3, rtt = 0.75, round = 1, d.slope = 0.1, extreme.p = 0.1, missing.p = 0.1,
+    random.names = TRUE)
 describeSC(dat)
 plotSC(dat)
 
@@ -57,6 +58,7 @@ dat <- rSC(n = 50, rtt = 0.6, round = 1, d.trend = 0.05, d.level = 0.5, d.slope 
 hplm(dat)
 
 set.seed(1408)
-dat <- rSC(n = 3, B.start = c(6,10,14), MT = c(12,20,22), m = 10, distribution = "poisson", d.level = -5, missing.p = 0.1)
+dat <- rSC(n = 3, B.start = c(6,10,14), MT = c(12,20,22), m = 10, distribution = "poisson",
+    d.level = -5, missing.p = 0.1)
 pand(dat, correction = FALSE)
 }

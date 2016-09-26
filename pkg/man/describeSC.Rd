@@ -19,10 +19,7 @@ If you expect data to be lower in phase B, set \code{decreasing = TRUE}. At the 
 }
 }
 
-\value{
-  \item{A data frame (or a list of data frames) of descriptive statistics (for each single-case), i.a.: number of observations, number of missing values, measures of central tendency and variation, trend, SMD.
-}
-}
+\value{A data frame (or a list of data frames) of descriptive statistics (for each single-case), i.a.: number of observations, number of missing values, measures of central tendency and variation, trend, SMD.}
 
 \author{
 Juergen Wilbert
