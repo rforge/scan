@@ -1,44 +1,34 @@
 \name{smoothSC}
 \alias{smoothSC}
-\title{Smoothing}
+\alias{movingMedian}
+\alias{moving Mean}
+\alias{localRegression}
+\title{Smoothing single-case data}
 \description{
-This command provides three different procedures to smooth the data (i.e., to eliminate noise). 
-A moving average function (either mean based or median based) replaces step-by-step each data point by the average of the surrounding data. With a local regression function, each data point is regressed by its surrounding values. 
+This function provides procedures to smooth single-case data (i.e., to eliminate noise). A moving average function (mean- or median-based) replaces each data point by the average of the surrounding data points step-by-step. With a local regression function, each data point is regressed by its surrounding data points. 
 }
+
 \usage{
 smoothSC(data, FUN = "movingMedian", intensity = NULL)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
-  \item{data}{
-A data frame or a list of data frames.
+  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
+
+  \item{FUN}{Function determining the smoothed scores. Default \code{FUN = "movingMedian"} is a moving Median function. Further possible values are: \code{"movingMean"} and a non-parametric \code{"localRegression"}.}
+  \item{intensity}{For \code{FUN = "movingMedian"} and \code{"movingMean"} it is the lag used for computing the average. Default is \code{intensity = 1}. In case of \code{FUN = "localRegression"} it is the proportion of surrounding data influencing each data point, which is \code{intensity = 0.2} by default.}
 }
 
-  \item{FUN}{
-Function to compute the smoothing. Default is a lag 1 moving Median function (see details).
-}
-  \item{intensity}{
-In the case of movingMean or movingMedian it is the lag (i.e., the range of values around the target value) that is used for computing the average (default is 1). In case of localRegression it is the proportion of data influencing each data point (default is 0.2).
-}
-}
-\details{
-Values for the FUN arguments.
+\value{Returns a data frame (for each single-case) with smoothed data points. See \code{\link{makeSCDF}} to learn about the format of these data frames.}
 
-"movingMean" Computes the moving mean.
+\author{Juergen Wilbert}
 
-"movingMedian" Computes the moving median.
-
-"localRegression" Computes non-parametric local regressions.
-
-}
-\author{
-Juergen Wilbert
-}
 \examples{
-new.dat <- smoothSC(Huber2014$Berta)
-new.dat2 <- smoothSC(Huber2014$Berta, FUN = "movingMean")
-new.dat3 <- smoothSC(Huber2014$Berta, FUN = "localRegression")
-plotSC(list("Original" = Huber2014$Berta,"Moving Median" = new.dat[[1]],
-            "Moving Mean" = new.dat2[[1]],"Local Regression" = new.dat3[[1]]))
+## use the three different smoothing functions and compare the results
+berta_mmd <- smoothSC(Huber2014$Berta)
+berta_mmn <- smoothSC(Huber2014$Berta, FUN = "movingMean")
+berta_lre <- smoothSC(Huber2014$Berta, FUN = "localRegression")
+plotSC(list("Original" = Huber2014$Berta,"Moving Median" = berta_mmd[[1]],
+    "Moving Mean" = berta_mmn[[1]],"Local Regression" = berta_lre[[1]]))
 }
 

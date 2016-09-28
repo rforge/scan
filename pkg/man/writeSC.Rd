@@ -4,27 +4,23 @@
 \description{
 This function restructures and exports single-case data into a .csv-file.
 }
+
 \usage{
 writeSC(dat, filename = "", sep = ",", dec = ".", ...)
 }
+
 \arguments{
-  \item{dat}{
-A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.
+  \item{dat}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
+  \item{filename}{A character string defining the output filname (e.g. \code{"SC_data.csv"}.}
+  \item{sep}{The field separator string. Values within rows will be separated by this string. Default is \code{sep = ","}.}
+  \item{dec}{The string used for decimal points. Must be a single character. Default is \code{dec = "."}}
+  \item{\dots}{Further arguments passed to write.table.}
 }
-  \item{filename}{
-A character string defining the output filname (e.g. \code{"SC_data.csv"}.
-}
-  \item{sep}{
-The field separator string. Values within rows will be separated by this string. Default is \code{sep = ","}.
-}
-  \item{dec}{
-The string used for decimal points. Must be a single character. Default is \code{dec = "."}
-}
-  \item{\dots}{
-Further arguments passed to write.table.
-}
-}
+
 \author{Juergen Wilbert}
+
+\seealso{\code{\link{readSC}}.}
+
 \examples{
 ## write single-case data to a .csv-file
 jessica <- rSC(d.level = .5)

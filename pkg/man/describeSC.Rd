@@ -11,12 +11,8 @@ describeSC(data, decreasing = FALSE)
 }
 
 \arguments{
-  \item{data}{
-A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.
-}
-  \item{decreasing}{
-If you expect data to be lower in phase B, set \code{decreasing = TRUE}. At the moment describeSC only reports indices not sensible to decreasing phase B scores, so this does not change the output.
-}
+  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
+  \item{decreasing}{If you expect data to be lower in phase B, set \code{decreasing = TRUE}. At the moment describeSC only reports indices not sensible to decreasing phase B scores, so this does not change the output.}
 }
 
 \value{A data frame (or a list of data frames) of descriptive statistics (for each single-case), i.a.: number of observations, number of missing values, measures of central tendency and variation, trend, SMD.}

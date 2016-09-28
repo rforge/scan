@@ -24,9 +24,8 @@ If set \code{TRUE}, \code{NA} values are also interpolated. Default is \code{na.
 \details{This procedure is recommended if there are gaps between measurement times (e.g. MT: 1, 2, 3, 4, 5, ... 8, 9) or explicitly missing values in your single-case data set and you want to calculate overlap indices (\code{overlapSC}) or a randomization test (\code{randSC}).
 }
 
-\value{
-A data frame (for each single-case) with missing data points interpolated.
-}
+\value{A data frame (for each single-case) with missing data points interpolated. See \code{\link{makeSCDF}} to learn about the format of these data frames.}
+
 \author{
 Juergen Wilbert
 }

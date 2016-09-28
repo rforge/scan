@@ -10,15 +10,9 @@ pand(data, decreasing = FALSE, correction = TRUE)
 }
 
 \arguments{
-  \item{data}{
-A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.
-}
-  \item{decreasing}{
-If you expect data to be lower in the B phase, set \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.
-}
-  \item{correction}{
-The default \code{correction = TRUE} makes \code{pand} use a frequency matrix, which is corrected for ties. A tie is counted as the half of a measurement in both phases. Set \code{correction = FALSE} to use the uncorrected matrix, which is not recommended.
-}
+  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
+  \item{decreasing}{If you expect data to be lower in the B phase, set \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.}
+  \item{correction}{The default \code{correction = TRUE} makes \code{pand} use a frequency matrix, which is corrected for ties. A tie is counted as the half of a measurement in both phases. Set \code{correction = FALSE} to use the uncorrected matrix, which is not recommended.}
 }
 
 \value{
