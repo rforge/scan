@@ -6,12 +6,13 @@ The power.testSC command conducts a Monte-Carlo study on the test-power and alph
 }
 
 \usage{
-power.testSC(data = NULL, stat = c("rand.test", "plm"), test.parameter = c("level", "slope"),
-             rand.test.stat = c("Mean B-A", "B"), cases = NULL, rtt = 0.8, d.level = NULL, 
-             d.slope = NULL, MT = NULL, B.start = NULL, d.trend = NULL, n = 100, limit = 5,
-             m = NULL, s = NULL, startpoints = NA, extreme.p = 0, extreme.d = c(-4, -3),
-             exclude.equal = "auto", alpha = 0.05, distribution = "normal", concise = TRUE,
-             silent = FALSE)
+power.testSC(data = NULL, stat = c("rand.test", "plm"),
+             test.parameter = c("level", "slope"), rand.test.stat = c("Mean B-A", "B"),
+             cases = NULL, rtt = 0.8, d.level = NULL, d.slope = NULL, MT = NULL,
+             B.start = NULL, d.trend = NULL, n = 100, limit = 5, m = NULL, s = NULL,
+             startpoints = NA, extreme.p = 0, extreme.d = c(-4, -3), 
+             exclude.equal = "auto", alpha = 0.05, distribution = "normal",
+             concise = TRUE, silent = FALSE)
 }
 
 \arguments{
@@ -38,25 +39,6 @@ power.testSC(data = NULL, stat = c("rand.test", "plm"), test.parameter = c("leve
   \item{distribution}{Indicates whether the random sample is based on a \code{"normal"} or a \code{"poisson"} distribution. Default is \code{distribution = "normal"}.}
   \item{concise}{If set \code{concise = TRUE}, which is the default setting, no effects on the generated random samples are given during the computation.}
   \item{silent}{If set \code{TRUE}, the results are not printed after computation. Default is \code{silent = FALSE}.}
-}
-
-\values{
-  \item{power.rand.level}{}
-  \item{power.plm.level}{}
-  \item{power.plm.slope}{}
-  \item{power.plm.poisson.level}{}
-  \item{power.plm.poisson.slope}{}
-  \item{power.hplm.level}{}
-  \item{power.hplm.slope}{}
-  \item{alphaerror.rand.level}{}
-  \item{alphaerror.plm.level}{}
-  \item{alphaerror.plm.slope}{}
-  \item{alphaerror.plm.poisson.level}{}
-  \item{alphaerror.plm.poisson.slope}{}
-  \item{alphaerror.hplm.level}{}
-  \item{alphaerror.hplm.slope}{}
-  \item{rand.test.stat}{}
-  \item{rand.sample}{}
 }
 
 \author{Juergen Wilbert}
