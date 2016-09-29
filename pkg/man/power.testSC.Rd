@@ -1,109 +1,77 @@
 \name{power.testSC}
 \alias{power.testSC}
-\title{Empirical Power Analysis for Single Cases}
+\title{Empirical power analysis for single-case data}
 \description{
-The power.testSC command conducts a Monte-Carlo study on the test-power and alpha-error of a randomization-test and a piecewise-regression model. The distribution values of the Monte-Carlo sample is either defined or automatically estimated based on the data of an actual study.
+The power.testSC command conducts a Monte-Carlo study on the test-power and alpha-error of a randomization-test and a piecewise-regression model. The distribution values of the Monte-Carlo sample are either specified by the user or estimated based on actual data.
 }
+
 \usage{
-power.testSC(data = NULL, stat = c("rand.test", "plm"), 
-             test.parameter = c("level", "slope"), rand.test.stat = c("Mean B-A", "B"),
-             cases = NULL, rtt = 0.8, d.level = NULL, 
-             d.slope = NULL, MT = NULL, B.start = NULL, d.trend = NULL, n = 100, 
-             limit = 5, m = NULL, s = NULL, startpoints = NA, extreme.p = 0, 
-             extreme.d = c(-4, -3), exclude.equal = "auto", alpha = 0.05, 
-             distribution = "normal", concise = TRUE, silent = FALSE)
+power.testSC(data = NULL, stat = c("rand.test", "plm"), test.parameter = c("level", "slope"),
+             rand.test.stat = c("Mean B-A", "B"), cases = NULL, rtt = 0.8, d.level = NULL, 
+             d.slope = NULL, MT = NULL, B.start = NULL, d.trend = NULL, n = 100, limit = 5,
+             m = NULL, s = NULL, startpoints = NA, extreme.p = 0, extreme.d = c(-4, -3),
+             exclude.equal = "auto", alpha = 0.05, distribution = "normal", concise = TRUE,
+             silent = FALSE)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
-  \item{data}{
-A data frame or a list of data frames. If data are provided, the power-analysis will be based on the design of these data and on the estimation of the effect sizes within the data.
-}
-  \item{stat}{
-Defines the statistics the power analysis is computed for. The default stat = c("rand.test","plm") computes a power-analysis for the randomization and the plm analysis.Further possibilities are "hplm" for a hierarchiacal linear regression model and "plm.poisson" for a generalized piecewise-regression model with the assumption of Poisson distributed error terms.
-}
-  \item{test.parameter}{
-Indicates whether the power and alpha error for a level effect, a slope effect, or both effects should be estimated.
-}
-  \item{rand.test.stat}{
-Defines the statistic a randomization test is based on. The first values stipulates the statistic for the level-effect computation and the second value for the slope-effect computation. Deafult is rand.test.stat = c("Mean B-A","B").
-}
-  \item{cases}{
-Number of cases per study.
-}
-  \item{rtt}{
-Reliability of the underlying simulated measurements.
-}
-  \item{d.level}{
-A single level increase with the beginning of the B-Phase in standard deviations.
-}
-  \item{d.slope}{
-Amount of increase in standard deviations per measurement time starting with the Beginning of the B-phase (e.g., d.slope = 0.1 generates an incremental increase of 0.1 standard deviations for each measurement of the B-phase).
-}
-  \item{MT}{
-Measurement times of single cases' random study.
-}
-  \item{B.start}{
-Starting values of the B-phase. A single value (e.g., B.start = 6) defines the B.start for all studies and cases. A vector of starting values is given with the chain command (e.g., B.start = c(6, 7, 8)). A value between 0 and 1 is interpreted as a proportion (e.g., B.start = c(0.3, 0.5, 0.8) are starting point at 30, 50, and 80 percent of the length defined in MT).
-}
-  \item{d.trend}{
-Defines a trend in d per measurement across all measurements. E.g., trend = 0.1 is an increase of 0.1 standard deviations per measurement.
-}
-  \item{n}{
-Number of sample studies created in the the Monte-Carlo study.
-}
-  \item{limit}{
-Minimal length of the A- und B-phase in the randomization sample.
-}
-  \item{startpoints}{
-Alternative to the limit parameter startpoints exactly defines the possible start points of the B-phase. E.g., startpoints = 4:9 restricts possible start points of the B-phase in the randomization design to measurements 4 to 9. startpoints arguments overwrite the limit parameter.
-}
-  \item{m}{
-Mean of the sample distribution the data are drawn from. 
-}
-  \item{s}{
-Standard deviation of the sample distribution the data are drawn from. 
+  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format. If you provide data, the power-analysis will be based on the design of these data and its estimated effect sizes.}
+  \item{stat}{Defines the tests the power analysis is computed for. The default \code{stat = c("rand.test","plm")} computes a power analysis for the \code{\link{randSC}} and the \code{\link{plm}} analyses. Further possibilities are \code{"hplm"} for a hierarchiacal linear regression model and \code{"plm.poisson"} for a generalized piecewise-regression model under the assumption of poisson distributed errors.}
+  \item{test.parameter}{Indicates whether the power and alpha error for a level effect, a slope effect, or both effects should be estimated. The default setting \code{test.parameter = c("level", "slope")} requests both.}
+  \item{rand.test.stat}{Defines the statistic the randomization test is based on. The first values stipulates the statistic for the level-effect computation and the second value for the slope-effect computation. Default is \code{rand.test.stat = c("Mean B-A","B")}. Please see \code{\link{randSC}} for more information on the test statistics.}
+  \item{cases}{Number of cases per study.}
+  \item{rtt}{Reliability of the underlying simulated measurements. Default is \code{rtt = 0.8}.}
+  \item{d.level}{Defines the level increase (effect size \emph{d}) at the beginning of phase B.}
+  \item{d.slope}{Defines the increase in scores - starting with phase B - expressed as effect size \emph{d} per MT. \code{d.slope = .1} generates an incremental increase of 0.1 standard deviations per MT for all phase B measurements.}
+  \item{MT}{Number of measurements (in each study).}
+  \item{B.start}{Phase B starting point. A single value (e.g., \code{B.start = 6}) defines \code{B.start} for all studies and cases. A vector of starting values is given with the chain command (e.g., \code{B.start = c(6, 7, 8)}). A value between 0 and 1 is interpreted as a proportion (e.g., \code{B.start = c(0.3, 0.5, 0.8)} would start phase B at 30, 50, and 80\% of the MTs).}
+  \item{d.trend}{Defines the effect size \emph{d} of a trend per MT added across the whole data-set.}
+  \item{n}{Number of sample studies created for the the Monte-Carlo study. Default is \code{n = 100}}
+  \item{limit}{Minimal number of data points per phase in the sample. Default is \code{limit = 5}.}
+   \item{m}{Mean of the sample distribution the data are drawn from.}
+  \item{s}{Standard deviation of the sample distribution the data are drawn from.}
+  \item{startpoints}{Alternative to the \code{limit} parameter start points exactly defines the possible start points of phase B (e.g., \code{startpoints = 4:9} restricts the phase B start points to measurements 4 to 9. \code{startpoints} overruns the \code{limit} parameter.}
+  \item{extreme.p}{Probability of extreme values. \code{extreme.p = .05} gives a five percent probability of an extreme value. Default is \code{extreme.p = 0}.}
+  \item{extreme.d}{Range for extreme values, expressed as effect size \emph{d}. \code{extreme.d = c(-7,-6)} uses extreme values within a range of -7 and -6 standard deviations. Caution: the first value must be smaller than the second, otherwise the procedure will fail. Default is \code{extreme.d = c(-4,-3)}.}
+  \item{exclude.equal}{If set to \code{exclude.equal = FALSE}, random distribution values equal to the observed distribution are counted as null-hypothesis conform. That is, they decrease the probability of rejecting the null-hypothesis (increase the p-value). Default is \code{exclude.equal = "auto"}, which means \code{FALSE} for multiple baseline designs and \code{TRUE} for one single-case.}
+  \item{alpha}{Alpha level used to calculate the proportion of significant tests. Default is \code{alpha = 0.05}.}
+  \item{distribution}{Indicates whether the random sample is based on a \code{"normal"} or a \code{"poisson"} distribution. Default is \code{distribution = "normal"}.}
+  \item{concise}{If set \code{concise = TRUE}, which is the default setting, no effects on the generated random samples are given during the computation.}
+  \item{silent}{If set \code{TRUE}, the results are not printed after computation. Default is \code{silent = FALSE}.}
 }
 
+\values{
+  \item{power.rand.level}{}
+  \item{power.plm.level}{}
+  \item{power.plm.slope}{}
+  \item{power.plm.poisson.level}{}
+  \item{power.plm.poisson.slope}{}
+  \item{power.hplm.level}{}
+  \item{power.hplm.slope}{}
+  \item{alphaerror.rand.level}{}
+  \item{alphaerror.plm.level}{}
+  \item{alphaerror.plm.slope}{}
+  \item{alphaerror.plm.poisson.level}{}
+  \item{alphaerror.plm.poisson.slope}{}
+  \item{alphaerror.hplm.level}{}
+  \item{alphaerror.hplm.slope}{}
+  \item{rand.test.stat}{}
+  \item{rand.sample}{}
+}
 
-  \item{extreme.p}{
-Probability of extreme values (e.g., extreme.p = 0.05 gives a 5 percent probability of an extreme value.
-}
-  \item{extreme.d}{
-Range of an extreme value in d (e.g., extreme.d = c(-7,-6) results in extreme values within a range of -7 and -6 standard deviations).  Default is c(-4,-3). Caution: the first value must be smaller than the second, otherwise the procedure will fail.
-}
-  \item{exclude.equal}{
-If set FALSE, random distribution value that are equal to the observed distribution are counted as values of the distribution of the null-hypothesis. That is, they decrease the probability of rejecting the null-hypothesis (increase the p-value). Default is exclude.equal = "auto" (FALSE for multiple-baseline designs and TRUE for single baseline designs).
-}
-  \item{alpha}{
-Alpha level used to calculate the proportion of significant tests. Default is 0.05.
-}
-  \item{distribution}{
-Indicated whether the random sample is based on a "normal" (e.g., gaussian) distribution or on a "poisson" distribution.
-}
-  \item{concise}{
-If set TRUE, no effects on the generated random samples are given during the computation.
-}
-  \item{silent}{
-If set TRUE, the results are not printed after computation.
-}
-}
 \author{Juergen Wilbert}
-\examples{
-#Assume you want to conduct a study with 15 measurements.
-#The test is highly reliable and you expect an intervention effect of d.level = 1.4.
-#The starting point of the intevention phase is randomly set between the 
-#5th and the 12th measurement. Can you expect to identify the effect with a 
-#plm or a randomization test (for a more precise estimation, set n = 1000)?
 
+\examples{
+## assume you want to conduct a single-case study with 15 MTs, with a highly reliable test,
+## an expected level effect of \eqn{d = 1.4}, and randomized start points between MTs 5 and 12
+## can you expect to identify the effect using plm or randomization test?
 
 power.testSC(MT = 15, B.start = round(runif(100,5,12)), test.parameter = "level", 
              d.level = 1.4, rtt = 0.8, n = 10)
 
-# Would the testpower be higher if you would set up a multiple baseline design (for
-# a more precise estimation, set n = 1000)?
+## would you achieve higher power by setting up a MBD with three cases?
 
 power.testSC(cases = 3, MT = 15, stat = c("rand.test","hplm"), 
              B.start = round(runif(300,5,12)), test.parameter = "level", 
              d.level = 1.4, rtt = 0.8, n = 10, startpoints = 5:12)
-
 }
