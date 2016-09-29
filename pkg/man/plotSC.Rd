@@ -1,121 +1,81 @@
 \name{plotSC}
 \alias{plotSC}
-\title{Plot AB-designs}
+\title{Plot single-case data}
 \description{
-The plotSC command draws a nice plot of one or multiple single-cases. By default, plotSC draws a multiple single-case plot if the given data contains more than one case.
+The plotSC function provides a plot of a single-case or multiple single-cases.
 }
+
 \usage{
-plotSC(data, ylim = NULL, xlim = NULL, fill = "", lines = "", marks = NULL, 
+plotSC(data, ylim = NULL, xlim = NULL, fill = "", lines = "", marks = NULL,
        annotations = NULL, phase.names = c("A", "B"), FUN.AB = NULL, 
        xlab = "Measurement time", ylab = "Score", text.ABlag = NULL, lwd = 2, 
        pch = 17, type = "b", mai = c(0.6, 0.82, 0.2, 0.42), ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
-  \item{data}{
-A data frame or a list of data frames.
+  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
+  \item{ylim}{Lower and upper limits of the y-axis (e.g., \code{ylim = c(0, 20)} sets the y-axis to a scale from 0 to 20). With multiple single-cases you can use \code{ylim = c(0, NA)} to scale the y-axis from 0 to the maximum of each case. \code{ylim} is not set by default, which makes \code{scan} set a proper scale based on the given data.}
+  \item{xlim}{Lower and upper limits of the x-axis (e.g., \code{xlim = c(0, 20)} sets the x-axis to a scale from 0 to 20). With multiple single-cases you can use \code{ylim = c(0, NA)} to scale the x-axis from 0 to the maximum of each case. \code{xlim} is not set by default, which makes \code{scan} set a proper scale based on the given data.}
+  \item{fill}{If set, the area under the line is filled with the given color (e.g., \code{fill = "tomato"}). Use the standard R command colors() to get a list of all possible colours. \code{fill} is empty by default.}
+  \item{lines}{A character or list defining one or more lines or curves to be plotted. The argument is either passed as a character string (e.g., \code{lines = "median"}) or as a list (e.g., \code{list("median", "trend")}. Some of the procedures can be refined with an additional argument (e.g., \code{lines = list("mean" = 0.10)} adds a 10 percent trimmed mean line. By default no additional lines are plotted. Possible lines are:
+    \itemize{
+      \item{\code{"median"} Separate lines for phase A and B medians.}
+      \item{\code{"mean"} Separate lines for phase A and B means. By default it is 10\%-trimmed. Other trims can be set, using a second parameter (e.g., \code{lines = list(mean = 0.2)} draws a 20\%-trimmed mean line).}
+      \item{\code{"trend"} Separate lines for phase A and B trends.}
+      \item{\code{"trendA"} Trend line for phase A.}
+      \item{\code{"maxA"} Line at the level of the highest phase A score.}
+      \item{\code{"medianA"} Line at the phase A median score.}
+      \item{\code{"meanA"} Line at the phase A 10\%-trimmed mean score. Apply a different trim, by using the additional argument (e.g., \code{lines = list(meanA = 0.2)}).}
+      \item{\code{"plm"} Regression lines for piecewise linear regression model.}
+      \item{\code{"plm.ar"} Regression lines for piecewise autoregression model. The lag is specified like this: \code{lines = list(plm.ar = 2)}.}
+      \item{\code{"movingMean"} Draws a moving mean curve, with a specified lag: \code{lines = list(movingMean = 2)}. Default is a lag 1 curve.}
+      \item{\code{"movingMedian"} Draws a moving median curve, with a specified lag: \code{lines = list(movingMedian = 3)}. Default is a lag 1 curve.}
+      \item{\code{"loreg"} Draws a non-parametric local regression line. The proportion of data influencing each data point can be specified using \code{lines = list("loreg" = 0.66)}. The default is 0.5.}
+      \item{\code{"lty"} Use this argument to define the linetype. Examples are: \code{"solid"}, \code{"dashed"}, \code{"dotted"}.}
+      \item{\code{"lwd"} Use this argument to define the thickness of the line, e.g., \code{lwd = 4}.}
+      \item{\code{"col"} Use this argument to define the color of the line, e.g., \code{col = "red"}.}
+    }
+  }
+  \item{marks}{A list of parameters defining markings of certain data points.
+    \itemize{
+      \item{\code{"positions"} A vector or a list of vectors indicating measurement-times to be marked. In case of a vector, the marked measurement-times are the same for all plotted cases. In case of a list of vectors, marks are set differently for each case. The list must have the same length as there are cases in the datafile.}
+      \item{\code{"col"} Color of the marks.}
+      \item{\code{"cex"} Size of the marks.}
+    }
+    Use for example \code{marks = list(positions = c(1, 8, 15), col = "red", cex = 3)} to make the MTs one, eight and 18 appear big and red.
+  }
+  \item{annotations}{A list of parameters defining annotations to each data point. This adds the score of ech MT to your plot.
+    \itemize{
+      \item{\code{"pos"} Position of the annotations: 1 = below, 2 = left, 3 = above, 4 = right.}
+      \item{\code{"col"} Color of the annotations.}
+      \item{\code{"cex"} Size of the annotations.}
+      \item{\code{"round"} Rounds the values to the specified decimal.}
+    }
+    Use for example \code{annotations = list(pos = 3, col = "brown", round = 1)} to plot scores rounded to one decimal above the data point in brown color.
+  }
+  \item{phase.names}{By default phases are labeled 'A' and 'B'. Use this argument to specify different labels: \code{phase.names = c("Baseline", "Intervention")}.}
+ \item{FUN.AB}{Not in use.}
+  \item{xlab}{The label of the x-axis. Default is \code{xlab = "Measurement time"}.}
+  \item{ylab}{The labels of the y-axis. Default is \code{ylab = "Score"}.}
+  \item{text.ABlag}{By default a vertical line separates phases A and B in the plot. Alternatively, you could print a character string between the two phases using this argument: \code{textAB.lag = "Start"}.}
+  \item{lwd}{Width of the plot line. Default is \code{lwd = 2}.}
+  \item{pch}{Point type. Default is \code{pch = 17} (triangles). Other options are for example: 16 (filled circles) or "A" (uses the letter A).}
+  \item{type}{Line type. "l" draws lines, "p" points, "b" draws lines and points, and "n" draws nothing. Default is \code{type = "b"}). The "n" argument is useful in combination with the lines argument (e.g., \code{type = "n", lines = "loreg"}).}
+  \item{mai}{Sets the margins of the plot.}
+  \item{...}{Further arguments passed to the plot command.}
 }
 
-  \item{ylim}{
-Lower and upper limit for the y-axis of the plot (e.g., ylim = c(0, 20) sets the y-axis to a scale from 0 to 20). In multiple single cases plots you can use ylim = c(0, NA) to scales the y-axis from 0 to the maximum of each case. If the ylim parameter is not set, scan automatically sets a proper scale. 
-}
-  \item{xlim}{
-Lower and upper limit for the x-axis of the plot. If the xlim parameter is not set, scan automatically computers a proper scale. 
-}
-  \item{fill}{
-  If set, the area beneath the plot line is coloured in the given colour (e.g., fill = "grey"). Use the standard R command colours() to get a list of possible colours.
-}
-  \item{lines}{
-A character or list defining one or more lines or curves to be plotted for a better estimation of statistical parameters. The argument is either given as a single character string lines = "median" or a list of character strings lines = list("median", "trend"). Additionally, some of the procedures can be refined by a single argument e.g., lines = list("mean" = 0.10) adds a 10 percent trimmed mean line. See details.
-}
-
-  \item{marks}{
-A list of parameters defining the marking of certain data points.
-
-"positions" = A vector or a list of vectors indicating measurement-times to be marked. In case of a vector, the marked measurement-times are the same for each plotted case. In case of a list of vectors, marks are set differently for each case. The list must have the same length as there are cases in the datafile. 
-
-"col" = A character string. The colour of the marks.
-
-"cex" = The size of the marks.
-}
-  \item{annotations}{
-A list defnining several parameters for plotting annotations to each data point. col = colour of the annotations, cex = size of the annotations, pos = position of plotting annotations (1=below, 2=left, 3=above, 4=right), round = rounds the values of the annotations to the specified number of decimal places.
-
-}
-  \item{phase.names}{
-scan uses the default names 'A' and 'B' for the two experimental phases. You can change these with the phase.names parameter. Example: phase.names = c("Baseline", "Treatment").
-}
-
- \item{FUN.AB}{
-Unused.
-}
-  \item{xlab}{
-The label of the x-axis.
-}
-  \item{ylab}{
-The labels of the y-axis.
-}
-  \item{text.ABlag}{
-By default, scan draws a vertical line to separate the A and B-phase. Alternatively, you could print a character string between the two phases using the textAB.lag parameter (e.g., textAB.lag = "Start").
-}
-  \item{lwd}{
-Width of the plot lines. Default is 2.
-}
-  \item{pch}{
-Point type. Default is 17. (e.g., pch = 16 draws filled circles; pch = "A" draws As).
-}
-  \item{type}{
-Sets the plot type. "l" draws lines, "p" points, "b" draws lines and points, and "n" draws nothing onto the plot (default of plotSC is "b"). The "n" argument can be useful in combination with the lines argument (e.g., type = "n", lines = "loreg").
-}
-  \item{mai}{
-Sets the margins of the plot.
-}
-
-  \item{\dots}{
-Further arguments for passing to the plot command.
-}
-}
-\details{
-Paramters for the argument "lines".
-
-"median"  A median line for the A and B-phase.
-
-"mean"	A mean line for the A and B-phase. Default is a 10 percent trimming. Other trimming values can be set by a second parameter e.g., lines = list(mean = 0.2) draws a 20 percent trimmed mean line.
-
-"trend"	A trend line for the A and B-phase.
-
-"trendA"  A trend line for the A-phase.
-
-"maxA"  A line for the maximum of the A-phase.
-
-"medianA" A line for the median of the A-phase.
-
-"meanA" A line for the 10 percent trimmed mean of the A-phase. Trimming can be changed in the following way lines = list(meanA = 0.15).
-
-"plm" A regression line for a piecewise linear regression model.
-
-"plm.ar"  A regression line for a piecewise autoregression model. The lag is specified by plm.ar = 2. Where the number is the maximum order of the autoregression analysis. 
-
-"movingMean"  Draws a moving mean curve. The lag can be specified by lines = list(movingMean = 2). Default is a lag 1 curve.
-
-"movingMedian"  Draws a moving median curve. The lag can be specified by lines = list(movingMedian = 3). Default is a lag 1 curve.
-
-"loreg" A non-parametric local regression line. The proportion of data influencing each data point can be specified by lines = list("loreg" = 0.66). The default is 0.5.
-
-"lty", "lwd", "col" Specifies line type ltw, line width lwd, and line colour col. Default is a black dashed line with the width 2. E.g., to draw a solid red thick mean line type lines = list("mean", lty = "solid", lwd = 4, col = "red"). Some of the possible line types are "solid", "dashed", and "dotted".
-}
-
-\author{
-Juergen Wilbert
-}
+\author{Juergen Wilbert}
 
 \examples{
-plotSC(Grosche2011, fill = "grey", type = "n", ylim = c(0,NA), 
+## plot the three cases from Grosche (2011) and visualize the phase A trend
+plotSC(Grosche2011, fill = "tomato", lines = "movingMean")
+## request the local regression line for Georg from that data set and customize the plot
+plotSC(Grosche2011$Georg, fill = "grey", type = "n", ylim = c(0,NA),
        xlab = "Training session", ylab = "Words per minute",
        phase.names = c("Baseline", "Intervention"), 
-       lines = list("plm", lty = "solid", col = "black", lwd = 3))
-
-set.seed(1234)
+       lines = list("loreg", lty = "solid", col = "black", lwd = 3))
+## plot a random MBD over three cases and mark interesting MTs
 dat <- rSC(3)
 plotSC(dat, marks = list(positions = list(c(2,4,5),c(1,2,3),c(7,8,9)), col = "blue",
        cex = 1.4),annotations = list(label = "values","col" = "red", cex = 0.75,
