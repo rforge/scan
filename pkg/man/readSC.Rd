@@ -6,7 +6,8 @@ Use this function to import single-case data from structured .csv-files.
 }
 
 \usage{
-readSC(filename, sep = ",", dec = ".", sort.labels = FALSE, phase.names = c("A", "B"), ...)
+readSC(filename, sep = ",", dec = ".", sort.labels = FALSE,
+       phase.names = c("A", "B"), ...)
 }
 
 \arguments{
@@ -26,8 +27,8 @@ readSC(filename, sep = ",", dec = ".", sort.labels = FALSE, phase.names = c("A",
 
 \examples{
 ## read SC-data from a file named "study1.csv" in your working directory
-#study1 <- readSC("study1.csv")
+# study1 <- readSC("study1.csv")
 
 ## read SC-data from a .csv-file with semicolon as field and comma as decimal separator
-#study2 <- readSC("study2.csv", sep = ";", dec = ",")
+# study2 <- readSC("study2.csv", sep = ";", dec = ",")
 }

@@ -3,7 +3,7 @@
 \alias{rand.test}
 \title{Randomization Tests for single-case data}
 \description{
-The randSC function computes a randomization test for single or multiple baseline single-case datasets. The function is based on an algorithm from the \code{\link{SCRT}} package SCRT (Bulte & Onghena, 2009, 2012), but rewritten and extended for the use in AB designs.
+The randSC function computes a randomization test for single or multiple baseline single-case data sets. The function is based on an algorithm from the \code{SCRT} package SCRT (Bulte & Onghena, 2009, 2012), but rewritten and extended for the use in AB designs.
 }
 
 \usage{
@@ -19,43 +19,38 @@ randSC(data, statistic = "Mean B-A", number = 500, complete = FALSE, limit = 5,
       \item{\code{"Mean B-A"}:	Uses the difference between the mean of phase B and the mean of phase A. This is appropriate if an increase of scores was expected for phase B.}
       \item{\code{"Mean |A-B|"}: Uses the absolute value of the difference between the means of phases A and B.}
       \item{\code{"Median A-B"}: The same as \code{"Mean A-B"}, but based on the median.}
-      \item{\code{"Median B-A"}: The same as \code{"Mean B-A"}, but based on the median.
+      \item{\code{"Median B-A"}: The same as \code{"Mean B-A"}, but based on the median.}
       \item{\code{"B"}: Caution! This procedure is still under development. Do not use it! Uses the difference between the slope parameter of a linear regression model for phases B and A.}
       \item{\code{"Bdecrease"}: Caution! This procedure is still under development. The same as \code{"B"}, but A-B. This is used is a .}
-      \item{}
+      \item{\code{"t plm level"}: Uses the t value for the level predictor of a piece-wise regression model as test statistic.}
+      \item{\code{"t plm slope"}: Uses the t value for the slope predictor of a piece-wise regression model as test statistic.}
     }
-"t plm level": Computes piecewise regression models and takes the t value for the level predictor as the critical statistic.
-
-"t plm slope": Computes piecewise regression models and takes the t value for the slope predictor as the critical statistic.
 }
-  \item{number}{Size of the randomization distribution. The exactness of the p-value can not exceed 1/number (i.e., number = 100 results in a p-values with an exactness of one percent). Default is number = 500. For a faster processing set number = 100. For a more precise p-value set number = 1000.}
-  \item{complete}{
-If TRUE, the distribution is based on a complete permutation of all possible starting combinations. This setting overwrites the number Argument. The default setting is FALSE.
-}
-  \item{limit}{
-Minimal length of the A- und B-phase in the randomization sample. Default is limit = 5.}
-  \item{startpoints}{Alternative to the limit parameter startpoints exactly defines the possible start points of the B-phase. E.g., startpoints = 4:9 restricts possible start points of the B-phase in the randomization design to measurements 4 to 9. startpoints arguments overwrite the limit parameter.}
-  \item{exclude.equal}{If set FALSE, random distribution value that are equal to the observed distribution are counted as values of the distribution of the null-hypothesis. That is, they decrease the probability of rejecting the null-hypothesis (increase the p-value). exclude.equal should be set to TRUE if you analyse one single-case design (not a multiple baseline data set) to get a sufficient test-power but be aware it increases the chance of an alpha-error.}
-  \item{graph}{If TRUE, a histogram of the resulting distribution is plotted.}
-  \item{output}{If set to "C", detailed information are given and if set to "p", only the resulting p value is returned.}
+  \item{number}{Sample size of the randomization distribution. The exactness of the p-value can not exceed \eqn{1/number} (i.e., \code{number = 100} results in p-values with an exactness of one percent). Default is \code{number = 500}. For faster processing use \code{number = 100}. For more precise p-values set \code{number = 1000}.}
+  \item{complete}{If TRUE, the distribution is based on a complete permutation of all possible starting combinations. This setting overwrites the number Argument. The default setting is FALSE.}
+  \item{limit}{Minimal number of data points per phase in the sample. Default is \code{limit = 5}.}
+  \item{startpoints}{Alternative to the \code{limit} parameter start points exactly defines the possible start points of phase B (e.g., \code{startpoints = 4:9} restricts the phase B start points to measurements 4 to 9. \code{startpoints} overruns the \code{limit} parameter.}
+  \item{exclude.equal}{If set to \code{exclude.equal = FALSE}, which is the default, random distribution values equal to the observed distribution are counted as null-hypothesis conform. That is, they decrease the probability of rejecting the null-hypothesis (increase the p-value). \code{exclude.equal} should be set to \code{TRUE} if you analyse one single-case design (not a multiple baseline data set) to reach a sufficient power. But be aware, that it increases the chance of an alpha-error.}
+  \item{graph}{If \code{graph = TRUE}, a histogram of the resulting distribution is plotted. It's \code{FALSE} by default.}
+  \item{output}{If set to the default \code{output = "C"}, detailed information is provided. Set \code{output = "p"}, to only return the resulting p value.}
 }
 
 \value{
-  \item{statistic}{}
-  \item{N}{}
-  \item{n1}{}
-  \item{n2}{}
-  \item{limit}{}
-  \item{startpoints}{}
-  \item{p.value}{}
-  \item{number}{}
-  \item{complete}{}
-  \item{observed.statistic}{}
-  \item{Z}{}
-  \item{p.z.single}{}
-  \item{distribution}{}
-  \item{possible.combinations}{}
-  \item{auto.corrected.number}{}
+  \item{statistic}{Character string from function call (see \code{Arguments} above).}
+  \item{N}{Number of single-cases.}
+  \item{n1}{Number of data points in phase A.}
+  \item{n2}{Number of data points in phase B.}
+  \item{limit}{Numeric from function call (see \code{Arguments} above).}
+  \item{startpoints}{A vector defining the start points passed from the function call (see \code{Arguments} above).}
+  \item{p.value}{P-value of the randomization test for the given data.}
+  \item{number}{Sample size of randomization distribution from function call (see \code{Arguments} above).}
+  \item{complete}{Logical argument from function call (see \code{Arguments} above).}
+  \item{observed.statistic}{Test statistic observed for the given single-case data. (see \code{statistic} in the \code{Arguments} above.)}
+  \item{Z}{Z-value of observed test statistic.}
+  \item{p.z.single}{Probability of z-value.}
+  \item{distribution}{Test statistic distribution from randomized data sets.}
+  \item{possible.combinations}{Number of possible combinations under the given restrictions.}
+  \item{auto.corrected.number}{\code{TRUE} indicates that a corrected number of combinations was used. This happens, if the number of possible combinations (under the given restrictions) undercuts the requested \code{number} of combinations.}
 }
 
 \references{
@@ -64,13 +59,12 @@ Bulte, I., & Onghena, P. (2009). Randomization tests for multiple-baseline desig
 Bulte, I., & Onghena, P. (2012). \emph{SCRT: Single-Case Randomization Tests}. Available from: http://cran.r-project.org/web/packages/SCRT/index.html
 }
 
-\author{
-Juergen Wilbert
-}
+\author{Juergen Wilbert}
 
 \examples{
-set.seed(1234)
-dat <- rSC(3, d.level = 0.6)
-randSC(dat, statistic = "Median B-A", startpoints = 5:17, graph = TRUE)
-}
+## compute a randomization test on the first case of the byHeart data and include a graph
+randSC(byHeart2011[1], statistic = "Median B-A", graph = TRUE)
 
+## compute a randomization test on the Grosche2011 data using complete permutation
+randSC(Grosche2011, statistic = "Median B-A", complete = TRUE, limit = 4)
+}
