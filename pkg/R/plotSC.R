@@ -247,6 +247,7 @@ plotSC <- function(data, ylim = NULL, xlim = NULL, fill = "", lines = "", marks 
     if (any(names(lines) == "plm.ar")) {
       id <- which(names(lines) == "plm.ar")
       lines.par <- as.numeric(lines[[id]])
+      if (is.na(lines.par)) lines.par <- 2
       pr <- plm(data, AR = lines.par)
       y <- pr$full.model$fitted
       lines(data[,3], y, lty = lty.line, col = col.line, lwd = lwd.line)
