@@ -34,9 +34,9 @@ Juergen Wilbert
 \examples{
 ## identify outliers using 1.5 standard deviations as criterion
 set.seed(1234)
-Susanne <- rSC(d.level = 1.0)
-res <- outlierSC(Susanne, criteria = c("SD", 1.5))
-plotSC(Susanne, marks = list(positions = res$dropped.mt))
+susanne <- rSC(d.level = 1.0)
+res <- outlierSC(susanne, criteria = c("SD", 1.5))
+plotSC(susanne, marks = list(positions = res$dropped.mt))
 
 ## identify outliers in the original data from Grosche (2011) using Cook's Distance above 4/n
 ## as criterion

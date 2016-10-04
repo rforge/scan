@@ -11,7 +11,7 @@ hplm(data, model = "B&L-B", method = "ML", control = list(opt = "optim"),
 }
 
 \arguments{
-  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
+  \item{data}{A single-case data frame. See \code{\link{makeSCDF}} to learn about this format.}
   \item{model}{Regression model used for computation (see Huitema & McKean, 2000). Default is \code{model = "B&L-B"}. Possible values are: \code{"B&L-B"}, \code{"H-M"}, \code{"Mohr#1"}, "Mohr#2", and "Manly".}
   \item{method}{Method used to fit your model. Pass \code{"REML"} to maximize the restricted log-likelihood or \code{"ML"} the log-likelihood is maximized. Default is \code{"ML"}.}
   \item{control}{A list of settings for the estimation algorithm, replacing the default values returned by the function lmeControl of the nlme package.}
@@ -40,18 +40,14 @@ hplm(data, model = "B&L-B", method = "ML", control = list(opt = "optim"),
   \item{p.ICC}{}
 }
 
-\author{
-Juergen Wilbert
-}
+\author{Juergen Wilbert}
 
 \examples{
-set.seed(1000)
-
+## 
 dat <- rSC(3, MT = 30, B.start = 11, d.level = 1.0, d.slope = 0.05, d.trend = 0.05)
 hplm(dat, method = "REML",random.slopes = FALSE)
 
-set.seed(1000)
-
+## 
 dat <- rSC(15, MT = 30, B.start = 11, d.level = 1.0, d.slope = runif(15,0,0.2), d.trend = 0.05)
 hplm(dat)
 }

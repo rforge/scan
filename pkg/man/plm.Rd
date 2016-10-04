@@ -1,51 +1,62 @@
 \name{plm}
 \alias{plm}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-Piecewise linear model/Piecewise Regression
-}
+\title{Piecewise linear model / Piecewise regression}
 \description{
-The plm function computes a piecewise regression model (see Huitema & Mckean, 2000). A piecewise regression models a linear trend in the data, a level and a slope increase with the start of the intervention. Additionally, the plm function computes two effect-sizes by comparing restricted to full regression models (see Beretvas & Chung, 2008). Furthermore, an autoregression model can be used to take into account autocorrelated data (Beretvas & Chung, 2008). For the latter, your R system must comprise an installation of the nlme package.
+The \code{plm} function computes a piecewise regression model (see Huitema & McKean, 2000).
 }
+
 \usage{
 plm(data, AR = NULL, model = "B&L-B", count.data = FALSE, 
     family = ifelse(count.data, "poisson", "gaussian"), ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
-  \item{data}{
-A data frame or a list of data frames.
+  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
+  \item{AR}{Maximal lag of autoregression. Modelled based on the Autoregressive-Moving Average (ARMA) function.}
+  \item{model}{Regression model used for computation (see Huitema & McKean, 2000). Default is \code{model = "B&L-B"}. Possible values are: \code{"B&L-B"}, \code{"H-M"}, \code{"Mohr#1"}, "Mohr#2", and "Manly".}
+  \item{count.data}{???}
+  \item{family}{???}
+  \item{...}{???}
 }
 
-  \item{AR}{
-Autoregression modelled up to the given lag based on the ARMA function.
-}
-  \item{model}{
-Regression model used for computation (see Huitema & Mckean, 2000). Default is model = "B&L-B". Possible values are: B&L-B, H-M, Mohr#1, Mohr#2, Manly.
-}
-  \item{count.data}{
-%%     ~~Describe \code{count.data} here~~
-}
-  \item{family}{
-%%     ~~Describe \code{family} here~~
-}
-  \item{...}{
-%%     ~~Describe \code{family} here~~
+\value{
+  \item{model}{Character string from function call (see \code{Arguments} above).}
+  \item{F}{F value for specified model.}
+  \item{df1}{Degrees of freedom (Regression).}
+  \item{df2}{Degrees of freedom (Residual).}
+  \item{p}{P value for specified model.}
+  \item{R2}{Explained variance R squared.}
+  \item{R2.adj}{Adjusted R squared.}
+  \item{n1}{}
+  \item{n2}{}
+  \item{count.data}{Logical argument from function call (see \code{Arguments} above).}
+  \item{I}{}
+  \item{T}{}
+  \item{D}{}
+  \item{TxD}{}
+  \item{F.slope}{}
+  \item{p.slope}{}
+  \item{ES.slope}{}
+  \item{F.trend}{}
+  \item{p.trend}{}
+  \item{ES.trend}{}
+  \item{full.model}{Full regression model list (including \code{coefficients}, \code{residuals} and many others}
+  \item{MT}{Number of measurements.}
+  \item{data}{Single-case data frame passed to the function.}
+  \item{N}{Number of single-cases.}
+  \item{family}{Character string from function call (see \code{Arguments} above).}
 }
 
-}
 \references{
-Beretvas, S., & Chung, H. (2008). An evaluation of modified R2-change effect size indices for single-subject experimental designs. Evidence-Based Communication Assessment and Intervention, 2, 120-128.
+Beretvas, S., & Chung, H. (2008). An evaluation of modified R2-change effect size indices for single-subject experimental designs. \emph{Evidence-Based Communication Assessment and Intervention, 2}, 120-128.
 
-Huitema, B. E., & Mckean, J. W. (2000). Design specification issues in time-series intervention models. Educational and Psychological Measurement, 60(1), 38-58.
+Huitema, B. E., & McKean, J. W. (2000). Design specification issues in time-series intervention models. \emph{Educational and Psychological Measurement, 60}, 38-58.
 }
-\author{
-Juergen Wilbert
-}
+
+\author{Juergen Wilbert}
+
 \examples{
-set.seed(1000)
+## 
 dat <- rSC(1, MT = 30, B.start = 11, d.level = 1.0, d.slope = 0.05, d.trend = 0.05)
 plm(dat, AR = 3)
-
 }
-
