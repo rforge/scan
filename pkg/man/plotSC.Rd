@@ -71,7 +71,7 @@ plotSC(data, ylim = NULL, xlim = NULL, fill = "", lines = "", marks = NULL,
 
 \examples{
 ## request the default plot of the data from Borckhardt (2014)
-plotSC(Borckhardt2014)
+plotSC(Borckardt2014)
 
 ## plot the three cases from Grosche (2011) and visualize the phase A trend
 plotSC(Grosche2011, fill = "tomato", lines = "movingMean")
