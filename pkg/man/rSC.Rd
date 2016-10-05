@@ -2,7 +2,7 @@
 \alias{rSC}
 \title{Single-case data generator}
 \description{
-The \Code{rSC} function generates random (multiple) single-case data frames for test and demonstration purposes.
+The \code{rSC} function generates random (multiple) single-case data frames for test and demonstration purposes.
 }
 
 \usage{
@@ -45,18 +45,14 @@ Juergen Wibert
 
 \examples{
 ## Create random single-case data and inspect it
-dat <- rSC(n = 3, rtt = 0.75, round = 1, d.slope = 0.1, extreme.p = 0.1, missing.p = 0.1,
-    random.names = TRUE)
+dat <- rSC(n = 3, rtt = 0.75, round = 1, d.slope = 0.1, extreme.p = 0.1,
+       missing.p = 0.1, random.names = TRUE)
 describeSC(dat)
 plotSC(dat)
 
-## Please note that this might take a while. Have a break! ;)
-dat <- rSC(n = 50, rtt = 0.6, round = 1, d.trend = 0.05, d.level = 0.5, d.slope = 0.1)
-hplm(dat)
-
 ## And now have a look at poisson-distributed data
-dat <- rSC(n = 3, B.start = c(6,10,14), MT = c(12,20,22), m = 10, distribution = "poisson",
-    d.level = -5, missing.p = 0.1)
+dat <- rSC(n = 3, B.start = c(6,10,14), MT = c(12,20,22), m = 10,
+       distribution = "poisson", d.level = -5, missing.p = 0.1)
 pand(dat, correction = FALSE)
 }
 
