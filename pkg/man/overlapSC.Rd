@@ -4,7 +4,7 @@
 Overlap indices for single-case data
 }
 \description{
-The overlapSC function provides the most common overlap indices for single-case data.
+The \code{overlapSC} function provides the most common overlap indices for single-case data.
 }
 \usage{
 overlapSC(data, decreasing = FALSE)
@@ -24,13 +24,15 @@ If you expect data to be lower in the B phase, set \code{decreasing = TRUE}. Def
 Juergen Wilbert
 }
 \examples{
-## overlap indices for one single-case
+## Display overlap indices for one single-case
 overlapSC(Huitema2000, decreasing = TRUE)
 
-## descriptive statistics for a list of six single-cases
+## Display overlap indices for a list of six single-cases
 describeSC(GruenkeWilbert2014)
 
-## write overlap indices to .csv-file
+## Write overlap indices to .csv-file
 overl <- overlapSC(Waddell2011)
 write.csv(overl$overlap, file = "overlap_indices.csv")
 }
+
+\concept{Overlap}

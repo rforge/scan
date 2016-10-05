@@ -1,11 +1,8 @@
 \name{smoothSC}
 \alias{smoothSC}
-\alias{movingMedian}
-\alias{moving Mean}
-\alias{localRegression}
 \title{Smoothing single-case data}
 \description{
-This function provides procedures to smooth single-case data (i.e., to eliminate noise). A moving average function (mean- or median-based) replaces each data point by the average of the surrounding data points step-by-step. With a local regression function, each data point is regressed by its surrounding data points. 
+The \code{smoothSC} function provides procedures to smooth single-case data (i.e., to eliminate noise). A moving average function (mean- or median-based) replaces each data point by the average of the surrounding data points step-by-step. With a local regression function, each data point is regressed by its surrounding data points. 
 }
 
 \usage{
@@ -24,7 +21,7 @@ smoothSC(data, FUN = "movingMedian", intensity = NULL)
 \author{Juergen Wilbert}
 
 \examples{
-## use the three different smoothing functions and compare the results
+## Use the three different smoothing functions and compare the results
 berta_mmd <- smoothSC(Huber2014$Berta)
 berta_mmn <- smoothSC(Huber2014$Berta, FUN = "movingMean")
 berta_lre <- smoothSC(Huber2014$Berta, FUN = "localRegression")
@@ -32,3 +29,4 @@ plotSC(list("Original" = Huber2014$Berta,"Moving Median" = berta_mmd[[1]],
     "Moving Mean" = berta_mmn[[1]],"Local Regression" = berta_lre[[1]]))
 }
 
+\keyword{manip}

@@ -2,7 +2,7 @@
 \alias{pet}
 \title{Percent exceeding the trend}
 \description{
-This function provides the percentage of phase B data points exceeding the prediction based on the phase A trend. A binomial test against a 50/50 distribution is computed. Furthermore, the percentage of phase B data points exceeding the upper (or lower) 95 percent confidence interval of the predicted progress is computed.
+The \code{pet} function provides the percentage of phase B data points exceeding the prediction based on the phase A trend. A binomial test against a 50/50 distribution is computed. Furthermore, the percentage of phase B data points exceeding the upper (or lower) 95 percent confidence interval of the predicted progress is computed.
 }
 \usage{
 pet(data, ci = 0.95, decreasing = FALSE)
@@ -28,12 +28,14 @@ Width of the confidence interval. Default is \code{ci = .95}.
   \item{decreasing}{Logical argument from function call (see \code{Arguments} above).}
   \item{case.names}{Assigned name of single-case.}
 }
-\author{
-Juergen Wilbert
-}
+\author{Juergen Wilbert}
+
+\seealso{\code{\link{overlapSC}}, \code{\link{describeSC}}, \code{\link{nap}}, \code{\link{pand}}, \code{\link{pem}}, \code{\link{pnd}}}
+
 \examples{
 ## Calculate the PET and use a 99\%-CI for the additional calculation
-set.seed(1234)
 dat <- rSC(5, d.slope = 0.2)
 pet(dat, ci = .99)
 }
+
+\concept{Overlap}

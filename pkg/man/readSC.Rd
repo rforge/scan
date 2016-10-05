@@ -2,7 +2,7 @@
 \alias{readSC}
 \title{Read single-case data from files}
 \description{
-Use this function to import single-case data from structured .csv-files.
+Use the \code{readSC} function to import single-case data from structured .csv-files.
 }
 
 \usage{
@@ -23,12 +23,16 @@ readSC(filename, sep = ",", dec = ".", sort.labels = FALSE,
 
 \author{Juergen Wilbert}
 
-\seealso{\code{\link{read.table}} \code{\link{writeSC}}, \code{\link{makeSCDF}}.}
+\seealso{\code{\link{read.table}}, \code{\link{writeSC}}, \code{\link{makeSCDF}}}
 
 \examples{
-## read SC-data from a file named "study1.csv" in your working directory
+## Read SC-data from a file named "study1.csv" in your working directory
 # study1 <- readSC("study1.csv")
 
-## read SC-data from a .csv-file with semicolon as field and comma as decimal separator
+## Read SC-data from a .csv-file with semicolon as field and comma as decimal separator
 # study2 <- readSC("study2.csv", sep = ";", dec = ",")
 }
+
+\keyword{manip}
+
+\concept{Import}

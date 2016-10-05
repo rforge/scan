@@ -1,6 +1,6 @@
 \name{makesingleSC}
 \alias{makesingleSC}
-\title{Aggregate multiple single-cases into one case.}
+\title{Aggregate multiple single-cases into one case}
 \description{
 The makesingleSC function combines multiple single-case data frames into one single-case data frame.
 }
@@ -24,12 +24,15 @@ The algorithm works the following way:
   \item{Phase B values are appended to phase A values. The measurement times of phase B are shifted to start with the next MT after the end of phase A.}
 }
 }
-\author{
-Juergen Wilbert
-}
+\author{Juergen Wilbert}
+
+\seealso{\code{\link{makeSCDF}}, \code{\link{longSCDF}}, \code{\link{writeSC}}}
+
 \examples{
-## aggregate three random single-case data sets into one
+## Aggregate three random single-case data sets into one
 study1 <- rSC(3, d.level = 0.8, d.slope = 0.1, round = 0)
 new.sc <- makesingleSC(study1)
 plotSC(new.sc, type = "p", lines = "trend")
 }
+
+\keyword{manip}

@@ -1,11 +1,10 @@
 \name{describeSC}
 \alias{describeSC}
-\title{
-Descriptive statistics for single-case data
-}
+\title{Descriptive statistics for single-case data}
 \description{
-The describeSC function provides common descriptive statistics for single-case data.
+The \code{describeSC} function provides common descriptive statistics for single-case data.
 }
+
 \usage{
 describeSC(data, decreasing = FALSE)
 }
@@ -17,13 +16,9 @@ describeSC(data, decreasing = FALSE)
 
 \value{A data frame (or a list of data frames) of descriptive statistics (for each single-case), i.a.: number of observations, number of missing values, measures of central tendency and variation, trend, SMD.}
 
-\author{
-Juergen Wilbert
-}
+\author{Juergen Wilbert}
 
-\seealso{
-\code{\link{writeSC}}.
-}
+\seealso{\code{\link{overlapSC}}, \code{\link{plotSC}}, \code{\link{writeSC}}}
 
 \examples{
 ## Descriptive statistics for one single-case

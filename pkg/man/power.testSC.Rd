@@ -2,7 +2,7 @@
 \alias{power.testSC}
 \title{Empirical power analysis for single-case data}
 \description{
-The power.testSC command conducts a Monte-Carlo study on the test-power and alpha-error of a randomization-test and a piecewise-regression model. The distribution values of the Monte-Carlo sample are either specified by the user or estimated based on actual data.
+The \code{power.testSC} command conducts a Monte-Carlo study on the test-power and alpha-error of a randomization-test and a piecewise-regression model.  The distribution values of the Monte-Carlo sample are either specified by the user or estimated based on actual data.
 }
 
 \usage{
@@ -43,17 +43,23 @@ power.testSC(data = NULL, stat = c("rand.test", "plm"),
 
 \author{Juergen Wilbert}
 
+\seealso{\code{\link{plm}}, \code{\link{randSC}}}
+
 \examples{
-## assume you want to conduct a single-case study with 15 MTs, with a highly reliable test,
-## an expected level effect of \eqn{d = 1.4}, and randomized start points between MTs 5 and 12
-## can you expect to identify the effect using plm or randomization test?
+## Assume you want to conduct a single-case study with 15 MTs, using a highly reliable test,
+## an expected level effect of \eqn{d = 1.4}, and randomized start points between MTs 5
+## and 12 can you expect to identify the effect using plm or randomization test?
 
 power.testSC(MT = 15, B.start = round(runif(100,5,12)), test.parameter = "level", 
              d.level = 1.4, rtt = 0.8, n = 10)
 
-## would you achieve higher power by setting up a MBD with three cases?
+## Would you achieve higher power by setting up a MBD with three cases?
 
 power.testSC(cases = 3, MT = 15, stat = c("rand.test","hplm"), 
              B.start = round(runif(300,5,12)), test.parameter = "level", 
              d.level = 1.4, rtt = 0.8, n = 10, startpoints = 5:12)
 }
+
+\concept{Power Analysis}
+\concept{Statistical Power}
+\concept{Monte Carlo Algorithm}

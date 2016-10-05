@@ -4,7 +4,9 @@
 \docType{package}
 \title{Single-Case Data Analyses}
 \description{
-A package for analyzing single-case data of from AB-designs. Most procedures also support multiple-baseline AB-designs.}
+A package to analyze single-case data of from AB-designs.
+
+Most procedures also support multiple-baseline AB-designs.}
 \details{
 \tabular{ll}{
 Package: \tab scan\cr
@@ -16,3 +18,5 @@ License: \tab GPL (version 2 or newer)\cr
 }
 
 \author{Juergen Wilbert [aut, cre]}
+
+\keyword{package}

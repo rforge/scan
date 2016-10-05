@@ -3,7 +3,7 @@
 \alias{rand.test}
 \title{Randomization Tests for single-case data}
 \description{
-The randSC function computes a randomization test for single or multiple baseline single-case data sets. The function is based on an algorithm from the \code{SCRT} package SCRT (Bulte & Onghena, 2009, 2012), but rewritten and extended for the use in AB designs.
+The \code{randSC} function computes a randomization test for single or multiple baseline single-case data.  The function is based on an algorithm from the \code{SCRT} package (Bulte & Onghena, 2009, 2012), but rewritten and extended for the use in AB designs.
 }
 
 \usage{
@@ -20,8 +20,8 @@ randSC(data, statistic = "Mean B-A", number = 500, complete = FALSE, limit = 5,
       \item{\code{"Mean |A-B|"}: Uses the absolute value of the difference between the means of phases A and B.}
       \item{\code{"Median A-B"}: The same as \code{"Mean A-B"}, but based on the median.}
       \item{\code{"Median B-A"}: The same as \code{"Mean B-A"}, but based on the median.}
-      \item{\code{"B"}: Caution! This procedure is still under development. Do not use it! Uses the difference between the slope parameter of a linear regression model for phases B and A.}
-      \item{\code{"Bdecrease"}: Caution! This procedure is still under development. The same as \code{"B"}, but A-B. This is used is a .}
+      \item{\code{"B"}: \bold{Caution! This procedure is still under development. Do not use it!} Uses the difference between the slope parameter of a linear regression model for phases B and A.}
+      \item{\code{"Bdecrease"}: \bold{Caution! This procedure is still under development. Do not use it!} The same as \code{"B"}, but A-B.}
       \item{\code{"t plm level"}: Uses the t value for the level predictor of a piece-wise regression model as test statistic.}
       \item{\code{"t plm slope"}: Uses the t value for the slope predictor of a piece-wise regression model as test statistic.}
     }
@@ -29,7 +29,7 @@ randSC(data, statistic = "Mean B-A", number = 500, complete = FALSE, limit = 5,
   \item{number}{Sample size of the randomization distribution. The exactness of the p-value can not exceed \eqn{1/number} (i.e., \code{number = 100} results in p-values with an exactness of one percent). Default is \code{number = 500}. For faster processing use \code{number = 100}. For more precise p-values set \code{number = 1000}.}
   \item{complete}{If TRUE, the distribution is based on a complete permutation of all possible starting combinations. This setting overwrites the number Argument. The default setting is FALSE.}
   \item{limit}{Minimal number of data points per phase in the sample. Default is \code{limit = 5}.}
-  \item{startpoints}{Alternative to the \code{limit} parameter start points exactly defines the possible start points of phase B (e.g., \code{startpoints = 4:9} restricts the phase B start points to measurements 4 to 9. \code{startpoints} overruns the \code{limit} parameter.}
+  \item{startpoints}{Alternative to the \code{limit}-parameter \code{startpoints} exactly defines the possible start points of phase B (e.g., \code{startpoints = 4:9} restricts the phase B start points to measurements 4 to 9. \code{startpoints} overruns the \code{limit}-parameter.}
   \item{exclude.equal}{If set to \code{exclude.equal = FALSE}, which is the default, random distribution values equal to the observed distribution are counted as null-hypothesis conform. That is, they decrease the probability of rejecting the null-hypothesis (increase the p-value). \code{exclude.equal} should be set to \code{TRUE} if you analyse one single-case design (not a multiple baseline data set) to reach a sufficient power. But be aware, that it increases the chance of an alpha-error.}
   \item{graph}{If \code{graph = TRUE}, a histogram of the resulting distribution is plotted. It's \code{FALSE} by default.}
   \item{output}{If set to the default \code{output = "C"}, detailed information is provided. Set \code{output = "p"}, to only return the resulting p value.}
@@ -56,15 +56,18 @@ randSC(data, statistic = "Mean B-A", number = 500, complete = FALSE, limit = 5,
 \references{
 Bulte, I., & Onghena, P. (2009). Randomization tests for multiple-baseline designs: An extension of the SCRT-R package. \emph{Behavior Research Methods, 41}, 477-485.
 
-Bulte, I., & Onghena, P. (2012). \emph{SCRT: Single-Case Randomization Tests}. Available from: http://cran.r-project.org/web/packages/SCRT/index.html
+Bulte, I., & Onghena, P. (2012). \emph{SCRT: Single-Case Randomization Tests}. Available from: \url{http://cran.r-project.org/web/packages/SCRT/index.html}
 }
 
 \author{Juergen Wilbert}
 
 \examples{
-## compute a randomization test on the first case of the byHeart data and include a graph
+## Compute a randomization test on the first case of the byHeart2011 data and include a graph
 randSC(byHeart2011[1], statistic = "Median B-A", graph = TRUE)
 
-## compute a randomization test on the Grosche2011 data using complete permutation
+## Compute a randomization test on the Grosche2011 data using complete permutation
 randSC(Grosche2011, statistic = "Median B-A", complete = TRUE, limit = 4)
 }
+
+\concept{Randomization}
+\concept{Permutation}

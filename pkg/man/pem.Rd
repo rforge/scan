@@ -2,7 +2,7 @@
 \alias{pem}
 \title{Percent exceeding the median}
 \description{
-This function returns the Percentage of the B-phase data exceeding the median of the A-phase data. Additionally, a chi square test against a 50/50 distribution is computed. Different measures of central tendency could be addressed for alternative analyses.
+The \code{pem} function returns the percentage of phase B data exceeding the phase A median.  Additionally, a chi square test against a 50/50 distribution is computed.  Different measures of central tendency can be addressed for alternative analyses.
 }
 \usage{
 pem(data, decreasing = FALSE, binom.test = TRUE, chi.test = FALSE, FUN = median, ...)
@@ -29,15 +29,17 @@ Additional arguments for the \code{FUN} parameter (e.g. \code{FUN = mean, trim =
 }
 \value{
   \item{PEM}{Percent exceeding the median.}
-  \item{test}{A list of \code{test} results.}
+  \item{test}{A list of results from the binomial- and chi-square test.}
   \item{decreasing}{Logical argument from function call (see \code{Arguments} above).}
 }
-\author{
-Juergen Wilbert
-}
+\author{Juergen Wilbert}
+
+\seealso{\code{\link{overlapSC}}, \code{\link{describeSC}}, \code{\link{nap}}, \code{\link{pand}}, \code{\link{pet}}, \code{\link{pnd}}}
+
 \examples{
-## Calculate the PEM including the Binomial and Chi-square tests
-set.seed(1234)
+## Calculate the PEM including the Binomial and Chi-square tests for a single-case
 dat <- rSC(5, d.level = 0.5)
 pem(dat, chi.test = TRUE)
 }
+
+\concept{Overlap}

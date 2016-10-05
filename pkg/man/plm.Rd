@@ -1,6 +1,6 @@
 \name{plm}
 \alias{plm}
-\title{Piecewise linear model / Piecewise regression}
+\title{Piecewise linear model / piecewise regression}
 \description{
 The \code{plm} function computes a piecewise regression model (see Huitema & McKean, 2000).
 }
@@ -12,8 +12,8 @@ plm(data, AR = NULL, model = "B&L-B", count.data = FALSE,
 
 \arguments{
   \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
-  \item{AR}{Maximal lag of autoregression. Modelled based on the Autoregressive-Moving Average (ARMA) function.}
-  \item{model}{Regression model used for computation (see Huitema & McKean, 2000). Default is \code{model = "B&L-B"}. Possible values are: \code{"B&L-B"}, \code{"H-M"}, \code{"Mohr#1"}, "Mohr#2", and "Manly".}
+  \item{AR}{Maximal lag of autoregression. Modeled based on the Autoregressive-Moving Average (ARMA) function.}
+  \item{model}{Regression model used for computation (see Huitema & McKean, 2000). Default is \code{model = "B&L-B"}. Possible values are: \code{"B&L-B"}, \code{"H-M"}, \code{"Mohr#1"}, \code{"Mohr#2"}, and \code{"Manly"}.}
   \item{count.data}{???}
   \item{family}{???}
   \item{...}{???}
@@ -55,8 +55,12 @@ Huitema, B. E., & McKean, J. W. (2000). Design specification issues in time-seri
 
 \author{Juergen Wilbert}
 
+\seealso{\code{\link{hplm}}}
+
 \examples{
-## 
+## Compute a piecewise regression model for a random single-case
 dat <- rSC(1, MT = 30, B.start = 11, d.level = 1.0, d.slope = 0.05, d.trend = 0.05)
 plm(dat, AR = 3)
 }
+
+\concept{Segmented Regression}
