@@ -35,4 +35,7 @@ tauUSC(bob)
 
 ## Calculate tau-U with ties counted as positive
 tauUSC(Grosche2011$Eva, ties.method = "positive")
+
+## Request tau-U for all single-cases fom the Grosche2011 data
+lapply(Grosche2011, tauUSC)
 }

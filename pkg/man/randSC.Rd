@@ -20,10 +20,6 @@ randSC(data, statistic = "Mean B-A", number = 500, complete = FALSE, limit = 5,
       \item{\code{"Mean |A-B|"}: Uses the absolute value of the difference between the means of phases A and B.}
       \item{\code{"Median A-B"}: The same as \code{"Mean A-B"}, but based on the median.}
       \item{\code{"Median B-A"}: The same as \code{"Mean B-A"}, but based on the median.}
-      \item{\code{"B"}: \bold{Caution! This procedure is still under development. Do not use it!} Uses the difference between the slope parameter of a linear regression model for phases B and A.}
-      \item{\code{"Bdecrease"}: \bold{Caution! This procedure is still under development. Do not use it!} The same as \code{"B"}, but A-B.}
-      \item{\code{"t plm level"}: Uses the t value for the level predictor of a piece-wise regression model as test statistic.}
-      \item{\code{"t plm slope"}: Uses the t value for the slope predictor of a piece-wise regression model as test statistic.}
     }
 }
   \item{number}{Sample size of the randomization distribution. The exactness of the p-value can not exceed \eqn{1/number} (i.e., \code{number = 100} results in p-values with an exactness of one percent). Default is \code{number = 500}. For faster processing use \code{number = 100}. For more precise p-values set \code{number = 1000}.}

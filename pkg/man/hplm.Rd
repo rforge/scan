@@ -25,19 +25,17 @@ hplm(data, model = "B&L-B", method = "ML", control = list(opt = "optim"),
   \item{N}{Number of single-cases.}
   \item{analyze.random.slopes}{Logical argument from function call (see \code{Arguments} above).}
   \item{analyze.ICC}{Logical argument from function call (see \code{Arguments} above).}
-  \item{random.trend.level}{}
-  \item{random.trend.slope}{}
-  \item{random.level.slope}{}
-  \item{random.trend.level.slope}{}
-  \item{random.nointercept.trend.level.slope}{}
-  \item{random.trend}{}
-  \item{random.level}{}
-  \item{random.slope}{}
-  \item{model.0}{}
-  \item{ICC}{}
-  \item{model.without}{}
-  \item{L.ICC}{}
-  \item{p.ICC}{}
+  \item{random.trend.level}{Linear mixed-effects model with random trend and level effect.}
+  \item{random.trend.slope}{Linear mixed-effects model with random trend and slope effect.}
+  \item{random.level.slope}{Linear mixed-effects model with random level and slope effect.}
+  \item{random.trend.level.slope}{Linear mixed-effects model with random trend, level, and slope effect.}
+  \item{random.nointercept.trend.level.slope}{Linear mixed-effects model with random trend, level, and slope effect without intercept.}
+  \item{random.trend}{Significance test for random trend effect.}
+  \item{random.level}{Significance test for random level effect.}
+  \item{random.slope}{Significance test for random slope effect.}
+  \item{ICC}{Intraclass correlation.}
+  \item{L.ICC}{L ratio from intraclass correlation.}
+  \item{p.ICC}{P-Value for intraclass correlation.}
 }
 
 \author{Juergen Wilbert}

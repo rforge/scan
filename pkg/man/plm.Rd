@@ -14,9 +14,9 @@ plm(data, AR = NULL, model = "B&L-B", count.data = FALSE,
   \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
   \item{AR}{Maximal lag of autoregression. Modeled based on the Autoregressive-Moving Average (ARMA) function.}
   \item{model}{Regression model used for computation (see Huitema & McKean, 2000). Default is \code{model = "B&L-B"}. Possible values are: \code{"B&L-B"}, \code{"H-M"}, \code{"Mohr#1"}, \code{"Mohr#2"}, and \code{"Manly"}.}
-  \item{count.data}{???}
-  \item{family}{???}
-  \item{...}{???}
+  \item{count.data}{Still under development. Do not use.}
+  \item{family}{Still under development. Do not use.}
+  \item{...}{Further arguments passed to the glm function.}
 }
 
 \value{
@@ -27,19 +27,9 @@ plm(data, AR = NULL, model = "B&L-B", count.data = FALSE,
   \item{p}{P value for specified model.}
   \item{R2}{Explained variance R squared.}
   \item{R2.adj}{Adjusted R squared.}
-  \item{n1}{}
-  \item{n2}{}
   \item{count.data}{Logical argument from function call (see \code{Arguments} above).}
-  \item{I}{}
-  \item{T}{}
-  \item{D}{}
-  \item{TxD}{}
-  \item{F.slope}{}
-  \item{p.slope}{}
-  \item{ES.slope}{}
-  \item{F.trend}{}
-  \item{p.trend}{}
-  \item{ES.trend}{}
+  \item{ES.slope}{Effect size / Explained variance gain of slope.}
+  \item{ES.trend}{Effect size / Explained variance gain of trend.}
   \item{full.model}{Full regression model list (including \code{coefficients}, \code{residuals} and many others}
   \item{MT}{Number of measurements.}
   \item{data}{Single-case data frame passed to the function.}
