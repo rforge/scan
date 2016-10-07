@@ -37,9 +37,9 @@ If set \code{TRUE}, a box plot of phase A and B scores is displayed. \code{graph
 \author{Juergen Wilbert}
 
 \references{
-ADD CITATION: Jacobsen et al.
+ADD CITATION: Jacobson et al.
 
-ADD CITATION: Christenden et al.
+ADD CITATION: Christensen et al.
 
 ADD CITATION: Hageman et al.
 

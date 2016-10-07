@@ -1,6 +1,7 @@
 \name{scan-package}
 \alias{scan-package}
 \alias{scan}
+\alias{print.sc}
 \docType{package}
 \title{Single-Case Data Analyses}
 \description{
