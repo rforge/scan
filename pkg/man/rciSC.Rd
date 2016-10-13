@@ -39,9 +39,9 @@ If set \code{TRUE}, a box plot of phase A and B scores is displayed. \code{graph
 \references{
 Christensen, L., & Mendoza, J. L. (1986). A method of assessing change in a single subject: An alteration of the RC index. \emph{Behavior Therapy, 17}, 305-308.
 
-Hageman, W. J. J., & Arrindell, W. A. (1993). A further refinement of the reliable change (RC) index by improving the pre-post difference score: Introducing RCID. \emph{Behaviour Research and Therapy, 31}, 693–700.
+Hageman, W. J. J., & Arrindell, W. A. (1993). A further refinement of the reliable change (RC) index by improving the pre-post difference score: Introducing RCID. \emph{Behaviour Research and Therapy, 31}, 693-700.
 
-Jacobson, N. S., & Truax, P. (1991). Clinical Significance: A statistical approach to defining meaningful change in psychotherapy research. \emph{Journal of Consulting and Clinical Psychology, 59}, 12–19.
+Jacobson, N. S., & Truax, P. (1991). Clinical Significance: A statistical approach to defining meaningful change in psychotherapy research. \emph{Journal of Consulting and Clinical Psychology, 59}, 12-19.
 
 Wise, E. A. (2004). Methods for analyzing psychotherapy outcomes: A review of clinical significance, reliable change, and recommendations for future directions. \emph{Journal of Personality Assessment, 82}, 50 - 59.
 }
