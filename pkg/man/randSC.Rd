@@ -52,7 +52,7 @@ randSC(data, statistic = "Mean B-A", number = 500, complete = FALSE, limit = 5,
 \references{
 Bulte, I., & Onghena, P. (2009). Randomization tests for multiple-baseline designs: An extension of the SCRT-R package. \emph{Behavior Research Methods, 41}, 477-485.
 
-Bulte, I., & Onghena, P. (2012). \emph{SCRT: Single-Case Randomization Tests}. Available from: \url{http://cran.r-project.org/web/packages/SCRT/index.html}
+Bulte, I., & Onghena, P. (2012). \emph{SCRT: Single-Case Randomization Tests}. Available from: \url{https://CRAN.R-project.org/package=SCRT}
 }
 
 \author{Juergen Wilbert}
