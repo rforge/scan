@@ -1,5 +1,6 @@
 \name{tauUSC}
 \alias{tauUSC}
+\alias{newtauUSC}
 \title{Tau-U for single-case data}
 \description{
 This function calculates indices of the Tau-U family as proposed by Parker et al. (2011).

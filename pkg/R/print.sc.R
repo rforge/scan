@@ -26,6 +26,13 @@ print.sc <- function(x, ...) {
     row.names(out) <- row.names(x)
     print(round(t(out),2),...)
   }
+
+  
+  if(value == "newTAU-U") {	
+    cat("Overall Tau-U = ", x$Overall_tau_u,"\n\n")
+    
+    print(x$table)
+  }
   
   if(value == "TAU-U") {	
     cat("Tau-U = ", x$tau_u,"\n")
