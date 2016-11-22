@@ -8,6 +8,7 @@
   out$plm.level <- NA
   out$plm.poisson.slope <- NA
   out$plm.poisson.level <- NA
+  out$tauU.level <- NA
   
   out$rand.sample <- NA
   
@@ -21,7 +22,14 @@
       out$rand.level <- mean(p.rand.level <= alpha, na.rm = TRUE)
     } else out$rand.level <- NA
   }
-  
+
+  if(any(stat == "tauU")) {
+    if(any(test.parameter == "level")) {
+      p.tauU.level <- unlist(lapply(rand.sample, function(x) newtauUSC(x, method = "parker")$table[[1]][6,12]))
+      out$tauU.level <- mean(p.tauU.level <= alpha, na.rm = TRUE)
+    } else out$tauU.level <- NA
+  }
+
   if(any(stat == "plm")) {
     if(any(test.parameter == "level")) {
       p.plm.level <- unlist(lapply(rand.sample, function(x) .plm.mt(x, type = "level p")))
@@ -69,46 +77,46 @@
   out
 }
 
-power.testSC <- function(data = NULL, stat = c("rand.test","plm"), test.parameter = c("level", "slope"), rand.test.stat = c("Mean B-A","B"), cases = NULL, rtt = 0.8, d.level = NULL, d.slope = NULL, MT = NULL, B.start = NULL, d.trend = NULL, n = 100, limit = 5,  m = NULL, s = NULL, startpoints = NA, extreme.p = 0, extreme.d = c(-4,-3), exclude.equal = "auto", alpha = 0.05, distribution = "normal", concise = TRUE, silent = FALSE) {
+power.testSC <- function(data = NULL, parameters = NULL,stat = c("rand.test","plm"), test.parameter = c("level", "slope"), rand.test.stat = c("Mean B-A","B"), cases = NULL, rtt = NULL, d.level = NULL, d.slope = NULL, MT = NULL, B.start = NULL, d.trend = NULL, n = 100, limit = 5,  m = NULL, s = NULL, startpoints = NA, extreme.p = 0, extreme.d = c(-4,-3), exclude.equal = "auto", alpha = 0.05, distribution = "normal", concise = TRUE, silent = FALSE) {
   
   return.distribution <- FALSE # depricated parameter 	
   
   if(!is.null(data)) {
     data <- .SCprepareData(data)
-    cases <- length(data)
-    B.start <- unlist(lapply(data, function(x) sum(x$phase == "A") + 1))
-    MT <- unlist(lapply(data, function(x) length(x$mt)))
-    
-    d.level <- c()
-    d.slope <- c()
-    d.trend <- c()
-    m <- c()
-    
-    for(i in 1:cases) {
-      res <- coef(plm(data[i])$full)
-      m <- c(m,res[1])
-      d.trend <- c(d.trend,res[2])
-      d.level <- c(d.level,res[3])
-      d.slope <- c(d.slope,res[4])
-    }
-    if(cases == 2 && is.null(s))
-      stop("Standard deviation could not be estimated with less than two cases. Please provide a value.\n")
-    if(cases > 2)
-      s <- sd(m, na.rm = TRUE)
-    d.level <- d.level / s
-    d.slope <- d.slope / s
-    d.trend <- d.trend / s
+    est <- estimateSC(data, s = s, rtt = rtt)
+    cases = length(data)
+    B.start <- est$B.start
+    MT <- est$MT
+    d.level <- est$d.level
+    d.slope <- est$d.slope
+    d.trend <- est$d.trend
+    m <- est$m
+    s <- est$s
+    rtt <- est$rtt
+    #if(cases == 2 && is.null(s))
+    #  stop("Standard deviation could not be estimated with less than two cases. Please provide a value.\n")
+  }
+  if(!is.null(parameters)) {
+    cases <- parameters$N
+    B.start <- parameters$B.start
+    MT <- parameters$MT
+    d.level <- parameters$d.level
+    d.slope <- parameters$d.slope
+    d.trend <- parameters$d.trend
+    m <- parameters$m
+    s <- parameters$s
+    rtt <- parameters$rtt
     
   }
-  if(is.null(data)) {
+  if(is.null(data) && is.null(parameters)) {
+    if(is.null(rtt))
+      rtt <- 0.8
     if(is.null(d.level)) d.level <- 0
     if(is.null(d.slope)) d.slope <- 0
     if(is.null(d.trend)) d.trend <- 0
     if(is.null(cases)) cases <- 1
     if(is.null(m)) m <- 50
     if(is.null(s)) s <- 10
-    
-    
   }
   
   if(cases == 1 && is.null(s))
@@ -144,6 +152,8 @@ power.testSC <- function(data = NULL, stat = c("rand.test","plm"), test.paramete
   }
   out <- list()
   
+  out$power.tauU.level <- NA
+  
   out$power.rand.level <- NA
   out$power.plm.level <- NA
   out$power.plm.slope <- NA
@@ -152,6 +162,9 @@ power.testSC <- function(data = NULL, stat = c("rand.test","plm"), test.paramete
   
   out$power.hplm.level <- NA
   out$power.hplm.slope <- NA
+
+
+  out$alphaerror.tauU.level <- NA
   
   out$alphaerror.rand.level <- NA
   out$alphaerror.plm.level <- NA
@@ -179,6 +192,8 @@ power.testSC <- function(data = NULL, stat = c("rand.test","plm"), test.paramete
       out$alphaerror.plm.poisson.level <- res$plm.poisson.level
     if(any(stat == "hplm"))
       out$alphaerror.hplm.level <- res$hplm.level
+    if(any(stat == "tauU"))
+      out$alphaerror.tauU.level <- res$tauU.level
     
   } else {
     if(any(stat == "rand.test"))
@@ -189,6 +204,8 @@ power.testSC <- function(data = NULL, stat = c("rand.test","plm"), test.paramete
       out$power.plm.poisson.level <- res$plm.poisson.level
     if(any(stat == "hplm"))
       out$power.hplm.level <- res$hplm.level
+    if(any(stat == "tauU"))
+      out$power.tauU.level <- res$tauU.level
     
   }
   
@@ -220,6 +237,8 @@ power.testSC <- function(data = NULL, stat = c("rand.test","plm"), test.paramete
       out$alphaerror.plm.poisson.level <- res$plm.poisson.level
     if(any(stat == "hplm"))
       out$alphaerror.hplm.level <- res$hplm.level
+    if(any(stat == "tauU"))
+      out$alphaerror.tauU.level <- res$tauU.level
     
   }
   

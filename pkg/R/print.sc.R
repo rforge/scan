@@ -29,9 +29,11 @@ print.sc <- function(x, ...) {
 
   
   if(value == "newTAU-U") {	
-    cat("Overall Tau-U = ", x$Overall_tau_u,"\n\n")
+    cat("Overall Tau-U: \n")
+    print(x$Overall_tau_u)
+    cat("\n\n")
     
-    print(x$table)
+    print(lapply(x$table,function(x)round(x,3)))
   }
   
   if(value == "TAU-U") {	
@@ -42,7 +44,7 @@ print.sc <- function(x, ...) {
   
   if(value == "power") {	
     cat("Test-Power in percent:\n")
-    ma <- matrix(unlist(x[1:14])*100,byrow = FALSE, ncol = 2, dimnames = list(c(paste0("Rand-Test: ",x$rand.test.stat[1]),  "PLM.Norm: Level", "PLM.Norm: Slope", "PLM.Poisson: Level", "PLM.Poisson: Slope", "HPLM: Level", "HPLM: Slope"), c("Power", "Alpha-error")))
+    ma <- matrix(unlist(x[1:16])*100,byrow = FALSE, ncol = 2, dimnames = list(c("tauU: A vs. B - Trend A",paste0("Rand-Test: ",x$rand.test.stat[1]),  "PLM.Norm: Level", "PLM.Norm: Slope", "PLM.Poisson: Level", "PLM.Poisson: Slope", "HPLM: Level", "HPLM: Slope"), c("Power", "Alpha-error")))
     print(ma)
   }
   

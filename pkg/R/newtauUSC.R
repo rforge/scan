@@ -128,7 +128,7 @@ newtauUSC <- function (data, ties.method = "omit", method = "parker") {
     BvB_AKen <- Kendall(c(A,B), c(nA:1,1:nB))
     
     AvB_B_AKen <- Kendall(c(A, B),c(nA:1,(nA + 1):nAB))
-    AvB_AKen <- Kendall(c(A, B),c(nA:1,rep(1,nB)))
+    AvB_AKen <- Kendall(c(A, B),c(nA:1,rep(nA+1,nB)))
     
     AvB_BKen <- Kendall(c(A, B),c(rep(0, nA),(nA + 1):nAB))
     out$D <- c(
@@ -170,7 +170,17 @@ newtauUSC <- function (data, ties.method = "omit", method = "parker") {
     weight.v <- c(weight.v,1/ret$table[[i]]["A vs. B + Trend B - Trend A","VAR"])
     weight.t <- c(weight.t,ret$table[[i]]["A vs. B + Trend B - Trend A","Tau"])
   }
-  ret$Overall_tau_u <- sum(weight.v*weight.t)/sum(weight.v)
+  ret$Overall_tau_u <- c("A vs. B + Trend B - Trend A" = sum(weight.v*weight.t)/sum(weight.v))
+  
+  weight.t <- c()
+  weight.v <- c()
+  for(i in 1:N) {
+    weight.v <- c(weight.v,1/ret$table[[i]]["A vs. B - Trend A","VAR"])
+    weight.t <- c(weight.t,ret$table[[i]]["A vs. B - Trend A","Tau"])
+  }
+  ret$Overall_tau_u <- c(ret$Overall_tau_u, "A vs. B - Trend A" = sum(weight.v*weight.t)/sum(weight.v))
+  
+  
   class(ret) <- c("sc","newTAU-U")
   
   ret
