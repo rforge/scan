@@ -11,10 +11,11 @@ randSC <- function (data, statistic = "Mean B-A", number = 500, complete = FALSE
   obs <- lapply(data, function(x) x[,2])
   MT <- lapply(data, nrow)
   N <- length(data)
+  if(length(limit) == 1) limit[2] <- limit[1]
   obs.B.start <- unlist(lapply(a, function(x) length(x)+1))
   
   if(is.na(startpoints[1])) {
-    pos.startpts <- lapply(MT, function(x) (limit[1]+1):(x-limit+1))
+    pos.startpts <- lapply(MT, function(x) (limit[1]+1):(x-limit[2]+1))
   } else {
     pos.startpts <- lapply(MT, function(x) startpoints)
   }

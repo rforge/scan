@@ -1,5 +1,6 @@
 \name{plm}
 \alias{plm}
+\alias{newplm}
 \title{Piecewise linear model / piecewise regression}
 \description{
 The \code{plm} function computes a piecewise regression model (see Huitema & McKean, 2000).
