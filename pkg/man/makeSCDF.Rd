@@ -1,5 +1,6 @@
 \name{makeSCDF}
 \alias{makeSCDF}
+\alias{newmakeSCDF}
 \title{Create a single case data frame for further analyses}
 \description{
 The \code{makeSCDF} function creates the basic data structure for one or multiple single-cases.  This basic data structure is required in all \code{scan} functions.
