@@ -100,7 +100,7 @@ plm <- function(data, AR = NULL, model = "B&L-B", count.data = FALSE, family = i
   ES.trend <- r2.full-r2.lr3
   
   ### output
-  out <- list(model = model, F = F.full, df1 = 3, df2 = df2.full, p = p.full, R2 = r2.full, R2.adj = r2.full.adj, n1 = n1, n2 = n2, count.data = count.data, I = full.I, T = full.T, D = full.D, TxD = full.TxD, F.slope = F.slope, p.slope = p.slope, ES.slope = ES.slope, F.level = F.level, p.level = p.level, ES.level = ES.level, F.trend = F.trend, p.trend = p.trend, ES.trend = ES.trend, full.model = full, MT = MT, data = data, N = N, family = family)
+  out <- list(model = model, F = F.full, df1 = 3, df2 = df2.full, p = p.full, R2 = r2.full, R2.adj = r2.full.adj, n1 = n1, n2 = n2, count.data = count.data, I = full.I, T = full.T, D = full.D, TxD = full.TxD, F.slope = F.slope, p.slope = p.slope, ES.slope = ES.slope, F.level = F.level, p.level = p.level, ES.level = ES.level, F.trend = F.trend, p.trend = p.trend, ES.trend = ES.trend, full.model = full, MT = MT, data = data, N = N, family = family, ar = 0)
   class(out) <- c("sc", "pr")
   out
 }

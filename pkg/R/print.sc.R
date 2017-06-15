@@ -215,12 +215,9 @@ print.sc <- function(x, ...) {
       cat("Multiple Baseline Design for", x$N, "cases.\n\n")
     
     cat("Regression model: ", x$model,"\n\n")
-    if(x$count.data)
-      cat("Measurements are count data.\n")
-    #if(x$family != "gaussian")
     cat("Fitted a", x$family, "distribution.\n\n")		
     
-    if (value == "plm.ar")
+    if (x$ar > 0)
       cat("Correlated residuals up to autoregressions of lag", x$ar, "are modelled\n\n")
     
     if(x$family == "poisson" || x$family == "nbinomial") {
@@ -232,9 +229,9 @@ print.sc <- function(x, ...) {
     }
     
     
-    if(value == "pr")
+    if(x$ar == 0)
       res <- summary(x$full)$coefficients
-    if(value == "plm.ar")
+    if(x$ar > 0)
       res <- summary(x$full)$tTable
     #ci <- sqrt(qt(0.975,x$df1+x$df2))
     res <- cbind(res[,1], suppressMessages(confint(x$full)), res[,2:4])
@@ -254,14 +251,6 @@ print.sc <- function(x, ...) {
     cat("Autocorrelation of the Residuals\n")
     print(data.frame(lag = 1:5,r = round(acf(residuals(x$full.model), lag.max = 5,plot = FALSE)$acf[2:6],2)))
     cat("\n")
-    #data.frame(lag = 2:5, autocorr = acf(residuals(x$full.model), lag.max = 5,plot = FALSE)$acf[2:5]
-    
-    #cat(sprintf("Test of level: F(1) = %.2f; p = %0.3f; delta R-Square = %0.3f", x$F.level, x$p.level, x$ES.level), "\n")
-    #cat(sprintf("Test of slope: F(1) = %.2f; p = %0.3f; delta R-Square = %0.3f", x$F.slope, x$p.slope, x$ES.slope), "\n\n")
-    
-    #cat("Separate regressions for phases\n")
-    #print(matrix(c(x$I, x$I + x$D + x$T*x$n1), x$T,x$T + x$TxD), ncol = 2, dimnames = list(c("Phase A", "Phase B"), c("Intercept", "Slope"))),...)
-    #cat("\n")
   }
   
   if(value == "PAND") {
