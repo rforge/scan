@@ -1,5 +1,6 @@
 \name{plotSC}
 \alias{plotSC}
+\alias{newplotSC}
 \title{Plot single-case data}
 \description{
 The \code{plotSC} function provides a plot of a single-case or multiple single-cases.
@@ -60,7 +61,7 @@ plotSC(data, ylim = NULL, xlim = NULL, fill = "", lines = "", marks = NULL,
  \item{FUN.AB}{Not in use.}
   \item{xlab}{The label of the x-axis. Default is \code{xlab = "Measurement time"}.}
   \item{ylab}{The labels of the y-axis. Default is \code{ylab = "Score"}.}
-  \item{text.ABlag}{By default a vertical line separates phases A and B in the plot. Alternatively, you could print a character string between the two phases using this argument: \code{textAB.lag = "Start"}.}
+  \item{text.ABlag}{By default a vertical line separates phases A and B in the plot. Alternatively, you could print a character string between the two phases using this argument: \code{text.ABlag = "Start"}.}
   \item{lwd}{Width of the plot line. Default is \code{lwd = 2}.}
   \item{pch}{Point type. Default is \code{pch = 17} (triangles). Other options are for example: 16 (filled circles) or "A" (uses the letter A).}
   \item{type}{Line type. "l" draws lines, "p" points, "b" draws lines and points, and "n" draws nothing. Default is \code{type = "b"}). The "n" argument is useful in combination with the lines argument (e.g., \code{type = "n", lines = "loreg"}).}

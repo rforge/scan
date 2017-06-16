@@ -13,8 +13,6 @@ describeSC <- function(data, decreasing = FALSE) {
     data <- data.list[[i]]
     A <- data[,2][data[,1] == "A"]
     B <- data[,2][data[,1] == "B"]
-    #d.f$acA[i] <- .SCac(A,1)
-    #d.f$acB[i] <- .SCac(B,1)
     d.f$nA[i] <- length(A)
     d.f$nB[i] <- length(B)
     d.f$nAB[i] <- d.f$nA[i] + d.f$nB[i]
@@ -41,11 +39,6 @@ describeSC <- function(data, decreasing = FALSE) {
     d.f$smd1[i] <- d.f$dif[i]/d.f$sdA[i]
     d.f$smd2[i] <- d.f$dif[i]/d.f$sdB[i]
     d.f$smd3[i] <- d.f$dif[i]/d.f$sdAB[i]
-    #d.f$PND[i] <- pnd(data, decreasing = decreasing)$PND
-    #d.f$PEM[i] <- pem(data, decreasing = decreasing, binom.test = FALSE, chi.test = FALSE)$PEM
-    #d.f$NAP[i] <- nap(data, decreasing = decreasing)$NAP
-    #d.f$PAND[i] <- pand(data, decreasing = decreasing)$PAND
-    #d.f$TAU_U[i] <- tauUSC(data)$tau_u
   }
   
   if(N > 1) {
@@ -72,17 +65,10 @@ describeSC <- function(data, decreasing = FALSE) {
     d.f$smd1[N] <- mean(d.f$smd1,na.rm = TRUE)
     d.f$smd2[N] <- mean(d.f$smd2,na.rm = TRUE)
     d.f$smd3[N] <- mean(d.f$smd3,na.rm = TRUE)
-    #d.f$acA[N] <- mean(d.f$acA,na.rm = TRUE)
-    #d.f$acB[N] <- mean(d.f$acB,na.rm = TRUE)
     d.f$bA[N] <- mean(d.f$bA,na.rm = TRUE)
     d.f$bB[N] <- mean(d.f$bB,na.rm = TRUE)
     d.f$bC[N] <- mean(d.f$bC,na.rm = TRUE)
     d.f$bdif[N] <- mean(d.f$bdif,na.rm = TRUE)
-    #d.f$PND[N] <- mean(d.f$PND,na.rm = TRUE)
-    #d.f$PEM[N] <- mean(d.f$PEM,na.rm = TRUE)
-    #d.f$NAP[N] <- mean(d.f$NAP,na.rm = TRUE)
-    #d.f$PAND[N] <- mean(d.f$PAND,na.rm = TRUE)
-    #d.f$TAU_U[N] <- mean(d.f$TAU_U,na.rm = TRUE)
     rownames(d.f) <- c(case.names, "total")
   }
   if(N == 1)

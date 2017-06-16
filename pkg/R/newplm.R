@@ -1,6 +1,6 @@
 
 
-newplm <- function(data, AR = 0, model = "B&L-B", family = "gaussian",...) {
+newplm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", add.formula = "", ...) {
   
   data <- .SCprepareData(data)
   N <- length(data)
@@ -9,7 +9,7 @@ newplm <- function(data, AR = 0, model = "B&L-B", family = "gaussian",...) {
     data <- data[[1]]
   
   if(N > 1)
-    stop("Procedure could not be applied for more than one case.\nConsider to use the hplm function.")
+    stop("Procedure could not be applied to more than one case.\nConsider to use the hplm function.")
   
   if (AR > 0 && !family == "gaussian")
 		stop("Autoregression models could only be applied if distribution familiy = 'gaussian'.\n")
@@ -17,7 +17,7 @@ newplm <- function(data, AR = 0, model = "B&L-B", family = "gaussian",...) {
   data <- na.omit(data)
   
   ### model definition
-  y <- data[,2]
+  #y <- data[,2]
   MT <- data[,3]
   D <- factor(data[,1])
   if(model == "H-M") {
@@ -45,19 +45,28 @@ newplm <- function(data, AR = 0, model = "B&L-B", family = "gaussian",...) {
     inter <- MT * ifelse(substr(D,1,1) == "A", 0,1)
   } else stop("Wrong model definition!\n")
   
+  data$mt <- MT
+  data$phase <- D
+  data$inter <- inter
+  
+  formula.full <- formula(paste0("values ~ 1 + mt + phase + inter",add.formula))
+  formula.lr1  <- formula(paste0("values ~ 1 + mt + phase",add.formula))
+  formula.lr2  <- formula(paste0("values ~ 1 + mt + inter",add.formula))
+  formula.lr3  <- formula(paste0("values ~ 1 + phase + inter",add.formula))
+  
   if(AR == 0) {
-    full <- glm(y ~ 1 + MT + D + inter, family = family,...)
-    lr1 <- glm(y ~ 1 + MT + D, family = family,...)
-    lr2 <- glm(y ~ 1 + MT + inter, family = family,...)
-    lr3 <- glm(y ~ 1 + D + inter, family = family,...)
+    full <- glm(formula.full, data = data, family = family,...)
+    lr1  <- glm(formula.lr1 , data = data, family = family,...)
+    lr2  <- glm(formula.lr2 , data = data, family = family,...)
+    lr3  <- glm(formula.lr3 , data = data, family = family,...)
     df2.full <- full$df.residual
   }
 
   if(AR > 0) {
-    full <- gls(y ~ 1 + MT + D + inter, correlation=corARMA(p=AR), method="ML")
-    lr1 <- gls(y ~ 1 + MT + D, correlation=corARMA(p=AR), method="ML")
-    lr2 <- gls(y ~ 1 + MT + inter, correlation=corARMA(p=AR), method="ML")
-    lr3 <- gls(y ~ 1 + D + inter, correlation=corARMA(p=AR), method="ML")
+    full <- gls(formula.full, data = data, correlation=corARMA(p=AR), method="ML")
+    lr1  <- gls(formula.lr1 , data = data, correlation=corARMA(p=AR), method="ML")
+    lr2  <- gls(formula.lr2 , data = data, correlation=corARMA(p=AR), method="ML")
+    lr3  <- gls(formula.lr3 , data = data, correlation=corARMA(p=AR), method="ML")
     df2.full <- full$dims$N - full$dims$p
   }
   
@@ -68,18 +77,18 @@ newplm <- function(data, AR = 0, model = "B&L-B", family = "gaussian",...) {
   
   ### inference
   QSE <- sum(full$residuals^2, na.rm = TRUE)
-  QST <- sum((y-mean(y))^2, na.rm = TRUE)
+  QST <- sum((data$values-mean(data$values))^2, na.rm = TRUE)
   MQSA <- (QST - QSE) / 3
   MQSE <- QSE / df2.full
   F.full <- MQSA / MQSE
   p.full <- pf(F.full,3,df2.full, lower.tail = FALSE)
   r2.full <- 1 - (QSE / QST)
-  r2.full.adj <- r2.full-(1-r2.full)*(3/(length(y)-3-1))
+  r2.full.adj <- r2.full-(1-r2.full)*(3/(length(data$values)-3-1))
   
-  r2.full <- 1-(var(full$residuals, na.rm = TRUE)/var(y, na.rm = TRUE))
-  r2.lr1 <- 1-(var(lr1$residuals, na.rm = TRUE)/var(y, na.rm = TRUE))
-  r2.lr2 <- 1-(var(lr2$residuals, na.rm = TRUE)/var(y, na.rm = TRUE))
-  r2.lr3 <- 1-(var(lr3$residuals, na.rm = TRUE)/var(y, na.rm = TRUE))
+  r2.full <- 1-(var(full$residuals, na.rm = TRUE)/var(data$values, na.rm = TRUE))
+  r2.lr1 <- 1-(var(lr1$residuals, na.rm = TRUE)/var(data$values, na.rm = TRUE))
+  r2.lr2 <- 1-(var(lr2$residuals, na.rm = TRUE)/var(data$values, na.rm = TRUE))
+  r2.lr3 <- 1-(var(lr3$residuals, na.rm = TRUE)/var(data$values, na.rm = TRUE))
   
   ES.slope <- r2.full-r2.lr1
   ES.level <- r2.full-r2.lr2

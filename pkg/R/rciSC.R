@@ -40,7 +40,7 @@ rciSC <- function(data, rel = 0.80, ci = 0.95, graph = FALSE) {
   }
   
   RCI.ma <- matrix(c(RCI.1, RCI.2, RCI.3), 3,1,dimnames = list(c("Jacobson et al.","Christensen and Mendoza","Hageman and Arrindell"), "RCI"))
-  out <- list(RCI = RCI.ma, stand.dif = stand.dif, conf = ci.ma, conf.percent = ci, reliability = rel, descriptives = descriptives.ma, N = N, A = A, B = B) 
+  out <- list(RCI = RCI.ma, stand.dif = stand.dif, conf = ci.ma, conf.percent = ci, reliability = rel, descriptives = descriptives.ma) 
   class(out) <- c("sc","rci")
   
   out

@@ -1,5 +1,5 @@
 
-newmakeSCDF <- function (data, B.start = NULL, MT = NULL, phase.length = NULL){
+newmakeSCDF <- function (data, B.start = NULL, MT = NULL, phase.length = NULL, pvar = NULL){
   if (is.null(MT))
     MT <- 1:length(data)
   if(!is.null(B.start)) {
@@ -10,5 +10,7 @@ newmakeSCDF <- function (data, B.start = NULL, MT = NULL, phase.length = NULL){
       D <- rep(names(phase.length),phase.length)
 
   data <- data.frame(phase = D, values = data, mt = MT)
+  if(!is.null(pvar))
+    data <- cbind(data, as.data.frame(pvar))
   data
 }

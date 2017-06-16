@@ -108,7 +108,6 @@ print.sc <- function(x, ...) {
   if(value == "rci") {
     cat("!!! Caution! This function is under development and not yet ready for use!!!\n\n")
     cat("Reliable Change Index\n\n")
-    cat("N Cases = ", x$N,"\n")
     cat("Mean Difference = ", x$descriptives[2,2] - x$descriptives[1,2], "\n")
     
     cat("Standardized Difference = ", x$stand.dif, "\n")
@@ -236,9 +235,10 @@ print.sc <- function(x, ...) {
     #ci <- sqrt(qt(0.975,x$df1+x$df2))
     res <- cbind(res[,1], suppressMessages(confint(x$full)), res[,2:4])
     res <- as.data.frame(res)
-    res$R2 <- c("", sprintf("%.3f",x$ES.trend), sprintf("%.3f",x$ES.level), sprintf("%.3f",x$ES.slope))
+    res$R2 <- ""
+    res$R2[2:4] <-  c(sprintf("%.3f",x$ES.trend), sprintf("%.3f",x$ES.level), sprintf("%.3f",x$ES.slope))
     res[1:6] <- round(res[1:6],3)
-    row.names(res) <- c("Intercept", "Trend", "Level","Slope")
+    row.names(res)[1:4] <- c("Intercept", "Trend", "Level","Slope")
     colnames(res) <- c("B","2.5%","97.5%","SE", "t","p", "R-Square")		
     if(x$family == "poisson" || x$family == "nbinomial") {
       OR <- exp(res[,1:3])
@@ -319,18 +319,11 @@ print.sc <- function(x, ...) {
       "SD A" = x$descriptives$sdA, 
       "SD B" = x$descriptives$sdB, 
       "SD AB" = x$descriptives$sdAB, 
-      #"Autocor A" = x$descriptives$acA, 
-      #"Autocor B" = x$descriptives$acB, 
       "Trend A" = x$descriptives$bA, 
       "Trend B" = x$descriptives$bB, 
       "Trend AB" = x$descriptives$bC, 
       "Trend dif" = x$descriptives$bdif,
-      "SMD" = x$descriptives$smd1   #,
-      #"PND" = x$descriptives$PND, 
-      #"PEM" = x$descriptives$PEM, 
-      #"NAP" = x$descriptives$NAP, 
-      #"PAND" = x$descriptives$PAND,
-      #"TAU-U" = x$descriptives$TAU_U
+      "SMD" = x$descriptives$smd1
     )
     
     row.names(out) <- row.names(x$descriptives)
