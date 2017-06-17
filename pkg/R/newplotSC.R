@@ -179,55 +179,69 @@ newplotSC <- function(data, ylim = NULL, xlim = NULL, fill = "", lines = "", mar
       lwd.line <- lines[[id]]
     }
     if (any(names(lines) == "trend")) {
-      reg <- lm(A~Ax)
-      lines(c(min(Ax), max(Ax)), c(reg$coefficients[1] + min(Ax) * reg$coefficients[2], reg$coefficients[1] + max(Ax) * reg$coefficients[2]), lty = lty.line, col = col.line, lwd = lwd.line)
-      reg <- lm(B~I(Bx-Bx[1]+1))
-      lines(c(min(Bx), max(Bx)), c(reg$coefficients[1] + 1 * reg$coefficients[2], reg$coefficients[1] + (Bx[length(Bx)] - Bx[1]+ 1)  * reg$coefficients[2]), lty = lty.line, col = col.line, lwd = lwd.line)
+      for(i in 1:length(design$values)) {
+        x <- data$mt[design$start[i]:design$stop[i]]
+        y <- data$values[design$start[i]:design$stop[i]]
+        reg <- lm(y~x)
+        lines(c(min(x), max(x)), c(reg$coefficients[1] + min(x) * reg$coefficients[2], reg$coefficients[1] + max(x) * reg$coefficients[2]), lty = lty.line, col = col.line, lwd = lwd.line)
+      }
     }
     if (any(names(lines) == "median")) {
-      lines(c(min(Ax), max(Ax)), c(median(A, na.rm = TRUE), median(A, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)		
-      lines(c(min(Bx), max(Bx)), c(median(B, na.rm = TRUE), median(B, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)		
-      labelxy <- c(max(Bx), median(B,na.rm = TRUE))
-      label <- "Median"
-      
+      for(i in 1:length(design$values)) {
+        x <- data$mt[design$start[i]:design$stop[i]]
+        y <- data$values[design$start[i]:design$stop[i]]
+        lines(c(min(x), max(x)), c(median(y, na.rm = TRUE), median(y, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)
+      }      
+      #labelxy <- c(max(Bx), median(B,na.rm = TRUE))
+      #label <- "Median"
     }
     if (any(names(lines) == "mean")) {
       id <- which(names(lines) == "mean")
       lines.par <- lines[[id]]
       if (is.na(lines.par)) lines.par <- 0.1
-      lines(c(min(Ax), max(Ax)), c(mean(A, trim = lines.par, na.rm = TRUE), mean(A, trim = lines.par, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)		
-      lines(c(min(Bx), max(Bx)), c(mean(B, trim = lines.par, na.rm = TRUE), mean(B, trim = lines.par, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)		
-      labelxy <- c(max(Bx), mean(B, trim = lines.par, na.rm = TRUE))
-      label <- "Trimmed mean"
+      
+      for(i in 1:length(design$values)) {
+        x <- data$mt[design$start[i]:design$stop[i]]
+        y <- data$values[design$start[i]:design$stop[i]]
+        lines(c(min(x), max(x)), c(mean(y, trim = lines.par, na.rm = TRUE), mean(y, trim = lines.par, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)
+      }
+      #labelxy <- c(max(Bx), mean(B, trim = lines.par, na.rm = TRUE))
+      #label <- "Trimmed mean"
     }
     if (any(names(lines) == "trendA")) {
-      #reg <- lm(A~I(1:length(A)))
-      reg <- lm(A~Ax)
-      lines(c(min(Ax), max(Bx)), c(reg$coefficients[1]  + min(Ax) * reg$coefficients[2], reg$coefficients[1] + max(Bx) * reg$coefficients[2]), lty = lty.line, col = col.line, lwd = lwd.line)
-      labelxy <- c(max(Bx), reg$coefficients[1] + (max(Bx) - min(Bx)) * reg$coefficients[2])
-      label <- "Trend A"
+      x <- data$mt[design$start[1]:design$stop[1]]
+      y <- data$values[design$start[1]:design$stop[1]]
+      maxMT <- max(data$mt)
+      reg <- lm(y~x)
+      lines(c(min(x), maxMT), c(reg$coefficients[1]  + min(x) * reg$coefficients[2], reg$coefficients[1] + maxMT * reg$coefficients[2]), lty = lty.line, col = col.line, lwd = lwd.line)
+      #labelxy <- c(max(Bx), reg$coefficients[1] + (max(Bx) - min(Bx)) * reg$coefficients[2])
+      #label <- "Trend A"
     }
     if (any(names(lines) == "loreg")) {
       id <- which(names(lines) == "loreg")
       lines.par <- lines[[id]]
       if (is.na(lines.par)) lines.par <- 0.5
-      
-      AB <- c(A,B)
-      ABx <- c(Ax,Bx)
-      reg <- lowess(AB~ABx, f = lines.par)
+      reg <- lowess(data$values~data$mt, f = lines.par)
       lines(reg, lty = lty.line, col = col.line, lwd = lwd.line)
-      labelxy <- c(max(Bx), (max(AB)-min(AB))/2+min(AB))
-      label <- "Local Regression"
+      #labelxy <- c(max(Bx), (max(AB)-min(AB))/2+min(AB))
+      #label <- "Local Regression"
     }
     
     if (any(names(lines) == "pnd") || any(names(lines) == "maxA")) {
-      lines(c(min(Ax), max(Bx)), c(max(A), max(A)), lty = lty.line, col = col.line, lwd = lwd.line)		
-      labelxy <- c(max(Bx), max(A))
-      label <- "Max A"
+      x <- data$mt[design$start[1]:design$stop[1]]
+      y <- data$values[design$start[1]:design$stop[1]]
+      maxMT <- max(data$mt)
+      lines(c(min(x), maxMT), c(max(y), max(y)), lty = lty.line, col = col.line, lwd = lwd.line)		
+      #labelxy <- c(max(Bx), max(A))
+      #label <- "Max A"
     }
     if (any(names(lines) == "medianA")) {
-      lines(c(min(Ax), max(Bx)), c(median(A, na.rm = TRUE), median(A, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)		
-      labelxy <- c(max(Bx), median(A, na.rm = TRUE))
+      x <- data$mt[design$start[1]:design$stop[1]]
+      y <- data$values[design$start[1]:design$stop[1]]
+      maxMT <- max(data$mt)
+      
+      lines(c(min(x), maxMT), c(median(y, na.rm = TRUE), median(y, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)		
+      #labelxy <- c(max(Bx), median(A, na.rm = TRUE))
       label <- "Median A"
     }
     if (any(names(lines) == "meanA")) {
@@ -235,36 +249,39 @@ newplotSC <- function(data, ylim = NULL, xlim = NULL, fill = "", lines = "", mar
       lines.par <- lines[[id]]
       if (is.na(lines.par)) lines.par <- 0.1
       
-      lines(c(min(Ax), max(Bx)), c(mean(A, trim = lines.par, na.rm = TRUE), mean(A, trim = lines.par, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)		
-      labelxy <- c(max(Bx), mean(A, trim = lines.par, na.rm = TRUE))
+      x <- data$mt[design$start[1]:design$stop[1]]
+      y <- data$values[design$start[1]:design$stop[1]]
+      maxMT <- max(data$mt)
+      lines(c(min(x), maxMT), c(mean(y, trim = lines.par, na.rm = TRUE), mean(y, trim = lines.par, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)		
+      #labelxy <- c(max(Bx), mean(A, trim = lines.par, na.rm = TRUE))
       label <- "Mean A"
     }
     if (any(names(lines) == "piecewisereg") || any(names(lines) == "plm")) {
       pr <- plm(data)
       y <- pr$full.model$fitted.values
-      lines(data[,3], y, lty = lty.line, col = col.line, lwd = lwd.line)
+      lines(data$mt, y, lty = lty.line, col = col.line, lwd = lwd.line)
     }
     if (any(names(lines) == "plm.ar")) {
       id <- which(names(lines) == "plm.ar")
       lines.par <- as.numeric(lines[[id]])
       pr <- plm(data, AR = lines.par)
       y <- pr$full.model$fitted
-      lines(data[,3], y, lty = lty.line, col = col.line, lwd = lwd.line)
+      lines(data$mt, y, lty = lty.line, col = col.line, lwd = lwd.line)
     }
     
     if (any(names(lines) == "movingMean")) {
       id <- which(names(lines) == "movingMean")
       lines.par <- lines[[id]]
       if (is.na(lines.par)) lines.par <- 1
-      y <- .SCmovingAverage(c(A,B),lines.par, mean)
-      lines(c(Ax,Bx), y, lty = lty.line, col = col.line, lwd = lwd.line)
+      y <- .SCmovingAverage(data$values,lines.par, mean)
+      lines(data$mt, y, lty = lty.line, col = col.line, lwd = lwd.line)
     }
     if (any(names(lines) == "movingMedian")) {
       id <- which(names(lines) == "movingMedian")
       lines.par <- lines[[id]]
       if (is.na(lines.par)) lines.par <- 1
-      y <- .SCmovingAverage(c(A,B),lines.par, median)
-      lines(c(Ax,Bx), y, lty = lty.line, col = col.line, lwd = lwd.line)
+      y <- .SCmovingAverage(data$values,lines.par, median)
+      lines(data$mt, y, lty = lty.line, col = col.line, lwd = lwd.line)
     }
     
     if (!is.null(FUN.AB)){
