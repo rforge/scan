@@ -12,21 +12,10 @@ print.sc <- function(x, ...) {
   
   if(value == "overlap") {
     cat("Overlap Indices\n\n")
+    cat("Design: ", x$design, "\n\n")
     cat("Comparing phase", x$phase[1],"to",x$phase[2],"\n\n")
-    
-    x <- x$overlap
-    out <- data.frame(
-      "PND" = x$PND, 
-      "PEM" = x$PEM,
-      "PET" = x$PET,
-      "NAP" = x$NAP,
-      "NAP rescaled" = x$NAP.rescaled,
-      "PAND" = x$PAND,
-      "Tau-U" = x$TAU_U
-    )
-    
-    row.names(out) <- row.names(x)
-    print(round(t(out),2),...)
+
+    print(round(t(x$overlap),2),...)
   }
 
   
@@ -302,40 +291,11 @@ print.sc <- function(x, ...) {
   
   if(value == "describe") {
     cat("Describe Single-Case Data\n\n")
-    if(any(names(x) == "design"))
-       cat("Design: ", x$design, "\n\n")
+    cat("Design: ", x$design, "\n\n")
     print(round(t(x$descriptives),2), ...)
     
     return()
-    ######## depricated: delete in next full release
-    out <- data.frame(
-      "n A" = x$descriptives$nA, 
-      "n B"  = x$descriptives$nB, 
-      "n AB" = x$descriptives$nAB, 
-      "Missing A" = x$descriptives$misA, 
-      "Missing B" = x$descriptives$misB, 
-      "Missing AB" = x$descriptives$misAB,
-      "Mean A" = x$descriptives$mA, 
-      "Mean B" = x$descriptives$mB, 
-      "Mean dif" = x$descriptives$dif,
-      "Median A" = x$descriptives$mdA,
-      "Median B" = x$descriptives$mdB,
-      "Min A" = x$descriptives$minA, 
-      "Min B" = x$descriptives$minB, 
-      "Max A" = x$descriptives$maxA, 
-      "Max B" = x$descriptives$maxB, 
-      "SD A" = x$descriptives$sdA, 
-      "SD B" = x$descriptives$sdB, 
-      "SD AB" = x$descriptives$sdAB, 
-      "Trend A" = x$descriptives$bA, 
-      "Trend B" = x$descriptives$bB, 
-      "Trend AB" = x$descriptives$bC, 
-      "Trend dif" = x$descriptives$bdif,
-      "SMD" = x$descriptives$smd1
-    )
-    
-    row.names(out) <- row.names(x$descriptives)
-    print(round(t(out),2), ...)
+ 
   }	
   
   if(value == "outlier") {

@@ -1,80 +1,52 @@
 
 
-describeSC <- function(data, decreasing = FALSE) {
+describeSC <- function(data, decreasing = FALSE, design = NULL) {
   data.list <- .SCprepareData(data)
   N <- length(data.list)
   case.names <- names(data.list)
   if (is.null(case.names))
     case.names <- paste("Case",1:N, sep = "")
   
-  d.f <- data.frame(tmp = rep(NA,N))
+  if(is.null(design)) 
+    design <- rle(as.character(data.list[[1]]$phase))$values
   
-  for(i in 1:N) {
-    data <- data.list[[i]]
-    A <- data[,2][data[,1] == "A"]
-    B <- data[,2][data[,1] == "B"]
-    d.f$nA[i] <- length(A)
-    d.f$nB[i] <- length(B)
-    d.f$nAB[i] <- d.f$nA[i] + d.f$nB[i]
-    d.f$misA[i] <- sum(is.na(A),na.rm = TRUE) 
-    d.f$misB[i] <- sum(is.na(B),na.rm = TRUE) 
-    d.f$misAB[i] <- d.f$misA[i] + d.f$misB[i]
-    d.f$mA[i] <- mean(A,na.rm = TRUE)
-    d.f$mB[i] <- mean(B,na.rm = TRUE)
-    d.f$mdA[i] <- median(A,na.rm = TRUE)
-    d.f$mdB[i] <- median(B,na.rm = TRUE)
-    d.f$minA[i] <- min(A,na.rm = TRUE)
-    d.f$minB[i] <- min(B,na.rm = TRUE)
-    d.f$maxA[i] <- max(A,na.rm = TRUE)
-    d.f$maxB[i] <- max(B,na.rm = TRUE)
-    trend <- trendSC(data)$trend
-    d.f$bA[i] <- trend[2,2]
-    d.f$bB[i] <- trend[3,2]
-    d.f$bC[i] <- trend[1,2]
-    d.f$bdif[i] <- d.f$bB[i] - d.f$bA[i]
-    d.f$sdA[i] <- sd(A,na.rm = TRUE)
-    d.f$sdB[i] <- sd(B,na.rm = TRUE)
-    d.f$sdAB[i] <- sd(data[,2],na.rm = TRUE)
-    d.f$dif[i] <- d.f$mB[i] - d.f$mA[i]
-    d.f$smd1[i] <- d.f$dif[i]/d.f$sdA[i]
-    d.f$smd2[i] <- d.f$dif[i]/d.f$sdB[i]
-    d.f$smd3[i] <- d.f$dif[i]/d.f$sdAB[i]
+  while(any(duplicated(design))) {
+    design[anyDuplicated(design)] <- paste0(design[anyDuplicated(design)],".phase",anyDuplicated(design))
   }
   
-  if(N > 1) {
-    N <- N + 1
-    d.f[N,"tmp"] <- NA
-    d.f$nA[N] <- sum(d.f$nA,na.rm = TRUE)
-    d.f$nB[N] <- sum(d.f$nB,na.rm = TRUE)
-    d.f$nAB[N] <- sum(d.f$nAB,na.rm = TRUE)
-    d.f$misA[N] <- sum(d.f$misA,na.rm = TRUE)
-    d.f$misB[N] <- sum(d.f$misB,na.rm = TRUE)
-    d.f$misAB[N] <- sum(d.f$misAB,na.rm = TRUE)
-    d.f$mA[N] <- mean(d.f$mA,na.rm = TRUE)
-    d.f$mB[N] <- mean(d.f$mB,na.rm = TRUE)
-    d.f$dif[N] <- mean(d.f$dif,na.rm = TRUE)
-    d.f$mdA[N] <- median(d.f$mdA,na.rm = TRUE)
-    d.f$mdB[N] <- median(d.f$mdB,na.rm = TRUE)
-    d.f$minA[N] <- min(d.f$minA,na.rm = TRUE)
-    d.f$minB[N] <- min(d.f$minB,na.rm = TRUE)
-    d.f$maxA[N] <- max(d.f$maxA,na.rm = TRUE)
-    d.f$maxB[N] <- max(d.f$maxB,na.rm = TRUE)
-    d.f$sdA[N] <- sqrt(mean(d.f$sdA^2,na.rm = TRUE))
-    d.f$sdB[N] <- sqrt(mean(d.f$sdB^2,na.rm = TRUE))
-    d.f$sdAB[N] <- sqrt(mean(d.f$sdAB^2,na.rm = TRUE))
-    d.f$smd1[N] <- mean(d.f$smd1,na.rm = TRUE)
-    d.f$smd2[N] <- mean(d.f$smd2,na.rm = TRUE)
-    d.f$smd3[N] <- mean(d.f$smd3,na.rm = TRUE)
-    d.f$bA[N] <- mean(d.f$bA,na.rm = TRUE)
-    d.f$bB[N] <- mean(d.f$bB,na.rm = TRUE)
-    d.f$bC[N] <- mean(d.f$bC,na.rm = TRUE)
-    d.f$bdif[N] <- mean(d.f$bdif,na.rm = TRUE)
-    rownames(d.f) <- c(case.names, "total")
-  }
-  if(N == 1)
-    rownames(d.f) <- c(case.names)
+  VAR <- c("n","mis","m","md","sd","min","max","trend")
   
-  out <- list(descriptives = d.f[,-1])
+  VAR2 <- paste0(rep(VAR, each = length(design)),".",design)
+  
+  d.f <- as.data.frame(matrix(nrow = N, ncol = length(VAR2)))
+  colnames(d.f) <- VAR2
+  rownames(d.f) <- case.names
+  
+  for(case in 1:N) {
+    data <- data.list[[case]]
+    for(i in 1:length(design)) {
+      phases <- rle(as.character(data$phase))
+      phases$start <- c(1,cumsum(phases$lengths)+1)[1:length(phases$lengths)]
+      phases$stop <- cumsum(phases$lengths)
+      class(phases) <- "list"
+      x <- data$mt[phases$start[i]:phases$stop[i]]
+      y <- data$values[phases$start[i]:phases$stop[i]]
+      phase <- design[i]
+
+      d.f[case, paste0("n.",phase)] <- length(y)
+      d.f[case, paste0("mis.",phase)] <- sum(is.na(y),na.rm = TRUE) 
+      d.f[case, paste0("m.",phase)] <- mean(y,na.rm = TRUE) 
+      d.f[case, paste0("md.",phase)] <- median(y,na.rm = TRUE) 
+      d.f[case, paste0("sd.",phase)] <- sd(y,na.rm = TRUE) 
+      d.f[case, paste0("min.",phase)] <- min(y,na.rm = TRUE) 
+      d.f[case, paste0("max.",phase)] <- max(y,na.rm = TRUE) 
+      d.f[case, paste0("trend.",phase)] <- coef(lm(y~I(x-x[1]+1)))[2]
+    }
+  }
+  
+  
+  
+  out <- list(descriptives = d.f, design = design, N = N)
   class(out) <- c("sc","describe")
   out
 }
