@@ -1,6 +1,7 @@
 
 autocorrSC <- function(data, lag.max = 3) {
   data.list <- .SCprepareData(data)
+  
   N <- length(data.list)
   case.names <- names(data.list)
   if (is.null(case.names))

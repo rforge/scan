@@ -1,8 +1,9 @@
 
 
-nap <- function(data, decreasing = FALSE) {
-  
+nap <- function(data, decreasing = FALSE, phases = c("A","B")) {
   data <- .SCprepareData(data)
+  data <- keepphasesSC(data, phases = phases)$data
+  
   N <- length(data)
   if(N > 1)
     stop("Multiple single-cases are given. Calculations could only be applied to a single data set.\n")

@@ -2,9 +2,10 @@
 
 rand.test <- function(...) {randSC(...)}
 
-randSC <- function (data, statistic = "Mean B-A", number = 500, complete = FALSE,limit = 5, startpoints = NA, exclude.equal = FALSE, graph = FALSE, output = "c") {
+randSC <- function (data, statistic = "Mean B-A", number = 500, complete = FALSE,limit = 5, startpoints = NA, exclude.equal = FALSE, graph = FALSE, output = "c", phases = c("A","B")) {
   
   data <- .SCprepareData(data)
+  data <- keepphasesSC(data, phases = phases)$data
   
   a <- lapply(data, function(x) x[,2][x[,1] == "A"])
   b <- lapply(data, function(x) x[,2][x[,1] == "B"])

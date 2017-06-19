@@ -1,5 +1,5 @@
 
-readSC <- function(filename, sep = ",", dec = ".", sort.labels = FALSE, phase.names = c("A","B"),...) {
+readSC <- function(filename, sep = ",", dec = ".", sort.labels = FALSE, ...) {
   dat <- read.table(filename, header = TRUE, sep = sep, dec = dec, stringsAsFactors = FALSE, ...)
   columns <- ncol(dat)
   names(dat) <- c("case", "phase", "values", "mt")[1:columns]
@@ -8,8 +8,6 @@ readSC <- function(filename, sep = ",", dec = ".", sort.labels = FALSE, phase.na
   else
     dat$case <- factor(dat$case)
   
-  dat$phase[dat$phase == phase.names[1]] <- "A"
-  dat$phase[dat$phase == phase.names[2]] <- "B"
   dat$phase <- factor(dat$phase)
   
   lab <- levels(dat$case)

@@ -1,8 +1,10 @@
 
 
-pem <- function(data, decreasing = FALSE, binom.test = TRUE, chi.test = FALSE, FUN = median, ...) {
+pem <- function(data, decreasing = FALSE, binom.test = TRUE, chi.test = FALSE, FUN = median, phases = c("A","B"), ...) {
   
   data <- .SCprepareData(data)
+  data <- keepphasesSC(data, phases = phases)$data
+  
   N <- length(data)
   PEM <- rep(NA,N)
   chi <- rep(NA,N)

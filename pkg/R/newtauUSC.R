@@ -1,8 +1,10 @@
 
 
 
-newtauUSC <- function (data, ties.method = "omit", method = "parker") {
+newtauUSC <- function (data, ties.method = "omit", method = "parker", phases = c("A","B")) {
   data <- .SCprepareData(data)
+  data <- keepphasesSC(data, phases = phases)$data
+  
   N <- length(data)
   ret <- list(
     table = list(), 

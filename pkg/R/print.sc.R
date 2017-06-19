@@ -12,6 +12,8 @@ print.sc <- function(x, ...) {
   
   if(value == "overlap") {
     cat("Overlap Indices\n\n")
+    cat("Comparing phase", x$phase[1],"to",x$phase[2],"\n\n")
+    
     x <- x$overlap
     out <- data.frame(
       "PND" = x$PND, 
@@ -300,6 +302,12 @@ print.sc <- function(x, ...) {
   
   if(value == "describe") {
     cat("Describe Single-Case Data\n\n")
+    if(any(names(x) == "design"))
+       cat("Design: ", x$design, "\n\n")
+    print(round(t(x$descriptives),2), ...)
+    
+    return()
+    ######## depricated: delete in next full release
     out <- data.frame(
       "n A" = x$descriptives$nA, 
       "n B"  = x$descriptives$nB, 

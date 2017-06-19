@@ -1,25 +1,33 @@
 \name{makeSCDF}
 \alias{makeSCDF}
-\alias{newmakeSCDF}
 \title{Create a single case data frame for further analyses}
 \description{
 The \code{makeSCDF} function creates the basic data structure for one or multiple single-cases.  This basic data structure is required in all \code{scan} functions.
 }
 
 \usage{
-makeSCDF(data, B.start = NULL, MT = NULL)
+makeSCDF(data, B.start = NULL, MT = NULL, phase.length = NULL, pvar = NULL)
 }
 
 \arguments{
   \item{data}{
-A vector containing measurement scores.
+A vector containing measurement values of the target variable.
 }
   \item{B.start}{
-The first measurement of phase B.
+The first measurement of phase B (simple coding if design is strictly AB).
 }
   \item{MT}{
 A vector defining measurement times. Default is \code{MT = (1,2,3,...,n)}.
 }
+
+  \item{phase.length}{
+A vector defining the length and label of each phase. E.g., \code{phase.length = c(A1 = 10, B1 = 10, A2 = 10, B2 = 10)}.
+}
+
+  \item{pvar}{
+A list with additional variables. E.g., \code{pvar = list(teacher = c(0,1,0,1,0,0,1), lesson = c(1,3,4,5,2,3)}.
+}
+
 }
 
 \value{

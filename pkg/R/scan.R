@@ -57,6 +57,41 @@
 	return(data)
 }
 
+keepphasesSC <- function(data, phases = c("A","B"), set.phases = TRUE) {
+  N <- length(data)
+
+  design.list <- list()
+  data.new <- list()
+  
+  for(case in 1:N) {
+    design <- rle(as.character(data[[case]]$phase))
+    if(class(phases) == "character") {
+      if(sum(design$values %in% phases) > length(phases))
+        stop(paste0("Case no.",case,": Phase names are not unique. Please give number of phases instead of characters."))
+      if(sum(design$values %in% phases) < length(phases))
+        stop(paste0("Case no.",case,": Phase name mismatch. Please give different phase names."))
+      
+      phases <- c(which(design$values == phases[1]),which(design$values == phases[2]))
+    }
+    
+    design$start <- c(1,cumsum(design$lengths)+1)[1:length(design$lengths)]
+    design$stop <- cumsum(design$lengths)
+    class(design) <- "list"
+    
+    keep <- c(design$start[phases[1]]:design$stop[phases[1]], design$start[phases[2]]:design$stop[phases[2]])
+    data[[case]]$phase <- as.character(data[[case]]$phase)
+    if(set.phases) {
+      data[[case]]$phase[design$start[phases[1]]:design$stop[phases[1]]] <- "A"
+      data[[case]]$phase[design$start[phases[2]]:design$stop[phases[2]]] <- "B"
+    }
+    data[[case]] <- data[[case]][keep,]
+    design.list[[case]] <- design
+  }
+  
+  out <- list(data = data, designs = design.list, N = N)
+  return(out)
+}
+
 
 longSCDF <- function(data) {
   dat <- .SCprepareData(data)

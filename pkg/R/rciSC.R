@@ -2,8 +2,10 @@
 
 rCi <- function(...){rciSC(...)}
 
-rciSC <- function(data, rel = 0.80, ci = 0.95, graph = FALSE) {
+rciSC <- function(data, rel = 0.80, ci = 0.95, graph = FALSE, phases = c("A","B")) {
   data <- .SCprepareData(data)
+  data <- keepphasesSC(data, phases = phases)$data
+  
   N <- length(data)
   if(N > 1)
     stop("Multiple single-cases are given. Calculations can only be applied to one single-case data set.\n")

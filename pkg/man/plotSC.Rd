@@ -1,6 +1,5 @@
 \name{plotSC}
 \alias{plotSC}
-\alias{newplotSC}
 \title{Plot single-case data}
 \description{
 The \code{plotSC} function provides a plot of a single-case or multiple single-cases.

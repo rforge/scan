@@ -1,8 +1,9 @@
 
 
-pet <- function(data, ci = 0.95, decreasing = FALSE) {
+pet <- function(data, ci = 0.95, decreasing = FALSE, phases = c("A","B")) {
   
   data <- .SCprepareData(data)
+  data <- keepphasesSC(data, phases = phases)$data
   
   N <- length(data)
   

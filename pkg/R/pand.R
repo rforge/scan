@@ -1,7 +1,8 @@
 
 
-pand <- function(data, decreasing = FALSE, correction = TRUE) {
+pand <- function(data, decreasing = FALSE, correction = TRUE, phases = c("A","B")) {
   data <- .SCprepareData(data)
+  data <- keepphasesSC(data, phases = phases)$data
   
   phase.expected <- list()
   phase.real <- list()

@@ -1,7 +1,9 @@
 
 
-tauUSC <- function (data, ties.method = "omit") {
+tauUSC <- function (data, ties.method = "omit", phases = c("A","B")) {
   data <- .SCprepareData(data)
+  data <- keepphasesSC(data, phases = phases)$data
+  
   N <- length(data)
   if(N == 1)
     data <- data[[1]]
