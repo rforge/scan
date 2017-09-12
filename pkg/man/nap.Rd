@@ -14,6 +14,7 @@ A single-case data frame. See \code{\link{makeSCDF}} to learn about this format.
   \item{decreasing}{
 If you expect data to be lower in the B phase, set \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.
 }
+\item{phases}{}
 }
 \value{
   \item{NAP}{Nonoverlap of all pairs.}

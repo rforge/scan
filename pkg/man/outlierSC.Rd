@@ -6,7 +6,7 @@ Identifies and drops outliers within a single-case data frame or a list of singl
 }
 
 \usage{
-outlierSC(data, criteria = c("SD", "2"))
+outlierSC(data, criteria = c("MAD", "3.5"))
 }
 
 \arguments{

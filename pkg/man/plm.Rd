@@ -15,8 +15,9 @@ plm(data, AR = 0, model = "B&L-B", phases = c("A", "B"), family = "gaussian",
   \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
   \item{AR}{Maximal lag of autoregression. Modeled based on the Autoregressive-Moving Average (ARMA) function.  When AR is set, the family argument must be set to  \code{family = "gaussian"}.}
   \item{model}{Regression model used for computation (see Huitema & McKean, 2000). Default is \code{model = "B&L-B"}. Possible values are: \code{"B&L-B"}, \code{"H-M"}, \code{"Mohr#1"}, \code{"Mohr#2"}, and \code{"Manly"}.}
-  \item{count.data}{Still under development. Do not use.}
   \item{family}{Set the distributioin family. Defaults to a gaussian distribution. See the \code{family} function for more details.}
+  \item{phases}{-}
+  \item{formula}{-}
   \item{...}{Further arguments passed to the glm function.}
 }
 

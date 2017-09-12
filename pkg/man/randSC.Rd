@@ -7,8 +7,9 @@ The \code{randSC} function computes a randomization test for single or multiple 
 }
 
 \usage{
-randSC(data, statistic = "Mean B-A", number = 500, complete = FALSE, limit = 5, 
-       startpoints = NA, exclude.equal = FALSE, graph = FALSE, output = "c")
+randSC(data, statistic = "Mean B-A", number = 500, complete = FALSE,limit = 5, 
+  startpoints = NA, exclude.equal = FALSE, graph = FALSE, 
+  output = "c", phases = c("A","B"))
 }
 
 \arguments{

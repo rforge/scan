@@ -16,12 +16,12 @@ The class \code{scdf} stores single-case study data with one or more single-case
 \usage{
 scdf(values, B.start = NULL, mt = NULL, phase = NULL, phase.design = NULL, 
   name = NULL, ...)
-as.scdf(...)
+as.scdf(object)
 checkSCDF(data)
-makeSCDF(data, B.start = NULL, MT = NULL, phase.length = NULL)
+makeSCDF(data, B.start = NULL, MT = NULL)
 
-\method{print}{scdf}(...)
-\method{summary}{scdf}(...)
+\method{print}{scdf}(x, cases = 3, rows = 15, row.names = FALSE, long = FALSE, ...)
+\method{summary}{scdf}(object, var.names = FALSE, ...)
 
 }
 

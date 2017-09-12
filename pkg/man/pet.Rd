@@ -27,6 +27,7 @@ Width of the confidence interval. Default is \code{ci = .95}.
   \item{N}{Number of cases.}
   \item{decreasing}{Logical argument from function call (see \code{Arguments} above).}
   \item{case.names}{Assigned name of single-case.}
+  \item{phases}{}
 }
 \author{Juergen Wilbert}
 

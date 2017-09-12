@@ -6,7 +6,8 @@
 \bold{CAUTION! This function is still under development and not ready for use!} The \code{rciSC} function computes three indices of reliable change (Wise, 2004) and corresponding descriptive statistics.
 }
 \usage{
-rciSC(data, rel = 0.8, ci = 0.95, graph = FALSE)
+rciSC(data, rel = 0.80, ci = 0.95, graph = FALSE, phases = c("A","B"))
+
 }
 
 \arguments{
