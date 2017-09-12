@@ -1,9 +1,9 @@
 
 
-outlierSC <- function(data, criteria = c("SD", "2")){
+outlierSC <- function(data, criteria = c("MAD", "3.5")){
   
   data.list <- .SCprepareData(data)
-  if(!any(criteria[1] %in% c("Cook","SD","CI")))
+  if(!any(criteria[1] %in% c("MAD","Cook","SD","CI")))
     stop("Unknown criteria. Please check.")
   out <- list()
   
@@ -13,6 +13,7 @@ outlierSC <- function(data, criteria = c("SD", "2")){
   dropped.n <- list()
   ci.matrix <- list()
   sd.matrix <- list()
+  mad.matrix <- list()
   cook <- list()
   
   if(is.null(case.names))
@@ -26,33 +27,60 @@ outlierSC <- function(data, criteria = c("SD", "2")){
   
     if (criteria[1] == "CI") {
       cut.off <- as.numeric(criteria[2])
-      mat <- matrix(NA, length(values), ncol = 2)
-      colnames(mat) <- c("lower", "upper")
+      mat <- matrix(NA, length(values), ncol = 5)
+      colnames(mat) <- c("phase","m","se","lower", "upper")
       rownames(mat) <- names(values)
       filter <- c()
       fac <- qnorm((1-cut.off)/2, lower.tail = FALSE)
       
       for(p in 1:length(values)) {
         x <- values[[p]]
+        mat[p,"m"] <- mean(x)
+        mat[p,"se"] <- sd(x)/sqrt(length(x))
         mat[p,"lower"] <- mean(x) - fac * (sd(x)/sqrt(length(x)))
         mat[p,"upper"] <- mean(x) + fac * (sd(x)/sqrt(length(x)))
         filter <- c(filter, (x < mat[p,"lower"]) | (x > mat[p,"upper"]))
-       }
+      }
+      mat <- as.data.frame(mat)
+      mat$phase <- phases
       ci.matrix[[i]] <- mat
     }
-    if (criteria[1] == "SD") {
-      SD <- as.numeric(criteria[2])
-      mat <- matrix(NA, length(values), ncol = 2)
-      colnames(mat) <- c("lower", "upper")
-      rownames(mat) <- names(values)
+    
+    if (criteria[1] == "MAD") {
+      fac <- as.numeric(criteria[2])
+      mat <- matrix(NA, length(values), ncol = 5)
+      colnames(mat) <- c("phase","md","mad","lower", "upper")
       filter <- c()
       for(p in 1:length(values)) {
         x <- values[[p]]
+        mat[p,"md"] <- median(x)
+        mat[p,"mad"] <- mad(x,constant = 1)
+        mat[p,"lower"] <- median(x) - fac * mad(x)
+        mat[p,"upper"] <- median(x) + fac * mad(x)
+        filter <- c(filter, (x < mat[p,"lower"]) | (x > mat[p,"upper"]))
+      }
+      mat <- as.data.frame(mat)
+      mat$phase <- phases
+      mad.matrix[[i]] <- mat
+      
+    }	
+    if (criteria[1] == "SD") {
+      SD <- as.numeric(criteria[2])
+      mat <- matrix(NA, length(values), ncol = 5)
+      colnames(mat) <- c("phase","m","sd","lower", "upper")
+      filter <- c()
+      for(p in 1:length(values)) {
+        x <- values[[p]]
+        mat[p,"m"] <- mean(x)
+        mat[p,"sd"] <- sd(x)
         mat[p,"lower"] <- mean(x) - SD * sd(x)
         mat[p,"upper"] <- mean(x) + SD * sd(x)
         filter <- c(filter, (x < mat[p,"lower"]) | (x > mat[p,"upper"]))
-       }
+      }
+      mat <- as.data.frame(mat)
+      mat$phase <- phases
       sd.matrix[[i]] <- mat
+      
     }		
     if (criteria[1] == "Cook") {
       if(!identical(phases, c("A","B")))
@@ -89,6 +117,7 @@ outlierSC <- function(data, criteria = c("SD", "2")){
   out$dropped.n <- dropped.n
   out$ci.matrix <- ci.matrix
   out$sd.matrix <- sd.matrix
+  out$mad.matrix <- mad.matrix
   out$cook <- cook
   out$criteria <- criteria
   out$N <- N

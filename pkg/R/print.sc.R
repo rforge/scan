@@ -344,6 +344,11 @@ print.sc <- function(x, ...) {
       cat("Criteria: Exceeds", x$criteria[2], "Standard Deviations\n\n")
       print(x$sd.matrix)
     }
+    if (x$criteria[1] == "MAD") {
+      names(x$mad.matrix) <- x$case.names
+      cat("Criteria: Exceeds", x$criteria[2], "Mean Average Deviations\n\n")
+      print(x$mad.matrix)
+    }
     if (x$criteria[1] == "Cook") {
       cat("Criteria: Cook's Distance based on piecewise-linear-regression exceeds", x$criteria[2],"\n\n")
     }
