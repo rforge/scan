@@ -5,7 +5,7 @@
 The \code{nap} function calculates the nonoverlap of all pairs (NAP; Parker & Vannest, 2009).  NAP summarizes the overlap between all pairs of phase A and phase B data points.  If an increase of phase B scores is expected, a non-overlapping pair has a higher phase B data point.  The NAP equals \eqn{number of pairs showing no overlap / number of pairs}.  Because NAP can only take values between 50 and 100 percent, a rescaled and therefore more intuitive NAP (0-100\%) is also displayed.
 }
 \usage{
-nap(data, decreasing = FALSE)
+nap(data, decreasing = FALSE, phases = c("A","B"))
 }
 \arguments{
   \item{data}{

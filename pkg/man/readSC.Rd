@@ -1,29 +1,33 @@
 \name{readSC}
 \alias{readSC}
+\alias{readSC.excel}
 \title{Read single-case data from files}
 \description{
-Use the \code{readSC} function to import single-case data from structured .csv-files.
+Use the \code{readSC} function to import single-case data from structured .csv or the \code{readSC.excel} function for importing excel files.
 }
 
 \usage{
-readSC(filename, sep = ",", dec = ".", sort.labels = FALSE,
-       phase.names = c("A", "B"), ...)
+readSC(filename = NULL, sep = ",", dec = ".", sort.labels = FALSE,
+       type = "csv", ...)
+readSC.excel(...)
 }
 
 \arguments{
-  \item{filename}{A character string defining the file to be imported (e.g. \code{"SC_Anita.csv"}.}
+  \item{filename}{A character string defining the file to be imported (e.g. \code{"SC_Anita.csv"}. If filename is left empty a dialog box for choosing will be opened.}
   \item{sep}{The field separator string. Values within rows have to be separated by this string. Default is \code{sep = ","}.}
   \item{dec}{The string used for decimal points in the file. Must be a single character. Default is \code{dec = "."}}
   \item{sort.labels}{If set TRUE, the resulting list is sorted by label names (alphabetically increasing).}
   \item{phase.names}{Name of the phases. Usually they should be "A" and "B". I the file contains different names, these are converted to "A" and "B".}
+  \item{type}{Format of the file to be imported. Either "csv" or "excel" is possible.}
+
   \item{\dots}{Further arguments passed to the \code{\link{read.table}} command.}
 }
 
-\value{Returns a single-case data frame. See \code{\link{makeSCDF}} to learn about the format of these data frames.}
+\value{Returns a single-case data frame. See \code{\link{scdf}} to learn about the format of these data frames.}
 
 \author{Juergen Wilbert}
 
-\seealso{\code{\link{read.table}}, \code{\link{writeSC}}, \code{\link{makeSCDF}}}
+\seealso{\code{\link{read.table}}, \code{\link{writeSC}}, \code{\link{scdf}}}
 
 \examples{
 ## Read SC-data from a file named "study1.csv" in your working directory

@@ -1,6 +1,20 @@
+readSC.excel <- function(...) {
+  readSC(..., type = "excel")
+  
+}
 
-readSC <- function(filename, sep = ",", dec = ".", sort.labels = FALSE, ...) {
-  dat <- read.table(filename, header = TRUE, sep = sep, dec = dec, stringsAsFactors = FALSE, ...)
+
+readSC <- function(filename = NULL, sep = ",", dec = ".", sort.labels = FALSE, type = "csv", ...) {
+  if(is.null(filename)) {
+    filename <- file.choose()
+    cat("Import file",filename,"\n\n")
+  }
+  
+  if(type == "csv")
+    dat <- read.table(filename, header = TRUE, sep = sep, dec = dec, stringsAsFactors = FALSE, ...)
+  if(type == "excel")
+    dat <- as.data.frame(read_excel(filename, ...))
+  
   columns <- ncol(dat)
   names(dat) <- c("case", "phase", "values", "mt")[1:columns]
   if(!sort.labels) 
@@ -21,5 +35,6 @@ readSC <- function(filename, sep = ",", dec = ".", sort.labels = FALSE, ...) {
     cat("Measurement-times are missing. Standard times were assigned.\n")
     dat <- .SCprepareData(dat)
   }
+  class(dat) <- c("scdf","list")
   return(dat)
 }

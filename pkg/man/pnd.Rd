@@ -5,7 +5,7 @@
 This function returns the percentage of non-overlapping data.  Due to its error-proneness the PND should not be used, but \code{\link{nap}} or \code{\link{pand}} instead (see Parker & Vannest, 2009).
 }
 \usage{
-pnd(data, decreasing = FALSE)
+pnd(data, decreasing = FALSE, phases = c("A", "B"))
 }
 
 \arguments{

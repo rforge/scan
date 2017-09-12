@@ -21,7 +21,7 @@ A vector of two characters or numbers indicating the two phases that should be c
 }
 }
 \value{
-  \item{overlap}{A data frame consisting of the following indices for each single-case as well as the average for all cases: PND, PEM, PET, NAP, PAND, Tau-U, Diff_mean, Diff_trend, SMD.}
+  \item{overlap}{A data frame consisting of the following indices for each single-case for all cases: PND, PEM, PET, NAP, PAND, Tau-U (A vs. B - Trend A), Diff_mean, Diff_trend, SMD.}
 }
 \author{
 Juergen Wilbert
@@ -31,7 +31,7 @@ Juergen Wilbert
 overlapSC(Huitema2000, decreasing = TRUE)
 
 ## Display overlap indices for a list of six single-cases
-describeSC(GruenkeWilbert2014)
+overlapSC(GruenkeWilbert2014)
 
 ## Write overlap indices to .csv-file
 overl <- overlapSC(Waddell2011)

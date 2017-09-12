@@ -100,8 +100,14 @@ rSC <- function(n = 1, MT = 20, B.start = 6, m = 50, s = 10, prob = 0.5, d.trend
           dat[[i]]$slope <- slope_values
           dat[[i]]$errors <- error_values
         }
-        if(random.names)
+        if(random.names == "male")
+          names(dat)[i] <- sample(.male.names,1)
+        if(random.names == "female")
+          names(dat)[i] <- sample(.female.names,1)
+        
+        if(isTRUE(random.names))
           names(dat)[i] <- sample(.names,1)
+        
       } else {
         dat[[i]][[j]] <- data.frame(phase = condition, values = measured_values, mt = 1:MT[B])
         if (output.long){
@@ -144,6 +150,7 @@ rSC <- function(n = 1, MT = 20, B.start = 6, m = 50, s = 10, prob = 0.5, d.trend
       
     }
   }
-  
+  if(cases == 1)
+    attributes(dat) <- .defaultAttributesSCDF(attributes(dat))    #class(dat) <- c("scdf","list")
   return(dat)
 }

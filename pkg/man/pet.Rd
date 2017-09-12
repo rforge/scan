@@ -5,7 +5,7 @@
 The \code{pet} function provides the percentage of phase B data points exceeding the prediction based on the phase A trend. A binomial test against a 50/50 distribution is computed. Furthermore, the percentage of phase B data points exceeding the upper (or lower) 95 percent confidence interval of the predicted progress is computed.
 }
 \usage{
-pet(data, ci = 0.95, decreasing = FALSE)
+pet(data, ci = 0.95, decreasing = FALSE, phases = c("A","B"))
 }
 \arguments{
   \item{data}{

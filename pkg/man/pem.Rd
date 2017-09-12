@@ -5,7 +5,7 @@
 The \code{pem} function returns the percentage of phase B data exceeding the phase A median.  Additionally, a chi square test against a 50/50 distribution is computed.  Different measures of central tendency can be addressed for alternative analyses.
 }
 \usage{
-pem(data, decreasing = FALSE, binom.test = TRUE, chi.test = FALSE, FUN = median, ...)
+pem(data, decreasing = FALSE, binom.test = TRUE, chi.test = FALSE, FUN = median, phases = c("A","B"), ...)
 }
 \arguments{
   \item{data}{

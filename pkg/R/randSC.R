@@ -5,11 +5,14 @@ rand.test <- function(...) {randSC(...)}
 randSC <- function (data, statistic = "Mean B-A", number = 500, complete = FALSE,limit = 5, startpoints = NA, exclude.equal = FALSE, graph = FALSE, output = "c", phases = c("A","B")) {
   
   data <- .SCprepareData(data)
+  if(!all(unlist(lapply(data, function(x) identical(rle(as.character(x$phase))$values, phases)))))
+    warning(paste0("Phase sequence is not ",paste0(phases, collapse = " "), " for all cases. Analyzes are restricted to the data of the ",paste0(phases,collapse = " ")," phases.\n"))
+  
   data <- keepphasesSC(data, phases = phases)$data
   
-  a <- lapply(data, function(x) x[,2][x[,1] == "A"])
-  b <- lapply(data, function(x) x[,2][x[,1] == "B"])
-  obs <- lapply(data, function(x) x[,2])
+  a <- lapply(data, function(x) x$values[x$phase == "A"])
+  b <- lapply(data, function(x) x$values[x$phase == "B"])
+  obs <- lapply(data, function(x) x$values)
   MT <- lapply(data, nrow)
   N <- length(data)
   if(length(limit) == 1) limit[2] <- limit[1]

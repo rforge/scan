@@ -2,7 +2,7 @@
 print.sc <- function(x, ...) {
   value <- class(x)[2]
 
-  
+    
   if(value == "autocorr") {
     cat("Autocorrelations\n\n")
     x <- x$autocorr
@@ -12,14 +12,14 @@ print.sc <- function(x, ...) {
   
   if(value == "overlap") {
     cat("Overlap Indices\n\n")
-    cat("Design: ", x$design, "\n\n")
-    cat("Comparing phase", x$phase[1],"to",x$phase[2],"\n\n")
+    cat("Design: ", x$design, "\n")
+    cat("Comparing phase", unlist(x$phases.A),"to",unlist(x$phases.B),"\n\n")
 
     print(round(t(x$overlap),2),...)
   }
 
   
-  if(value == "newTAU-U") {	
+  if(value == "TAU-U") {	
     cat("Overall Tau-U: \n")
     print(x$Overall_tau_u)
     cat("\n\n")
@@ -27,7 +27,7 @@ print.sc <- function(x, ...) {
     print(lapply(x$table,function(x)round(x,3)))
   }
   
-  if(value == "TAU-U") {	
+  if(value == "oldTAU-U") {	
     cat("Tau-U = ", x$tau_u,"\n")
     
     print(x$table)
@@ -181,7 +181,19 @@ print.sc <- function(x, ...) {
     }
     
     colnames(md) <- c("B","SE","df","t","p")
-    rownames(md) <- c("Intercept","Trend","Level","Slope")
+    #rownames(md)[1:4] <- c("Intercept","Trend","Level","Slope")
+    rn <- rownames(md)
+    if(!is.na(match("mt",rn)))
+      rownames(md)[match("mt",rn)] <- "Trend"
+    if(!is.na(match("phase",rn)))
+      rownames(md)[match("phase",rn)] <- "Level"
+    if(!is.na(match("inter",rn)))
+      rownames(md)[match("inter",rn)] <- "Slope"
+    if(!is.na(match("(intercept)",rn)))
+      rownames(md)[match("(intercept)",rn)] <- "Intercept"
+    
+    #rownames(md)[match(c("(Intercept)","mt","phase","inter"),rn)] <- c("Intercept","Trend","Level","Slope")
+
     md$B <- round(md$B,3)
     md$SE <- round(md$SE,3)
     md$t <- round(md$t,3)
@@ -191,9 +203,25 @@ print.sc <- function(x, ...) {
     print(md)
     if(x$analyze.random.slopes) {
       cat("\nRandom effects\n\n")
-      out$random.effects <- data.frame("EstimateSD" = round(c(as.numeric(VarCorr(x$random.trend.level.slope$model)[,2])),3), L = round(c(x$random.nointercept.trend.level.slope$LR.test$L.Ratio[2],x$random.trend$LR.test$L.Ratio[2], x$random.level$LR.test$L.Ratio[2], x$random.slope$LR.test$L.Ratio[2], NA),1), p = round(c(x$random.nointercept.trend.level.slope$LR.test$"p-value"[2],x$random.trend$LR.test$"p-value"[2], x$random.level$LR.test$"p-value"[2], x$random.slope$LR.test$"p-value"[2], NA),3))
-      rownames(out$random.effects) <- c("Intercept", "Trend","Level", "Slope","Residual")
-      print(out$random.effects)
+      
+      SD <- round(as.numeric(VarCorr(x$random.trend.level.slope$model)[,"StdDev"]),3)
+      L <- round(c(x$random.nointercept.trend.level.slope$LR.test$L.Ratio[2],x$random.trend$LR.test$L.Ratio[2], x$random.level$LR.test$L.Ratio[2], x$random.slope$LR.test$L.Ratio[2], NA),1)
+      round(c(as.numeric(VarCorr(x$random.trend.level.slope$model)[,2])),3)
+      coef(x$random.trend.level.slope$model)
+      md <- data.frame("EstimateSD" = SD, L = round(c(x$random.nointercept.trend.level.slope$LR.test$L.Ratio[2],x$random.trend$LR.test$L.Ratio[2], x$random.level$LR.test$L.Ratio[2], x$random.slope$LR.test$L.Ratio[2], NA),1), p = round(c(x$random.nointercept.trend.level.slope$LR.test$"p-value"[2],x$random.trend$LR.test$"p-value"[2], x$random.level$LR.test$"p-value"[2], x$random.slope$LR.test$"p-value"[2], NA),3))
+      #rownames(md) <- c("Intercept", "Trend","Level", "Slope","Residual")
+      rownames(md) <- names(VarCorr(x$random.trend.level.slope$model)[,2])
+      rn <- rownames(md)
+      if(!is.na(match("mt",rn)))
+        rownames(md)[match("mt",rn)] <- "Trend"
+      if(!is.na(match("phase",rn)))
+        rownames(md)[match("phase",rn)] <- "Level"
+      if(!is.na(match("inter",rn)))
+        rownames(md)[match("inter",rn)] <- "Slope"
+      if(!is.na(match("(intercept)",rn)))
+        rownames(md)[match("(intercept)",rn)] <- "Intercept"
+      
+      print(md)
       
     }
     invisible(out)
@@ -201,9 +229,6 @@ print.sc <- function(x, ...) {
   
   if(value == "pr" || value == "plm.ar") {
     cat("Piecewise Regression Analysis\n\n")
-    if(x$N>1)
-      cat("Multiple Baseline Design for", x$N, "cases.\n\n")
-    
     cat("Regression model: ", x$model,"\n\n")
     cat("Fitted a", x$family, "distribution.\n\n")		
     
@@ -215,7 +240,7 @@ print.sc <- function(x, ...) {
       DF <- x$full$df.null - x$full$df.residual
       cat(sprintf("X-Square(%d) = %.2f; p = %0.3f; AIC = %.0f\n\n", DF, Chi, 1 - pchisq(Chi, df = DF), x$full$aic))	
     } else {
-      cat(sprintf("F(%d, %d) = %.2f; p = %0.3f; R-Square = %0.3f; Adjusted R-Square = %0.3f\n\n", x$df1, x$df2, x$F, x$p, x$R2, x$R2.adj))	
+      cat(sprintf("F(%d, %d) = %.2f; p = %0.3f; R-Square = %0.3f; Adjusted R-Square = %0.3f\n\n", x$F.test["df1"], x$F.test["df2"], x$F.test["F"], x$F.test["p"], x$F.test["R2"], x$F.test["R2.adj"]))	
     }
     
     
@@ -223,13 +248,21 @@ print.sc <- function(x, ...) {
       res <- summary(x$full)$coefficients
     if(x$ar > 0)
       res <- summary(x$full)$tTable
-    #ci <- sqrt(qt(0.975,x$df1+x$df2))
+
     res <- cbind(res[,1], suppressMessages(confint(x$full)), res[,2:4])
+    res <- round(res,3)
     res <- as.data.frame(res)
-    res$R2 <- ""
-    res$R2[2:4] <-  c(sprintf("%.3f",x$ES.trend), sprintf("%.3f",x$ES.level), sprintf("%.3f",x$ES.slope))
-    res[1:6] <- round(res[1:6],3)
-    row.names(res)[1:4] <- c("Intercept", "Trend", "Level","Slope")
+    res$R2 <- c("",format(round(x$r.squares,4)))
+    rn <- rownames(res)
+    if(!is.na(match("mt",rn)))
+      rownames(res)[match("mt",rn)] <- "Trend"
+    if(!is.na(match("phaseB",rn)))
+      rownames(res)[match("phaseB",rn)] <- "Level"
+    if(!is.na(match("inter",rn)))
+      rownames(res)[match("inter",rn)] <- "Slope"
+    if(!is.na(match("(intercept)",rn)))
+      rownames(res)[match("(intercept)",rn)] <- "Intercept"
+    
     colnames(res) <- c("B","2.5%","97.5%","SE", "t","p", "R-Square")		
     if(x$family == "poisson" || x$family == "nbinomial") {
       OR <- exp(res[,1:3])

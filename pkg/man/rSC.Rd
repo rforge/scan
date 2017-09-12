@@ -31,12 +31,12 @@ rSC(n = 1, MT = 20, B.start = 6, m = 50, s = 10, prob = 0.5, d.trend = 0, d.leve
   \item{missing.p}{Portion of missing values. \code{missing.p = 0.1} creates 10\% of all values as missing). A vector of values assigns different probabilities to multiple cases. If the number of cases exceeds the length of the vector, values are repeated.}
   \item{distribution}{Distribution of the scores. Default is \code{distribution = "normal"}. Possible values are \code{"normal"}, \code{"binomial"}, and \code{"poisson"}. If set to \code{"normal"}, the sample of scores will be normally distributed with the parameters \code{m} and \code{s} as mean and standard deviation of the sample, including a measurement error defined by \code{rtt}. If set to \code{"binomial"}, data are drawn from a binomial distribution with the expectation value \code{m}. This setting is useful for generating criterial data like correct answers in a test. If set to \code{"poisson"}, data are drawn from a poisson distribution, which is very common for count-data like behavioral observations. There's no measurement error is included. \code{m} defines the expectation value of the poisson distribution, lambda.}
   \item{start.values.fixed}{If set \code{TRUE}, the true value at the first measurement of each case is set to \code{m}. The default setting is \code{start.value.fixed = FALSE}, which results in a true value for each case drawn from a distribution (defined above: \code{distribution}) with the expected value \code{m} and standard deviation \code{s}.}
-  \item{random.names}{Is \code{FALSE} by default. If set \code{random.names = TRUE} cases are assigned random first names. The names are drawn from the 2,000 most popular names for newborns in 2012 in the U.S. (1,000 male and 1,000 female names).}
+  \item{random.names}{Is \code{FALSE} by default. If set \code{random.names = TRUE} cases are assigned random first names. If set \code{"male" or "female"} only male or female names are chosen. The names are drawn from the 2,000 most popular names for newborns in 2012 in the U.S. (1,000 male and 1,000 female names).}
   \item{output.long}{If set \code{TRUE}, the true value, implemented trend, level and slope effect, as well as error values are included for each MT. Default is \code{output.long = FALSE}.}
 }
 
 \value{
-A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.
+A single-case data frame or a list of single-case data frames. See \code{\link{scdf}} to learn about this format.
 }
 
 \author{

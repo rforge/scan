@@ -1,15 +1,18 @@
-
+plot.scdf <- function(...) {
+  plotSC(...)
+}
 
 .SCfill <- function(x, y, ymin, col = "grey") {
   for(i in 1:length(x))
     polygon(c(x[i], x[i+1], x[i+1], x[i]),c(ymin,ymin, y[i+1],y[i]), col=col, border = NA)
 }
 
-plotSC <- function(data, ylim = NULL, xlim = NULL, fill = "", lines = "", marks = NULL, annotations = NULL, phase.names = NULL, FUN.AB = NULL, xlab = "Measurement time", ylab = "Score", text.ABlag = NULL, lwd = 2, pch = 17, type = "b", mai = c(0.6, 0.82, 0.2, 0.42), ...) {
+plotSC <- function(data, ylim = NULL, xlim = NULL, fill = "", frame = "black", fill.bg = NA, grid = NA, lines = "", marks = NULL, annotations = NULL, phase.names = NULL, FUN.AB = NULL, xlab = "Measurement time", ylab = "Score", text.ABlag = NULL, lwd = 2, pch = 17, type = "b", mai = c(0.6, 0.82, 0.2, 0.42), bty = "o",...) {
   data.list <- .SCprepareData(data)
   
   annotations.cex <- 0.8 ### maybe for later implementation as an argument
-  
+  if(is.na(frame))
+    bty <- "n"
   case.names <- names(data.list)
   
   if(class(lines) != "list")
@@ -58,16 +61,35 @@ plotSC <- function(data, ylim = NULL, xlim = NULL, fill = "", lines = "", marks 
     
     if (case == N) {
       par(mai = mai)
-      plot(data$mt, data$values, xlab = xlab, type = "n", xlim = xlim, ylim = y.lim, ylab = ylab, lwd = lwd, pch = pch, xaxp = c(xlim[1],xlim[2],xlim[2] - xlim[1]), ...)
+      plot(data$mt, data$values, xlab = xlab, type = "n", xlim = xlim, ylim = y.lim, ylab = ylab, lwd = lwd, pch = pch, xaxp = c(xlim[1],xlim[2],xlim[2] - xlim[1]), bty = bty, ...)
+      usr <- par("usr")
     }
     else {
       if (case == 1)
         par(mai = c(0.2, 0.82, 0.6, 0.42))
       else  
         par(mai = c(0.4, 0.82, 0.4, 0.42))
-      plot(data[,3], data[,2], xaxt = "n", xlab = "", lwd = lwd, type = "n", xlim = xlim, ylim = y.lim, ylab = ylab, pch = pch)
+      plot(data$mt, data$values, xaxt = "n", xlab = "", lwd = lwd, type = "n", xlim = xlim, ylim = y.lim, ylab = ylab, pch = pch, bty = bty, ...)
+      usr <- par("usr")
     }
+    
+    if(!is.na(fill.bg)) {
+      rect(usr[1],usr[3],usr[2],usr[4], col = fill.bg, border = NA)#, border = par("fg"))
+    }
+    
+    if(!is.na(grid))
+       grid(NULL, NULL, col = grid)
+    if(!is.na(frame))
+      rect(usr[1],usr[3],usr[2],usr[4], col = NA, border = frame)
+    
+    if(is.na(frame) && !is.na(fill.bg))
+      rect(usr[1],usr[3],usr[2],usr[4], col = NA, border = fill.bg)
 
+    if(is.na(frame) && is.na(fill.bg))
+      rect(usr[1],usr[3],usr[2],usr[4], col = NA, border = par("bg"))
+    
+    
+    
     if(fill != "") {
       for(i in 1:length(design$values)) {
         x <- data$mt[design$start[i]:design$stop[i]]

@@ -6,7 +6,7 @@ The \code{pand} function calculates the percentage of all non-overlapping data (
 }
 
 \usage{
-pand(data, decreasing = FALSE, correction = TRUE)
+pand(data, decreasing = FALSE, correction = TRUE, phases = c("A","B"))
 }
 
 \arguments{

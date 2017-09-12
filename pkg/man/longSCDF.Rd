@@ -7,7 +7,7 @@ The longSCDF function transposes a list of single-case data frames (wide) into o
 }
 
 \usage{
-longSCDF(data)
+longSCDF(data, l2 = NULL, id = "case", model = NULL, ...)
 }
 
 \arguments{

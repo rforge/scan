@@ -3,7 +3,7 @@ pnd <- function(data, decreasing = FALSE, phases = c("A","B")) {
   
   data <- .SCprepareData(data)
   data <- keepphasesSC(data, phases = phases)$data
-  
+
   PND <- c()
   for(i in 1:length(data)) {
     A <- data[[i]][,2][data[[i]][,1] == "A"]

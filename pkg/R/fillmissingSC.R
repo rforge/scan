@@ -2,6 +2,7 @@
 
 fillmissingSC <- function(data, interpolation = "linear", na.rm = TRUE) {
   data <- .SCprepareData(data)
+  ATTRIBUTES <- attributes(data)
   N <- length(data)
   for(i in 1:N) {
     dat <- data[[i]]
@@ -17,11 +18,12 @@ fillmissingSC <- function(data, interpolation = "linear", na.rm = TRUE) {
           tmp$mt <- k
           if(interpolation == "linear")
             tmp$values <- dat$values[j] + step.size * (k - dat$mt[j])
-          new.dat <- rbind(new.dat, tmp) 
+          new.dat <- rbind(new.dat, linear = tmp) 
         }
       }
     }
     data[[i]] <- new.dat[order(new.dat$mt),]
   }
+  attributes(data) <- ATTRIBUTES
   data
 }

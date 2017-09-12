@@ -1,14 +1,13 @@
 
 
-describeSC <- function(data, decreasing = FALSE, design = NULL) {
+describeSC <- function(data) {
   data.list <- .SCprepareData(data)
   N <- length(data.list)
   case.names <- names(data.list)
   if (is.null(case.names))
     case.names <- paste("Case",1:N, sep = "")
   
-  if(is.null(design)) 
-    design <- rle(as.character(data.list[[1]]$phase))$values
+  design <- rle(as.character(data.list[[1]]$phase))$values
   
   while(any(duplicated(design))) {
     design[anyDuplicated(design)] <- paste0(design[anyDuplicated(design)],".phase",anyDuplicated(design))
@@ -43,8 +42,6 @@ describeSC <- function(data, decreasing = FALSE, design = NULL) {
       d.f[case, paste0("trend.",phase)] <- coef(lm(y~I(x-x[1]+1)))[2]
     }
   }
-  
-  
   
   out <- list(descriptives = d.f, design = design, N = N)
   class(out) <- c("sc","describe")

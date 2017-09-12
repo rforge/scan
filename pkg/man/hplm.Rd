@@ -7,7 +7,7 @@ The \code{hplm} function computes a hierarchical piecewise regression model.
 
 \usage{
 hplm(data, model = "B&L-B", method = "ML", control = list(opt = "optim"),
-  random.slopes = TRUE, ICC = TRUE)
+  random.slopes = FALSE, ICC = TRUE, phases = c("A", "B"), formula = values ~ 1 + mt + phase + inter, data.l2 = NULL)
 }
 
 \arguments{
@@ -17,6 +17,8 @@ hplm(data, model = "B&L-B", method = "ML", control = list(opt = "optim"),
   \item{control}{A list of settings for the estimation algorithm, replacing the default values passed to the function \code{lmeControl} of the \code{nlme} package.}
   \item{random.slopes}{If \code{random.slopes = TRUE} random slope effects of the level, trend, and treatment parameter are estimated.}
 \item{ICC}{If \code{ICC = TRUE} an intraclass-correlation is estimated.}
+\item{formula}{Defaults to the standard piecewise regression model. The parameter 'inter' adresses the intercation term defined based on the method provide in the model argument (e.g., "B&L-B"). The formula can be changed for example to include further L1 or L2 variables into the regression model.}
+\item{l2}{A dataframe providing aditional variables at Level2. The scdf File has to have names for all cases and the l2 dataframe has to have a column named 'cases' with the names of the cases the l2 variables belong to.}
 }
 
 \value{

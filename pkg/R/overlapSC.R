@@ -1,8 +1,14 @@
+
 overlapSC <- function(data, decreasing = FALSE, phases = c("A","B")) {
   data.list <- .SCprepareData(data)
+
+  keep <- keepphasesSC(data.list, phases = phases)
+
+  data.list <- keep$data
+  
   design <- rle(as.character(data.list[[1]]$phase))$values
-  data.list <- keepphasesSC(data.list, phases = phases)$data
   N <- length(data.list)
+
   case.names <- names(data.list)
   if (is.null(case.names))
     case.names <- paste("Case",1:N, sep = "")
@@ -20,7 +26,7 @@ overlapSC <- function(data, decreasing = FALSE, phases = c("A","B")) {
     d.f$NAP[i] <- nap(data, decreasing = decreasing)$NAP
     d.f$NAP.rescaled[i] <- nap(data, decreasing = decreasing)$NAP.rescaled
     d.f$PAND[i] <- pand(data, decreasing = decreasing)$PAND
-    d.f$TAU_U[i] <- tauUSC(data)$tau_u
+    d.f$TAU_U[i] <- tauUSC(data)$Overall_tau_u[2]
     
     A <- data$values[data$phase == "A"]
     B <- data$values[data$phase == "B"]
@@ -34,7 +40,7 @@ overlapSC <- function(data, decreasing = FALSE, phases = c("A","B")) {
   }
   
 
-  out <- list(overlap = d.f, phases = phases, design = design)
+  out <- list(overlap = d.f, phases.A = keep$phases.A, phases.B = keep$phases.B, design = design)
   class(out) <- c("sc","overlap")
   out
 }

@@ -10,6 +10,13 @@
 \alias{Grosche2014}
 \alias{GruenkeWilbert2014}
 \alias{Huber2014}
+\alias{exampleAB}
+\alias{exampleABC}
+\alias{exampleABAB}
+\alias{exampleA1B1A2B2}
+\alias{example50}
+\alias{example50.l2}
+\alias{Huber2014}
 \title{Single-case example data}
 \description{
 The \code{scan} package comes with a set of fictitious and authentic single-case study data, by courtesy of the particular authors.
