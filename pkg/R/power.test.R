@@ -25,7 +25,7 @@
 
   if(any(stat == "tauU")) {
     if(any(test.parameter == "level")) {
-      p.tauU.level <- unlist(lapply(rand.sample, function(x) newtauUSC(x, method = "parker")$table[[1]][6,12]))
+      p.tauU.level <- unlist(lapply(rand.sample, function(x) tauUSC(x, method = "parker")$table[[1]][6,12]))
       out$tauU.level <- mean(p.tauU.level <= alpha, na.rm = TRUE)
     } else out$tauU.level <- NA
   }

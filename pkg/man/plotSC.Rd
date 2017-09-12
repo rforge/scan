@@ -7,7 +7,8 @@ The \code{plotSC} function provides a plot of a single-case or multiple single-c
 }
 
 \usage{
-plotSC(data, ylim = NULL, xlim = NULL, fill = "", lines = "", marks = NULL, annotations = NULL, phase.names = c("A","B"), FUN.AB = NULL, xlab = "Measurement time", ylab = "Score", text.ABlag = NULL, lwd = 2, pch = 17, type = "b", mai = c(0.6, 0.82, 0.2, 0.42), ...)
+plotSC(data, ylim = NULL, xlim = NULL, fill = "", frame = "black", fill.bg = NA, grid = NA, lines = "", marks = NULL, annotations = NULL, phase.names = NULL, FUN.AB = NULL, xlab = "Measurement time", ylab = "Score", text.ABlag = NULL, lwd = 2, pch = 17, type = "b", mai = c(0.6, 0.82, 0.2, 0.42), bty = "o",...)
+      
 plot.scdf(...)
 }
 

@@ -11,6 +11,7 @@
 \alias{GruenkeWilbert2014}
 \alias{Huber2014}
 \alias{exampleAB}
+\alias{exampleAB_add}
 \alias{exampleABC}
 \alias{exampleABAB}
 \alias{exampleA1B1A2B2}

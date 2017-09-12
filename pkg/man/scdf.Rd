@@ -36,12 +36,15 @@ A vector defining measurement times. Default is \code{MT = (1,2,3,...,n)}.
 A vector defining the length and label of each phase. E.g., \code{phase.length = c(A1 = 10, B1 = 10, A2 = 10, B2 = 10)}.
 }
 
-  \item{pvar}{
-A list with additional variables. E.g., \code{pvar = list(teacher = c(0,1,0,1,0,0,1), lesson = c(1,3,4,5,2,3)}.
-}
   \item{name}{
 A name for the case.
 }
+
+
+  \item{...}{
+Additional variables. E.g., \code{teacher = c(0,1,0,1,0,0,1), lesson = c(1,3,4,5,2,3)}.
+}
+
 }
 
 \value{

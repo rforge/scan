@@ -1,7 +1,15 @@
 \name{scan-package}
 \alias{scan-package}
 \alias{scan}
+
 \alias{print.sc}
+\alias{estimateSC}
+\alias{keepphasesSC}
+\alias{newrankSC}
+\alias{recodeSCDF}
+\alias{scaleSC}
+
+
 \docType{package}
 \title{Single-Case Data Analyses}
 \description{
