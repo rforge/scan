@@ -20,6 +20,10 @@ plotSC(data, ylim = NULL, xlim = NULL, fill = "", frame = "black", fill.bg = NA,
   \item{ylim}{Lower and upper limits of the y-axis (e.g., \code{ylim = c(0, 20)} sets the y-axis to a scale from 0 to 20). With multiple single-cases you can use \code{ylim = c(0, NA)} to scale the y-axis from 0 to the maximum of each case. \code{ylim} is not set by default, which makes \code{scan} set a proper scale based on the given data.}
   \item{xlim}{Lower and upper limits of the x-axis (e.g., \code{xlim = c(0, 20)} sets the x-axis to a scale from 0 to 20). With multiple single-cases you can use \code{ylim = c(0, NA)} to scale the x-axis from 0 to the maximum of each case. \code{xlim} is not set by default, which makes \code{scan} set a proper scale based on the given data.}
   \item{fill}{If set, the area under the line is filled with the given color (e.g., \code{fill = "tomato"}). Use the standard R command colors() to get a list of all possible colours. \code{fill} is empty by default.}
+  \item{frame}{-}
+  \item{fill.bg}{-}
+  \item{grid}{-}
+  \item{bty}{-}
   \item{lines}{A character or list defining one or more lines or curves to be plotted. The argument is either passed as a character string (e.g., \code{lines = "median"}) or as a list (e.g., \code{list("median", "trend")}. Some of the procedures can be refined with an additional argument (e.g., \code{lines = list("mean" = 0.20)} adds a 20\% trimmed mean line. By default no additional lines are plotted. Possible lines are:
     \itemize{
       \item{\code{"median"} Separate lines for phase A and B medians.}

@@ -30,6 +30,7 @@ randSC(data, statistic = "Mean B-A", number = 500, complete = FALSE,limit = 5,
   \item{exclude.equal}{If set to \code{exclude.equal = FALSE}, which is the default, random distribution values equal to the observed distribution are counted as null-hypothesis conform. That is, they decrease the probability of rejecting the null-hypothesis (increase the p-value). \code{exclude.equal} should be set to \code{TRUE} if you analyse one single-case design (not a multiple baseline data set) to reach a sufficient power. But be aware, that it increases the chance of an alpha-error.}
   \item{graph}{If \code{graph = TRUE}, a histogram of the resulting distribution is plotted. It's \code{FALSE} by default.}
   \item{output}{If set to the default \code{output = "C"}, detailed information is provided. Set \code{output = "p"}, to only return the resulting p value.}
+  \item{phases}{-}
 }
 
 \value{

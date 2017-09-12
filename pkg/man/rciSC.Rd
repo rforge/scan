@@ -22,6 +22,7 @@ Width of confidence interval as a decimal. Default is \code{ci = 0.95} applying 
 }
   \item{graph}{
 If set \code{TRUE}, a box plot of phase A and B scores is displayed. \code{graph = FALSE} by default.}
+  \item{phases}{-}
 }
 
 \value{

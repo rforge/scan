@@ -14,9 +14,10 @@ longSCDF(data, l2 = NULL, id = "case", model = NULL, ...)
   \item{data}{
 A list of single-case data frames
 }
-\item{l2}{}
-\item{id}{}
-\item{model}{}
+\item{l2}{-}
+\item{id}{-}
+\item{model}{-}
+\item{...}{-}
 }
 
 \value{

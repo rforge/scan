@@ -11,6 +11,7 @@ pnd(data, decreasing = FALSE, phases = c("A", "B"))
 \arguments{
   \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
   \item{decreasing}{If you expect data to be lower in the B phase, set \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.}
+  \item{phases}{-}
 }
 
 \value{

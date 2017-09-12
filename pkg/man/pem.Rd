@@ -27,7 +27,7 @@ Data points are compared with the phase A median. Use this argument to implement
   \item{\dots}{
 Additional arguments for the \code{FUN} parameter (e.g. \code{FUN = mean, trim = 0.1} will use the 10 percent trimmed arithmetic mean instead of the median for comparisons).
 }
-  \item{phases}{}
+  \item{phases}{-}
 }
 \value{
   \item{PEM}{Percent exceeding the median.}

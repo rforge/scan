@@ -17,7 +17,6 @@ readSC.excel(...)
   \item{sep}{The field separator string. Values within rows have to be separated by this string. Default is \code{sep = ","}.}
   \item{dec}{The string used for decimal points in the file. Must be a single character. Default is \code{dec = "."}}
   \item{sort.labels}{If set TRUE, the resulting list is sorted by label names (alphabetically increasing).}
-  \item{phase.names}{Name of the phases. Usually they should be "A" and "B". I the file contains different names, these are converted to "A" and "B".}
   \item{type}{Format of the file to be imported. Either "csv" or "excel" is possible.}
 
   \item{\dots}{Further arguments passed to the \code{\link{read.table}} command.}
