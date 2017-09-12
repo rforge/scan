@@ -7,7 +7,8 @@ The \code{plm} function computes a piecewise regression model (see Huitema & McK
 }
 
 \usage{
-plm(data, AR = 0, model = "B&L-B", phases = c("A", "B"), family = "gaussian", formula = values ~ 1 + mt + phase + inter, na.action = na.omit, ...)
+plm(data, AR = 0, model = "B&L-B", phases = c("A", "B"), family = "gaussian", 
+  formula = values ~ 1 + mt + phase + inter, na.action = na.omit, ...)
 }
 
 \arguments{

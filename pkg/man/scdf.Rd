@@ -1,5 +1,6 @@
 \name{scdf}
 \alias{scdf}
+\alias{scdf-class}
 \alias{summary.scdf}
 \alias{print.scdf}
 \alias{as.scdf}
@@ -13,12 +14,15 @@ The class \code{scdf} stores single-case study data with one or more single-case
 }
 
 \usage{
-scdf(values, B.start = NULL, mt = NULL, phase = NULL, phase.design = NULL, pvar = NULL, name = NULL, ...)
-checkSCDF(data)
-makeSCDF(data, B.start = NULL, MT = NULL, phase.length = NULL, pvar = NULL)
-summary.scdf(...)
-print.scdf(...)
+scdf(values, B.start = NULL, mt = NULL, phase = NULL, phase.design = NULL, 
+  name = NULL, ...)
 as.scdf(...)
+checkSCDF(data)
+makeSCDF(data, B.start = NULL, MT = NULL, phase.length = NULL)
+
+\method{print}{scdf}(...)
+\method{summary}{scdf}(...)
+
 }
 
 \arguments{

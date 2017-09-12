@@ -13,10 +13,11 @@
 \alias{exampleAB}
 \alias{exampleAB_add}
 \alias{exampleABC}
+\alias{exampleABC_outlier}
 \alias{exampleABAB}
 \alias{exampleA1B1A2B2}
-\alias{example50}
-\alias{example50.l2}
+\alias{exampleAB_50}
+\alias{exampleAB_50.l2}
 \alias{Huber2014}
 \title{Single-case example data}
 \description{
