@@ -30,8 +30,8 @@ overlapSC <- function(data, decreasing = FALSE, phases = c("A","B")) {
     
     A <- data$values[data$phase == "A"]
     B <- data$values[data$phase == "B"]
-    d.f$Diff_mean[i] <- mean(B, na = TRUE) - mean(A, na = TRUE)
-    d.f$SMD[i] <- (mean(B, na = TRUE) - mean(A, na = TRUE)) / sd(A, na = TRUE)
+    d.f$Diff_mean[i] <- mean(B, na.rm = TRUE) - mean(A, na.rm = TRUE)
+    d.f$SMD[i] <- (mean(B, na.rm = TRUE) - mean(A, na.rm = TRUE)) / sd(A, na.rm = TRUE)
     
     A.MT <- data$mt[data$phase == "A"]
     B.MT <- data$mt[data$phase == "B"]
