@@ -39,6 +39,7 @@ power.testSC(data = NULL, parameters = NULL,stat = c("rand.test","plm"),
   \item{distribution}{Indicates whether the random sample is based on a \code{"normal"} or a \code{"poisson"} distribution. Default is \code{distribution = "normal"}.}
   \item{concise}{If set \code{concise = TRUE}, which is the default setting, no effects on the generated random samples are given during the computation.}
   \item{silent}{If set \code{TRUE}, the results are not printed after computation. Default is \code{silent = FALSE}.}
+    \item{parameters}{-}
 }
 
 \author{Juergen Wilbert}

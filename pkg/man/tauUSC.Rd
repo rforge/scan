@@ -1,6 +1,5 @@
 \name{tauUSC}
 \alias{tauUSC}
-\alias{newtauUSC}
 \title{Tau-U for single-case data}
 \description{
 This function calculates indices of the Tau-U family as proposed by Parker et al. (2011).
@@ -16,6 +15,8 @@ A single-case data frame.
   \item{ties.method}{
 Defines how to handle ties. \code{"omit"} excludes all ties from the calculation. \code{"positive"} counts all ties as positive comparisons, while \code{"negative"} counts them as negative comparisons.
 }
+  \item{phases}{-}
+    \item{method}{-}
 }
 
 \value{

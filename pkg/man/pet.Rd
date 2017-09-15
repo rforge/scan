@@ -17,6 +17,10 @@ If you expect data to be lower in the B phase, set \code{decreasing = TRUE}. Def
   \item{ci}{
 Width of the confidence interval. Default is \code{ci = .95}.
 }
+  \item{phases}{A vector of two strings defining the labels of the two phases that should be taken into the anaylsis. The default is \code{phases = c("A","B")}.
+}
+
+
 }
 \value{
   \item{PET}{Percent exceeding the trend.}

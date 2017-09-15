@@ -1,6 +1,5 @@
 \name{plm}
 \alias{plm}
-\alias{newplm}
 \title{Piecewise linear model / piecewise regression}
 \description{
 The \code{plm} function computes a piecewise regression model (see Huitema & McKean, 2000).
@@ -18,6 +17,7 @@ plm(data, AR = 0, model = "B&L-B", phases = c("A", "B"), family = "gaussian",
   \item{family}{Set the distributioin family. Defaults to a gaussian distribution. See the \code{family} function for more details.}
   \item{phases}{-}
   \item{formula}{-}
+  \item{na.action}{Defines how to deal with missing values}
   \item{...}{Further arguments passed to the glm function.}
 }
 

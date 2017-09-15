@@ -36,7 +36,7 @@ The first measurement of phase B (simple coding if design is strictly AB).
 A vector defining measurement times. Default is \code{MT = (1,2,3,...,n)}.
 }
 
-  \item{phase.length}{
+  \item{phase.design}{
 A vector defining the length and label of each phase. E.g., \code{phase.length = c(A1 = 10, B1 = 10, A2 = 10, B2 = 10)}.
 }
 
@@ -44,6 +44,16 @@ A vector defining the length and label of each phase. E.g., \code{phase.length =
 A name for the case.
 }
 
+  \item{phase}{-}
+  \item{values}{-}
+  \item{mt}{-}
+  \item{object}{-}
+  \item{x}{-}
+  \item{cases}{-}
+  \item{rows}{-}
+  \item{row.names}{-}
+  \item{long}{-}
+  \item{var.names}{-}
 
   \item{...}{
 Additional variables. E.g., \code{teacher = c(0,1,0,1,0,0,1), lesson = c(1,3,4,5,2,3)}.
