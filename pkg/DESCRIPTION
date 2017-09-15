@@ -6,7 +6,7 @@ Date: 2017-08-08
 Author: Juergen Wilbert [aut, cre], Timo Lueke [aut]
 Maintainer: Juergen Wilbert <jwilbert@uni-potsdam.de>
 Imports: stats, Kendall, nlme, utils, methods, graphics, readxl
-Depends: R (>= 1.8.0)
+Depends: R (>= 1.8.0), Kendall, nlme
 Description: A collection of procedures for analysing single-case data. Some procedures support multiple-baseline designs.
 License: GPL
 URL: https://r-forge.r-project.org/projects/scan/
