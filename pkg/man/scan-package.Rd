@@ -20,8 +20,8 @@ Most procedures also support multiple-baseline designs.}
 \tabular{ll}{
 Package: \tab scan\cr
 Type: \tab Package\cr
-Version: \tab 0.33\cr
-Date: \tab 2017-08-08\cr
+Version: \tab 0.34\cr
+Date: \tab 2017-09-17\cr
 License: \tab GPL (version 2 or newer)\cr
 }
 }
