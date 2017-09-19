@@ -5,7 +5,7 @@ Version: 0.34
 Date: 2017-09-17
 Author: Juergen Wilbert [aut, cre], Timo Lueke [aut]
 Maintainer: Juergen Wilbert <jwilbert@uni-potsdam.de>
-Imports: stats, Kendall, nlme, utils, methods, graphics, readxl
+Imports: stats, nlme, utils, methods, graphics
 Depends: R (>= 1.8.0)
 Description: A collection of procedures for analysing single-case data. Some procedures support multiple-baseline designs.
 License: GPL

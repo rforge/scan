@@ -26,7 +26,8 @@ overlapSC <- function(data, decreasing = FALSE, phases = c("A","B")) {
     d.f$NAP[i] <- nap(data, decreasing = decreasing)$NAP
     d.f$NAP.rescaled[i] <- nap(data, decreasing = decreasing)$NAP.rescaled
     d.f$PAND[i] <- pand(data, decreasing = decreasing)$PAND
-    d.f$TAU_U[i] <- tauUSC(data)$Overall_tau_u[2]
+    #d.f$TAU_U[i] <- tauUSC(data)$Overall_tau_u[2]
+    d.f$TAU_U[i] <- tauUSC(data)$table[[1]]["A vs. B + Trend B - Trend A","Tau"]
     
     A <- data$values[data$phase == "A"]
     B <- data$values[data$phase == "B"]

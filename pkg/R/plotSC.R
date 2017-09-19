@@ -7,7 +7,7 @@ plot.scdf <- function(...) {
     polygon(c(x[i], x[i+1], x[i+1], x[i]),c(ymin,ymin, y[i+1],y[i]), col=col, border = NA)
 }
 
-plotSC <- function(data, ylim = NULL, xlim = NULL, fill = "", frame = "black", fill.bg = NA, grid = NA, lines = "", marks = NULL, annotations = NULL, phase.names = NULL, FUN.AB = NULL, xlab = "Measurement time", ylab = "Score", text.ABlag = NULL, lwd = 2, pch = 17, type = "b", mai = c(0.6, 0.82, 0.2, 0.42), bty = "o",...) {
+plotSC <- function(data, ylim = NULL, xlim = NULL, fill = "", frame = "black", fill.bg = NA, grid = NA, lines = "", marks = NULL, annotations = NULL, phase.names = NULL, FUN.AB = NULL, xlab = "Measurement time", ylab = "Score", text.ABlag = NULL, lwd = 2, pch = 17, type = "b", main = "", mai = c(0.6, 0.82, 0.2, 0.42), bty = "o",...) {
   data.list <- .SCprepareData(data)
   
   annotations.cex <- 0.8 ### maybe for later implementation as an argument
@@ -72,6 +72,8 @@ plotSC <- function(data, ylim = NULL, xlim = NULL, fill = "", frame = "black", f
       plot(data$mt, data$values, xaxt = "n", xlab = "", lwd = lwd, type = "n", xlim = xlim, ylim = y.lim, ylab = ylab, pch = pch, bty = bty, ...)
       usr <- par("usr")
     }
+    
+
     
     if(!is.na(fill.bg)) {
       rect(usr[1],usr[3],usr[2],usr[4], col = fill.bg, border = NA)#, border = par("fg"))
@@ -167,6 +169,7 @@ plotSC <- function(data, ylim = NULL, xlim = NULL, fill = "", frame = "black", f
 
       text(data$mt,data$values, label = annotations.label, col = annotations.col, pos = annotations.pos, offset = annotations.offset, cex = annotations.cex)
     }
+    
     
     
     #### START: Adding help-lines
@@ -337,5 +340,9 @@ plotSC <- function(data, ylim = NULL, xlim = NULL, fill = "", frame = "black", f
     if (length(case.names) ==  N)
       mtext(case.names[case], side = 3, line = -1, adj = 0, at = 1)	
   }
+  
   par(op)
+  
+  title(main)
+  
 }

@@ -20,11 +20,12 @@ print.sc <- function(x, ...) {
 
   
   if(value == "TAU-U") {	
-    cat("Overall Tau-U: \n")
-    print(x$Overall_tau_u)
-    cat("\n\n")
+    #cat("Overall Tau-U: \n")
+    #print(x$Overall_tau_u)
+    #cat("\n\n")
     
-    print(lapply(x$table,function(x)round(x,3)))
+    #print(lapply(x$table,function(x)round(x,3)))
+    print(x$table)
   }
   
   if(value == "oldTAU-U") {	

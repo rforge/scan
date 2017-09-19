@@ -1,11 +1,9 @@
 exportPattern("^[[:alpha:]]+")
 
 import(nlme)
-import(Kendall)
 import(stats)
 import(utils)
 import(graphics)
-import(readxl)
 S3method(print,sc)
 S3method(print,scdf)
 S3method(plot,scdf)

@@ -123,64 +123,65 @@ tauUSC <- function (data, ties.method = "omit", method = "complete", phases = c(
     
     out$S <- out$pos-out$neg
     
-    AvBKen <- Kendall(AB, c(rep(0,nA),rep(1,nB)))
-    AvAKen <- Kendall(A, 1:nA)
-    BvBKen <- Kendall(B, 1:nB)
-    BvB_AKen <- Kendall(c(A,B), c(nA:1,1:nB))
+    #AvBKen <- Kendall(AB, c(rep(0,nA),rep(1,nB)))
+    #AvAKen <- Kendall(A, 1:nA)
+    #BvBKen <- Kendall(B, 1:nB)
+    #BvB_AKen <- Kendall(c(A,B), c(nA:1,1:nB))
     
-    AvB_B_AKen <- Kendall(c(A, B),c(nA:1,(nA + 1):nAB))
-    AvB_AKen <- Kendall(c(A, B),c(nA:1,rep(nA+1,nB)))
+    #AvB_B_AKen <- Kendall(c(A, B),c(nA:1,(nA + 1):nAB))
+    #AvB_AKen <- Kendall(c(A, B),c(nA:1,rep(nA+1,nB)))
     
-    AvB_BKen <- Kendall(c(A, B),c(rep(0, nA),(nA + 1):nAB))
-    out$D <- c(
-      out$pairs[1]-out$ties[1]/2,
-      AvAKen$D,
-      BvBKen$D,
-      BvB_AKen$D,
-      #NA,
-      AvB_AKen$D,
-      AvB_BKen$D,
-      AvB_B_AKen$D
-    )
+    #AvB_BKen <- Kendall(c(A, B),c(rep(0, nA),(nA + 1):nAB))
+    #out$D <- c(
+    #  out$pairs[1]-out$ties[1]/2,
+    #  AvAKen$D,
+    #  BvBKen$D,
+    #  BvB_AKen$D,
+    #  #NA,
+    #  AvB_AKen$D,
+    #  AvB_BKen$D,
+    #  AvB_B_AKen$D
+    #)
     
     
     out$Tau <- out$S / out$pairs
-    out$Tau.b <- out$S / out$D
-    out$SD <- c(
-      sqrt((nA*nB)*(nA+nB+1)/12)*2,
-      sqrt(Kendall(sample(nA,nA),1:nA)$varS),
-      sqrt(Kendall(sample(nB,nB),1:nB)$varS),
-      sqrt(Kendall(sample(nA+nB, nA+nB), c(nA:1,1:nB))$varS),
-      #NA,
-      sqrt(AvB_AKen$varS),
-      sqrt(AvB_BKen$varS),
-      sqrt(AvB_B_AKen$varS)
-    )
-    out$VAR <- out$SD^2
-    out$Z <- out$S/out$SD
-    out$p <- pnorm(abs(out$Z), lower.tail = FALSE)*2
+    #out$Tau.b <- out$S / out$D
+    #out$SD <- c(
+    #  sqrt((nA*nB)*(nA+nB+1)/12)*2,
+    #  sqrt(Kendall(sample(nA,nA),1:nA)$varS),
+    #  sqrt(Kendall(sample(nB,nB),1:nB)$varS),
+    #  sqrt(Kendall(sample(nA+nB, nA+nB), c(nA:1,1:nB))$varS),
+    #  #NA,
+    #  sqrt(AvB_AKen$varS),
+    #  sqrt(AvB_BKen$varS),
+    #  sqrt(AvB_B_AKen$varS)
+    #)
+    #out$VAR <- out$SD^2
+    #out$Z <- out$S/out$SD
+    #out$p <- pnorm(abs(out$Z), lower.tail = FALSE)*2
     
     ret$table[[i]] <- out		
     ret$matrix[[i]] <- tau_m
-    ret$tau_u[[i]] <- out["A vs. B + Trend B - Trend A","Tau"]
-    
-  }
-  weight.t <- c()
-  weight.v <- c()
-  for(i in 1:N) {
-    weight.v <- c(weight.v,1/ret$table[[i]]["A vs. B + Trend B - Trend A","VAR"])
-    weight.t <- c(weight.t,ret$table[[i]]["A vs. B + Trend B - Trend A","Tau"])
-  }
-  ret$Overall_tau_u <- c("A vs. B + Trend B - Trend A" = sum(weight.v*weight.t)/sum(weight.v))
+    ret$tau_u[[i]] <- c("A vs. B + Trend B - Trend A" = out["A vs. B + Trend B - Trend A","Tau"])
   
-  weight.t <- c()
-  weight.v <- c()
-  for(i in 1:N) {
-    weight.v <- c(weight.v,1/ret$table[[i]]["A vs. B - Trend A","VAR"])
-    weight.t <- c(weight.t,ret$table[[i]]["A vs. B - Trend A","Tau"])
   }
-  ret$Overall_tau_u <- c(ret$Overall_tau_u, "A vs. B - Trend A" = sum(weight.v*weight.t)/sum(weight.v))
+  #weight.t <- c()
+  #weight.v <- c()
+  #for(i in 1:N) {
+  #  weight.v <- c(weight.v,1/ret$table[[i]]["A vs. B + Trend B - Trend A","VAR"])
+  #  weight.t <- c(weight.t,ret$table[[i]]["A vs. B + Trend B - Trend A","Tau"])
+  #}
+  #ret$Overall_tau_u <- c("A vs. B + Trend B - Trend A" = sum(weight.v*weight.t)/sum(weight.v))
+  
+  #weight.t <- c()
+  #weight.v <- c()
+  #for(i in 1:N) {
+  #  weight.v <- c(weight.v,1/ret$table[[i]]["A vs. B - Trend A","VAR"])
+  #  weight.t <- c(weight.t,ret$table[[i]]["A vs. B - Trend A","Tau"])
+  #}
+  #ret$Overall_tau_u <- c(ret$Overall_tau_u, "A vs. B - Trend A" = sum(weight.v*weight.t)/sum(weight.v))
   names(ret$table) <- names(data)
+  names(ret$tau_u) <- names(data)
   
   class(ret) <- c("sc","TAU-U")
   
