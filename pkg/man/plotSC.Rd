@@ -10,7 +10,7 @@ The \code{plotSC} function provides a plot of a single-case or multiple single-c
 plotSC(data, ylim = NULL, xlim = NULL, fill = "", frame = "black", fill.bg = NA, 
   grid = NA, lines = "", marks = NULL, annotations = NULL, phase.names = NULL,
   FUN.AB = NULL, xlab = "Measurement time", ylab = "Score", text.ABlag = NULL, lwd = 2,
-  pch = 17, type = "b", mai = c(0.6, 0.82, 0.2, 0.42), bty = "o",...)
+  pch = 17, type = "b",  main = "", mai = c(0.6, 0.82, 0.2, 0.42), bty = "o",...)
 
 \method{plot}{scdf}(...)      
 }
@@ -23,7 +23,6 @@ plotSC(data, ylim = NULL, xlim = NULL, fill = "", frame = "black", fill.bg = NA,
   \item{frame}{-}
   \item{fill.bg}{-}
   \item{grid}{-}
-  \item{bty}{-}
   \item{lines}{A character or list defining one or more lines or curves to be plotted. The argument is either passed as a character string (e.g., \code{lines = "median"}) or as a list (e.g., \code{list("median", "trend")}. Some of the procedures can be refined with an additional argument (e.g., \code{lines = list("mean" = 0.20)} adds a 20\% trimmed mean line. By default no additional lines are plotted. Possible lines are:
     \itemize{
       \item{\code{"median"} Separate lines for phase A and B medians.}
@@ -71,7 +70,9 @@ plotSC(data, ylim = NULL, xlim = NULL, fill = "", frame = "black", fill.bg = NA,
   \item{lwd}{Width of the plot line. Default is \code{lwd = 2}.}
   \item{pch}{Point type. Default is \code{pch = 17} (triangles). Other options are for example: 16 (filled circles) or "A" (uses the letter A).}
   \item{type}{Line type. "l" draws lines, "p" points, "b" draws lines and points, and "n" draws nothing. Default is \code{type = "b"}). The "n" argument is useful in combination with the lines argument (e.g., \code{type = "n", lines = "loreg"}).}
+  \item{main}{Main title of the plot.}
   \item{mai}{Sets the margins of the plot.}
+  \item{bty}{-}
   \item{...}{Further arguments passed to the plot command.}
 }
 
