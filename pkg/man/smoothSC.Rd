@@ -10,7 +10,7 @@ smoothSC(data, FUN = "movingMedian", intensity = NULL)
 }
 
 \arguments{
-  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
+  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{scdf}} to learn about this format.}
 
   \item{FUN}{Function determining the smoothed scores. Default \code{FUN = "movingMedian"} is a moving Median function. Further possible values are: \code{"movingMean"} and a non-parametric \code{"localRegression"}.}
   \item{intensity}{For \code{FUN = "movingMedian"} and \code{"movingMean"} it is the lag used for computing the average. Default is \code{intensity = 1}. In case of \code{FUN = "localRegression"} it is the proportion of surrounding data influencing each data point, which is \code{intensity = 0.2} by default.}

@@ -12,7 +12,7 @@ rciSC(data, rel = 0.80, ci = 0.95, graph = FALSE, phases = c("A","B"))
 
 \arguments{
   \item{data}{
-A single-case data frame. See \code{\link{makeSCDF}} to learn about this format.
+A single-case data frame. See \code{\link{scdf}} to learn about this format.
 }
   \item{rel}{
 Reliability of the measure, used to compute the standard error. Default is \code{rel = 0.8}.
@@ -22,7 +22,9 @@ Width of confidence interval as a decimal. Default is \code{ci = 0.95} applying 
 }
   \item{graph}{
 If set \code{TRUE}, a box plot of phase A and B scores is displayed. \code{graph = FALSE} by default.}
-  \item{phases}{-}
+  \item{phases}{
+A vector of two characters or numbers indicating the two phases that should be compared. E.g., \code{phases = c("A","C")} or  \code{phases = c(2,4)} for comparing the second and the fourth phase. Phases could be combined by providing a list with two elements. E.g., \code{phases = list(A = c(1,3), B = c(2,4))} will compare phases 1 and 3 (as A) against 2 and 4 (as B). Default is \code{phases = c("A","B")}.
+}
 }
 
 \value{

@@ -10,7 +10,7 @@ truncateSC(data, A = c(0,0), B = c(0,0))
 }
 
 \arguments{
-  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
+  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{scdf}} to learn about this format.}
   \item{A}{A vector of two values defining the number of data points from phase A to be dropped (at the beginning and end). For lists of single-case data frames, the truncation is adapted to the length of the A phase for each single case.}
   \item{B}{A vector of two values defining the number of data points from phase B to be dropped (at the beginning and end). For lists of single-case data frames, the truncation is adapted to the length of the B phase for each single case.}
 }

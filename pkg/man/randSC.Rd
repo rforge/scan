@@ -13,7 +13,7 @@ randSC(data, statistic = "Mean B-A", number = 500, complete = FALSE,limit = 5,
 }
 
 \arguments{
-  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
+  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{scdf}} to learn about this format.}
   \item{statistic}{Defines the statistic on which the comparison of phases A and B is based on. Default setting is \code{statistic = "Mean B-A"}). The following comparisons are possible:
     \itemize{
       \item{\code{"Mean A-B"}: Uses the difference between the mean of phase A and the mean of phase B. This is appropriate if a decrease of scores was expected for phase B.}
@@ -30,7 +30,9 @@ randSC(data, statistic = "Mean B-A", number = 500, complete = FALSE,limit = 5,
   \item{exclude.equal}{If set to \code{exclude.equal = FALSE}, which is the default, random distribution values equal to the observed distribution are counted as null-hypothesis conform. That is, they decrease the probability of rejecting the null-hypothesis (increase the p-value). \code{exclude.equal} should be set to \code{TRUE} if you analyse one single-case design (not a multiple baseline data set) to reach a sufficient power. But be aware, that it increases the chance of an alpha-error.}
   \item{graph}{If \code{graph = TRUE}, a histogram of the resulting distribution is plotted. It's \code{FALSE} by default.}
   \item{output}{If set to the default \code{output = "C"}, detailed information is provided. Set \code{output = "p"}, to only return the resulting p value.}
-  \item{phases}{-}
+  \item{phases}{
+A vector of two characters or numbers indicating the two phases that should be compared. E.g., \code{phases = c("A","C")} or  \code{phases = c(2,4)} for comparing the second and the fourth phase. Phases could be combined by providing a list with two elements. E.g., \code{phases = list(A = c(1,3), B = c(2,4))} will compare phases 1 and 3 (as A) against 2 and 4 (as B). Default is \code{phases = c("A","B")}.
+}
 }
 
 \value{

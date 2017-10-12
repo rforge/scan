@@ -2,7 +2,7 @@
 \alias{autocorrSC}
 \title{Autocorrelation for single-case data}
 \description{
-The autocorrSC function calculates autocorrelations within phase A, phase B and the complete single-case data set (AB).
+The autocorrSC function calculates autocorrelations within each phase and across all phases.
 }
 
 \usage{
@@ -10,11 +10,11 @@ autocorrSC(data, lag.max = 3)
 }
 
 \arguments{
-  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
+  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{scdf}} to learn about this format.}
   \item{lag.max}{The lag up to which autocorrelations will be computed. Default is \code{lag.max = 3}.}
 }
 \value{
-  \item{autocorr}{A data frame containing separate autocorrelations of phase A, phase B and the complete data (for each single-case). If \code{lag.max} exceeds the length of a phase minus one, NA is returned for this cell.}
+  \item{autocorr}{A data frame containing separate autocorrelations for each phase and for all phases (for each single-case). If \code{lag.max} exceeds the length of a phase minus one, NA is returned for this cell.}
 }
 
 \author{Juergen Wilbert}

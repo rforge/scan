@@ -10,11 +10,11 @@ describeSC(data)
 }
 
 \arguments{
-  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
+  \item{data}{A single-case data frame or a list of single-case data frames. See \code{\link{scdf}} to learn about this format.}
   
 }
 
-\value{A data frame (or a list of data frames) of descriptive statistics (for each single-case), i.a.: number of observations, number of missing values, measures of central tendency, variation, and trend.}
+\value{A data frame of descriptive statistics (for each single-case), i.e.: number of observations, number of missing values, measures of central tendency, variation, and trend.}
 
 \author{Juergen Wilbert}
 

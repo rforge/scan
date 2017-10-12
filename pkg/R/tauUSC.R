@@ -22,12 +22,12 @@
   
   S <- C-D
   n0 <- N*(N-1)/2
-  #out$N <- N
-  #out$n0 <- n0
-  #out$ti <- ti
-  #out$ui <- ui
-  #out$.C <- C
-  #out$.D <- D
+  out$N <- N
+  out$n0 <- n0
+  out$ti <- ti
+  out$ui <- ui
+  out$.C <- C
+  out$.D <- D
   out$S <- S
   out$tau <- S/n0
   out$tau.b <- S / sqrt( (n0-ti)*(n0-ui) )
@@ -43,12 +43,17 @@
   v2 <- sum(sapply(tie.x,function(x) (x*(x-1))*(x-2))) * sum(sapply(tie.y,function(x) (x*(x-1))*(x-2)))
   
   out$varS <- (v0 - vt - vu)/18 + (v1/(2*N*(N-1))) + (v2 /(9*N*(N-1)*(N-2)))
+  
+  out$sdS <- sqrt(out$varS)
+  out$se <- out$sdS/out$D
+  out$z <- out$tau.b / out$se
+  out$p  <- (1-pnorm(out$z, lower = FALSE)) *2
   out
 }
 
 
 tauUSC <- function (data, ties.method = "omit", method = "complete", phases = c("A","B")) {
-  #data <- .SCprepareData(data)
+  data <- .SCprepareData(data)
   data <- keepphasesSC(data, phases = phases)$data
   
   N <- length(data)
@@ -81,6 +86,7 @@ tauUSC <- function (data, ties.method = "omit", method = "complete", phases = c(
     tau_m[tmp] <- "T"
     
     diag(tau_m) <- 0
+    tau_m[lower.tri(tau_m)] <- ""
     
     pos.s <- c("+")
     neg.s <- c("-")
@@ -89,10 +95,7 @@ tauUSC <- function (data, ties.method = "omit", method = "complete", phases = c(
       pos.s <- c("+","T")
     if(ties.method == "negative") 
       neg.s <- c("-","T")
-    
-    
-    tau_m[lower.tri(tau_m)] <- ""
-    
+ 
     AvBm <- tau_m[1:nA,(nA+1):nAB]
     AvBpos <- sum(AvBm%in%pos.s)
     AvBneg <- sum(AvBm%in%neg.s)
@@ -108,6 +111,13 @@ tauUSC <- function (data, ties.method = "omit", method = "complete", phases = c(
     BvBneg <- sum(BvBm%in%neg.s)
     BvBtie <- sum(BvBm%in%tie.s)
     
+    AvBKen      <- .kendall(AB, c(rep(0,nA),rep(1,nB)))
+    AvAKen      <- .kendall(A, 1:nA)
+    BvBKen      <- .kendall(B, 1:nB)
+    BvB_AKen    <- .kendall(c(A,B), c(nA:1,1:nB))
+    AvB_B_AKen  <- .kendall(c(A, B),c(nA:1,(nA + 1):nAB))
+    AvB_AKen    <- .kendall(c(A, B),c(nA:1,rep(nA+1,nB)))
+    AvB_BKen    <- .kendall(c(A, B),c(rep(0, nA),(nA + 1):nAB))
     
     if(method == "parker") {
       out$pairs <- c(
@@ -172,15 +182,7 @@ tauUSC <- function (data, ties.method = "omit", method = "complete", phases = c(
     out$S <- out$pos-out$neg
     
     
-    AvBKen <- .kendall(AB, c(rep(0,nA),rep(1,nB)))
-    AvAKen <- .kendall(A, 1:nA)
-    BvBKen <- .kendall(B, 1:nB)
-    BvB_AKen <- .kendall(c(A,B), c(nA:1,1:nB))
-    
-    AvB_B_AKen <- .kendall(c(A, B),c(nA:1,(nA + 1):nAB))
-    AvB_AKen <- .kendall(c(A, B),c(nA:1,rep(nA+1,nB)))
-    
-    AvB_BKen <- .kendall(c(A, B),c(rep(0, nA),(nA + 1):nAB))
+   
     out$D <- c(
       out$pairs[1]-out$ties[1]/2,
       AvAKen$D,
@@ -236,6 +238,3 @@ tauUSC <- function (data, ties.method = "omit", method = "complete", phases = c(
   
   ret
 }
-
-
-

@@ -23,8 +23,16 @@ print.sc <- function(x, ...) {
     cat("Overall Tau-U: \n")
     print(x$Overall_tau_u)
     cat("\n\n")
+    out <- lapply(x$table,function(x)round(x,3))
+    arg <- list(...)
+    complete <- FALSE
+    if(any(names(arg) == "complete")) {
+      complete <- arg$complete
+    }
+    if(complete == FALSE)
+      out <- lapply(x$table,function(x)round(x[c(-1,-2,-3,-4),c(-1,-2,-3,-4, -9, -10)],3))
     
-    print(lapply(x$table,function(x)round(x,3)))
+    print(out)
     #print(x$table)
   }
   

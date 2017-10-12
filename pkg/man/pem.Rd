@@ -9,8 +9,8 @@ pem(data, decreasing = FALSE, binom.test = TRUE, chi.test = FALSE, FUN = median,
   phases = c("A","B"), ...)
 }
 \arguments{
-  \item{data}{
-A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.
+   \item{data}{
+A single-case data frame. See \code{\link{scdf}} to learn about this format.
 }
   \item{decreasing}{
 If you expect data to be lower in the B phase, set \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.
@@ -27,7 +27,9 @@ Data points are compared with the phase A median. Use this argument to implement
   \item{\dots}{
 Additional arguments for the \code{FUN} parameter (e.g. \code{FUN = mean, trim = 0.1} will use the 10 percent trimmed arithmetic mean instead of the median for comparisons).
 }
-  \item{phases}{-}
+  \item{phases}{
+A vector of two characters or numbers indicating the two phases that should be compared. E.g., \code{phases = c("A","C")} or  \code{phases = c(2,4)} for comparing the second to the fourth phase. Phases could be combined by providing a list with two elements. E.g., \code{phases = list(A = c(1,3), B = c(2,4))} will compare phases 1 and 3 (as A) against 2 and 4 (as B). Default is \code{phases = c("A","B")}.
+}
 }
 \value{
   \item{PEM}{Percent exceeding the median.}

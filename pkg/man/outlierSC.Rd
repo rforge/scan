@@ -2,7 +2,7 @@
 \alias{outlierSC}
 \title{Handling outliers in single-case data}
 \description{
-Identifies and drops outliers within a single-case data frame or a list of single-case data frames.
+Identifies and drops outliers within a single-case data frame (scdf).
 }
 
 \usage{
@@ -11,7 +11,7 @@ outlierSC(data, criteria = c("MAD", "3.5"))
 
 \arguments{
   \item{data}{
-A single-case data frame or a list of single-case data frames. See \code{\link{makeSCDF}} to learn about this format.}
+A single-case data frame. See \code{\link{makeSCDF}} to learn about this format.}
   \item{criteria}{Specifies the criteria for outlier identification. Set \code{criteria = c("SD", 2)} to define two standard deviations as limit. This is also the default setting. To use the 99\% Confidence Interval use \code{criteria = c("CI", 0.99)}. Set \code{criteria = c("Cook", "4/n")} to define any data point with a Cook's Distance greater than 4/n as an outlier, based on the Piecewise Linear Regression Model.}
 }
 
