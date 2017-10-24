@@ -188,15 +188,12 @@ print.sc <- function(x, ...) {
     rn <- rownames(md)
     if(!is.na(match("mt",rn)))
       rownames(md)[match("mt",rn)] <- "Trend"
-    if(!is.na(match("phase",rn)))
-      rownames(md)[match("phase",rn)] <- "Level"
-    if(!is.na(match("inter",rn)))
-      rownames(md)[match("inter",rn)] <- "Slope"
-    if(!is.na(match("(intercept)",rn)))
-      rownames(md)[match("(intercept)",rn)] <- "Intercept"
+    if(!is.na(match("(Intercept)",rn)))
+      rownames(md)[match("(Intercept)",rn)] <- "Intercept"
     
-    #rownames(md)[match(c("(Intercept)","mt","phase","inter"),rn)] <- c("Intercept","Trend","Level","Slope")
-
+    rownames(md) <- gsub("phase","Level Phase ",rownames(md))
+    rownames(md) <- gsub("inter","Slope Phase ",rownames(md))
+    
     md$B <- round(md$B,3)
     md$SE <- round(md$SE,3)
     md$t <- round(md$t,3)
@@ -230,7 +227,7 @@ print.sc <- function(x, ...) {
     invisible(out)
   }
   
-  if(value == "pr" || value == "plm.ar") {
+  if(value == "pr") {
     cat("Piecewise Regression Analysis\n\n")
     cat("Regression model: ", x$model,"\n\n")
     cat("Fitted a", x$family, "distribution.\n\n")		
@@ -248,9 +245,9 @@ print.sc <- function(x, ...) {
     
     
     if(x$ar == 0)
-      res <- summary(x$full)$coefficients
+      res <- summary(x$full.model)$coefficients
     if(x$ar > 0)
-      res <- summary(x$full)$tTable
+      res <- summary(x$full.model)$tTable
 
     res <- cbind(res[,1], suppressMessages(confint(x$full)), res[,2:4])
     res <- round(res,3)
@@ -259,13 +256,17 @@ print.sc <- function(x, ...) {
     rn <- rownames(res)
     if(!is.na(match("mt",rn)))
       rownames(res)[match("mt",rn)] <- "Trend"
-    if(!is.na(match("phaseB",rn)))
-      rownames(res)[match("phaseB",rn)] <- "Level"
-    if(!is.na(match("inter",rn)))
-      rownames(res)[match("inter",rn)] <- "Slope"
-    if(!is.na(match("(intercept)",rn)))
-      rownames(res)[match("(intercept)",rn)] <- "Intercept"
+    if(!is.na(match("(Intercept)",rn)))
+      rownames(res)[match("(Intercept)",rn)] <- "Intercept"
     
+    #if(!is.na(match("phaseB",rn)))
+    #  rownames(res)[match("phaseB",rn)] <- "Level"
+    rownames(res) <- gsub("phase","Level Phase ",rownames(res))
+    rownames(res) <- gsub("inter","Slope Phase ",rownames(res))
+    
+        #if(!is.na(match("inter",rn)))
+    #  rownames(res)[match("inter",rn)] <- "Slope"
+     
     colnames(res) <- c("B","2.5%","97.5%","SE", "t","p", "R-Square")		
     if(x$family == "poisson" || x$family == "nbinomial") {
       OR <- exp(res[,1:3])

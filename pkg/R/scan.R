@@ -187,9 +187,9 @@ longSCDF <- function(data, l2 = NULL, id = "case", model = NULL, ...) {
   
   if(!is.null(model)) {
     for(case in 1:length(dat)) {
-      data.inter <- .plm.interaction(dat[[case]], model = model)
+      data.inter <- plm.predictor(dat[[case]], model = model)
       dat[[case]]$mt <- data.inter$mt
-      dat[[case]]$inter <- data.inter$inter
+      dat[[case]] <- cbind(dat[[case]],data.inter[,-1])
     }
   }
   
