@@ -16,7 +16,7 @@ newhplm <- function(data, model = "B&L-B", method = "ML", control = list(opt = "
   out$analyze.ICC <- ICC
   
   for(case in 1: N) {
-    dat_inter <- plm.predictor(dat[[case]], model = model)
+    dat_inter <- .plm.predictor(dat[[case]], model = model)
     dat[[case]]$mt <- dat_inter$mt
     dat[[case]] <- cbind(dat[[case]],dat_inter[,-1])
     n_Var <- (ncol(dat_inter) - 1) / 2
