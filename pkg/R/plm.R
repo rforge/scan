@@ -1,6 +1,5 @@
 
-
-plm <- function(data, AR = 0, model = "B&L-B", phases = c("A","B"), family = "gaussian", formula = values ~ 1 + mt + phase + inter, na.action = na.omit, ...) {
+plm <- function(data, AR = 0, model = "B&L-B", phases = NULL, family = "gaussian", formula = NULL, na.action = na.omit, ...) {
 
   if (AR > 0 && !family == "gaussian")
     stop("Autoregression models could only be applied if distribution familiy = 'gaussian'.\n")
@@ -10,17 +9,23 @@ plm <- function(data, AR = 0, model = "B&L-B", phases = c("A","B"), family = "ga
   if(N > 1)
     stop("Procedure could not be applied to more than one case.\nConsider to use the hplm function.")
   
-  if(!identical(rle(as.character(data[[1]]$phase))$values, phases))
-    warning(paste0("Phase sequence is not ",paste0(phases, collapse = ""), " for all cases. Analyzes are restricted to the data of the ",paste0(phases,collapse = "")," phases.\n"))
-
-  data <- keepphasesSC(data, phases = phases)$data
+  if(!is.null(phases))
+     data <- keepphasesSC(data, phases = phases)$data
   data <- data[[1]]
   
   ### model definition
-  dat.inter <- .plm.interaction(data, model = model)
+  dat_inter <- .plm.predictor(data, model = model)
+  data$mt   <- dat_inter$mt
+  data      <- cbind(data,dat_inter[,-1])
+  n_Var     <- (ncol(dat_inter) - 1) / 2
+  VAR_INTER <- names(dat_inter)[(ncol(dat_inter)-n_Var+1):ncol(dat_inter)]
+  VAR_PHASE <- names(dat_inter)[2:(n_Var+1)]
   
-  data$mt <- dat.inter$mt
-  data$inter <- dat.inter$inter
+  if(is.null(formula)) {
+    INTER <- paste0(VAR_INTER, collapse = "+")
+    PHASE <- paste0(VAR_PHASE, collapse = "+")
+    formula <- as.formula(paste0("values ~ 1 + mt + ", PHASE, "+", INTER))
+  } 
   
   PREDICTORS <- as.character(formula[3])
   PREDICTORS <- unlist(strsplit(PREDICTORS, "\\+"))
@@ -29,7 +34,7 @@ plm <- function(data, AR = 0, model = "B&L-B", phases = c("A","B"), family = "ga
      PREDICTORS <- PREDICTORS[-match("1", PREDICTORS)]
   
   formula.full <- formula
-  formulas.ir <- sapply(PREDICTORS, function(x) update(formula, formula(paste0(".~. - ",x))))
+  formulas.ir  <- sapply(PREDICTORS, function(x) update(formula, formula(paste0(".~. - ",x))))
 
   if(AR == 0) {
     full <- glm(formula.full, data = data, family = family, na.action = na.action, ...)
@@ -61,57 +66,60 @@ plm <- function(data, AR = 0, model = "B&L-B", phases = c("A","B"), family = "ga
   
   ### output
   F.test <- c(F = F.full, df1 = 3, df2 = df2.full, p = p.full, R2 = r2.full, R2.adj = r2.full.adj)
-  out <- list(model = model, F.test = F.test, r.squares = r.squares, ar = AR, family = family, full.model = full)
+  out <- list(model = model, F.test = F.test, r.squares = r.squares, ar = AR, family = family, full.model = full, data = data)
 
   class(out) <- c("sc", "pr")
   out
 }
 
 
-.plm.interaction <- function(data, model) {
+.plm.predictor <- function(data, model, phase.dummy = TRUE) {
+
   MT <- data$mt
   D  <- data$phase
+  N  <- length(D)
   
+  out    <- data.frame(mt = MT)
+  design <- rle(as.character(data$phase))
+  
+  #dummy phases
+  if(phase.dummy) {
+    for(phase in 2:length(design$values)) {
+      length.phase <- design$lengths[phase]
+      pre <- sum(design$lengths[1:(phase-1)])
+      dummy <- rep(0,N)
+      dummy[(pre + 1):(pre + length.phase)] <- 1
+      out[,paste0("phase",design$values[phase])] <- dummy
+    } 
+  }
+  
+  if(model == "B&L-B") {
+    for(phase in 2:length(design$values)) {
+      inter <- rep(0,N)
+      length.phase <- design$lengths[phase]
+      pre <- sum(design$lengths[1:(phase-1)])
+      inter[(pre +1):(pre + length.phase)] <- MT[(pre +1):(pre + length.phase)] - MT[(pre)]#1:length.phase
+      out[,paste0("inter",design$values[phase])] <- inter
+    }
+  }
   if(model == "H-M") {
-    inter <- ifelse(D == "A", 0,1)
-    for(i in 1:length(inter))
-      if(inter[i] == 1) 
-        inter[i] <- inter[i-1] + 1 
-    inter <- ifelse(inter == 0,0, inter - 1) 
-    
-  } else if (model == "B&L-B") {
-    inter <- ifelse(D == "A", 0,1)
-    for(i in 1:length(inter))
-      if(inter[i] > 0) 
-        inter[i] <- inter[i-1] + 1 
+      for(phase in 2:length(design$values)) {
+        inter <- rep(0,N)
+        length.phase <- design$lengths[phase]
+        pre <- sum(design$lengths[1:(phase-1)])
+        inter[(pre +1):(pre + length.phase)] <- MT[(pre +1):(pre + length.phase)] - MT[(pre + 1)]#1:length.phase
+        out[,paste0("inter",design$values[phase])] <- inter
+    }
       
-  } else if (model == "Mohr#1") {
-    inter <- MT * ifelse(D == "A", 0,1)
-    
-  } else if (model == "Mohr#2") {
-    inter <- ifelse(D == "A", 0,1)
-    for(i in 1:length(inter))
-      if(inter[i] > 0) 
-        inter[i] <- inter[i-1] + 1 
-      inter <- ifelse(inter == 0,0, inter - 1) 
-      n1 <- sum(data$phase == "A")
-      MT <- MT-MT[n1+1] #this is correct! MT must be corrected after the calculation of the interaction term
- 
-  } else if (model == "Manly") {
-    inter <- MT * ifelse(D == "A", 0,1)
-    
-  } else stop("Wrong model definition!\n")
-  
-  data.frame(mt = MT, inter = inter)
-  
+  }
+  out
 }
-
 
 
 .plm.mt <- function(data, type = "level p", model = "B&L-B", count.data = FALSE) {
   N <- length(data)
   if(N > 1)
-    stop("Multiple single-cases are given. Calculatioins could only be applied to a single data set.\n")
+    stop("Multiple single-cases are given. Calculations could only be applied to a single data set.\n")
   
   if(class(data)=="list")
     data <- data[[1]]

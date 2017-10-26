@@ -59,13 +59,13 @@
   
   if(any(stat == "hplm")) {
     if(any(test.parameter == "level")) {
-      p.hplm.level <- unlist(lapply(rand.sample, function(x) summary(hplm(x, random.slopes = FALSE, ICC = FALSE)$random.intercept$model)$tTable[3,5]))
+      p.hplm.level <- unlist(lapply(rand.sample, function(x) summary(hplm(x, random.slopes = FALSE, ICC = FALSE)$hplm)$tTable[3,5]))
       out$hplm.level <- mean(p.hplm.level <= alpha, na.rm = TRUE)
     } else out$hplm.level <- NA
     
     
     if(any(test.parameter == "slope")) {
-      p.hplm.slope <- unlist(lapply(rand.sample, function(x) summary(hplm(x, random.slopes = FALSE, ICC = FALSE)$random.intercept$model)$tTable[4,5]))
+      p.hplm.slope <- unlist(lapply(rand.sample, function(x) summary(hplm(x, random.slopes = FALSE, ICC = FALSE)$hplm)$tTable[4,5]))
       out$hplm.slope <- mean(p.hplm.slope <= alpha, na.rm = TRUE)
     } else out$hplm.slope <- NA
   }

@@ -3,22 +3,48 @@
 #.names <- c(.male.names, .female.names)
 
 
+.check.designSC <- function(data, n) {
+  for(phase in 1:length(data)) {
+    if(length(data[[phase]]) != n)
+      data[[phase]] <- rep(data[[phase]], length = n)
+  }
+  data
+}
+    
 design.rSC <- function(n = 1, phase.design = NULL, m = list(50), s = list(10), prob = list(0.5), trend = list(0), level = list(0), slope = list(0), rtt = list(0.80), concise = TRUE, cases = 1, round = NA, extreme.p = list(0), extreme.d = c(-4,-3), missing.p = list(0), distribution = "normal", start.values.fixed = FALSE, MT = 20, B.start = 6) {
-  
-  if(length(m) != n)
-    m <- lapply(numeric(n),function(y) unlist(m))
-  if(length(s) != n)
-    s <- lapply(numeric(n),function(y) unlist(s))
-  if(length(rtt) != n)
-    rtt <- lapply(numeric(n),function(y) unlist(rtt))
 
-  if(length(trend) != n)
-    trend <- lapply(numeric(n),function(y) unlist(trend))
-  if(length(level) != n)
-    level <- lapply(numeric(n),function(y) unlist(level))
-  if(length(slope) != n)
-    slope <- lapply(numeric(n),function(y) unlist(slope))
-  
+  if(is.null(phase.design)) {
+    MT  <- rep(MT, length.out = n)
+    if (B.start[1] == "rand") {
+      tmp.start <- round(as.numeric(B.start[2]) * MT)
+      tmp.end   <- round(as.numeric(B.start[3]) * MT)  
+      B.start   <- round(runif(n*cases, tmp.start, tmp.end))
+    }
+    
+    if(any(B.start < 1) && any(B.start >= 1)) stop("A B.start vector must not include values below and above 1 at the same time.")
+    if(B.start[1] < 1 && B.start[1] > 0) B.start <- round(B.start * MT)+1
+    B.start <- rep(B.start, length.out = n * cases)  
+    
+    phase.design <- rep(list(A = rep(NA,n), B = rep(NA,n)))
+    for(i in 1:length(B.start)) {
+    #  design[[i]] <- data.frame(phase = c("A","B"), length = c(B.start[i] - 1, 1 + MT[i] - B.start[i]))
+      phase.design$A[i] <- B.start[i] - 1
+      phase.design$B[i] <- 1 + MT[i] - B.start[i]
+    }
+  }
+    
+  if(length(m) != n)
+    m <- rep(m, length = n)
+  if(length(s) != n)
+    s <- rep(s, length = n)
+  if(length(rtt) != n)
+    rtt <- rep(rtt, length = n)
+
+  trend <- .check.designSC(trend,n)
+  level <- .check.designSC(level,n)
+  slope <- .check.designSC(slope,n)
+  phase.design <- .check.designSC(phase.design,n)
+
   if(length(extreme.p) != n)
     extreme.p <- lapply(numeric(n),function(y) unlist(extreme.p))
   if(length(extreme.d) != n)
@@ -27,48 +53,31 @@ design.rSC <- function(n = 1, phase.design = NULL, m = list(50), s = list(10), p
     missing.p <- lapply(numeric(n),function(y) unlist(missing.p))
 
   out <- vector("list", n)
+  case <- 1
   for(case in 1: n) {
 
     error <- sqrt(((1-rtt[[case]])/rtt[[case]]) * s[[case]]^2)
+
+    design <- data.frame(phase = names(phase.design))
     
-    if(is.null(phase.design)) {
-      MT  <- rep(MT, length.out = n)
-      if (B.start[1] == "rand") {
-        tmp.start <- round(as.numeric(B.start[2]) * MT)
-        tmp.end   <- round(as.numeric(B.start[3]) * MT)  
-        B.start   <- round(runif(n*cases, tmp.start, tmp.end))
-      }
-      
-      if(any(B.start < 1) && any(B.start >= 1)) stop("A B.start vector must not include values below and above 1 at the same time.")
-      if(B.start[1] < 1 && B.start[1] > 0) B.start <- round(B.start * MT)+1
-      B.start <- rep(B.start, length.out = n * cases)  
-    
-      for(i in 1:length(B.start)) {
-        design[[i]] <- data.frame(phase = c("A","B"), length = c(B.start[i] - 1, 1 + MT[i] - B.start[i]))
-      }
-    }
-    
-    if(!is.null(phase.design)) {
-      design <- data.frame(phase = names(phase.design), length = phase.design)
-    }
-    
-    design$mt    <- sum(design$length)
-    design$rtt     <- rtt[[case]]
-    design$error     <- error
-    design$missing.p  <- missing.p[[case]]
-    design$extreme.p  <- extreme.p[[case]]
+    design$length       <- unlist(lapply(phase.design, function(x) x[case]))
+    design$mt           <- sum(design$length)
+    design$rtt          <- rtt[[case]]
+    design$error        <- error
+    design$missing.p    <- missing.p[[case]]
+    design$extreme.p    <- extreme.p[[case]]
     design$extreme.low  <- extreme.d[[case]][1]
-    design$extreme.high  <- extreme.d[[case]][2]
-    design$trend <- trend[[case]]
-    design$level <- level[[case]]
-    design$level[1] <- 0
-    design$slope <- slope[[case]]
-    design$slope[1] <- 0
+    design$extreme.high <- extreme.d[[case]][2]
+    design$trend        <- unlist(lapply(trend, function(x) x[case])) #trend[[case]]
+    design$level        <- unlist(lapply(level, function(x) x[case])) #level[[case]]
+    design$level[1]     <- 0
+    design$slope        <- unlist(lapply(slope, function(x) x[case])) #slope[[case]]
+    design$slope[1]     <- 0
     if(start.values.fixed)
-      design$m     <- m[[case]]
+      design$m          <- m[[case]]
     if(!start.values.fixed)
-      design$m     <- rnorm(1,m[[case]],s[[case]])
-    design$s     <- s[[case]]
+      design$m          <- rnorm(1,m[[case]],s[[case]])
+    design$s            <- s[[case]]#unlist(lapply(s, function(x) x[case])) #s[[case]]
     
     design$start <- c(1,cumsum(design$length)+1)[1:length(design$length)]
     design$stop <- cumsum(design$length)
@@ -78,7 +87,7 @@ design.rSC <- function(n = 1, phase.design = NULL, m = list(50), s = list(10), p
   return(out)
 }
                                     
-newrSC <- function(n = 1, MT = 20, B.start = 6, design = NULL, m = 50, s = 10, prob = 0.5, d.trend = 0, d.level = 0.0, d.slope = 0.0, rtt = 0.80, round = NA, extreme.p = 0, extreme.d = c(-4,-3), missing.p = 0, distribution = "normal", start.values.fixed = FALSE, random.names = FALSE, output.long = FALSE) {
+create.rSC <- function(n = 1, MT = 20, B.start = 6, design = NULL, m = 50, s = 10, prob = 0.5, d.trend = 0, d.level = 0.0, d.slope = 0.0, rtt = 0.80, round = NA, extreme.p = 0, extreme.d = c(-4,-3), missing.p = 0, distribution = "normal", start.values.fixed = FALSE, random.names = FALSE, output.long = FALSE) {
   
   cases <- 1
   if(!is.null(design))

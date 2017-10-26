@@ -164,27 +164,20 @@ print.sc <- function(x, ...) {
     
     cat("Hierarchical Piecewise Linear Regression\n\n")
     
-    cat("Method",x$method,"\n")
+    cat("Estimation method",x$model$estimation.method,"\n")
+    cat("Slope estimation method:",x$model$interaction.method,"\n")
     cat(x$N,"Cases\n\n")
     
     out <- list()
     
-    if(x$analyze.ICC) {
-      out$ICC <- sprintf("ICC = %.3f; L = %.1f; p = %.3f\n\n", x$ICC, x$L.ICC, x$p.ICC)
+    if(x$model$ICC) {
+      out$ICC <- sprintf("ICC = %.3f; L = %.1f; p = %.3f\n\n", x$ICC$value, x$ICC$L, x$ICC$p)
       cat(out$ICC)
     }
     
-    if(!x$analyze.random.slopes) {
-      md <- as.data.frame(summary(x$random.intercept$model)$tTable)
-      #cat("Random intercept model\n\n")
-    }	
-    if(x$analyze.random.slopes) {
-      #cat("Random slope model\n\n")
-      md <- as.data.frame(summary(x$random.trend.level.slope$model)$tTable)
-    }
-    
+    md <- as.data.frame(summary(x$hplm)$tTable)
+
     colnames(md) <- c("B","SE","df","t","p")
-    #rownames(md)[1:4] <- c("Intercept","Trend","Level","Slope")
     rn <- rownames(md)
     if(!is.na(match("mt",rn)))
       rownames(md)[match("mt",rn)] <- "Trend"
@@ -194,36 +187,42 @@ print.sc <- function(x, ...) {
     rownames(md) <- gsub("phase","Level Phase ",rownames(md))
     rownames(md) <- gsub("inter","Slope Phase ",rownames(md))
     
-    md$B <- round(md$B,3)
+    md$B  <- round(md$B, 3)
     md$SE <- round(md$SE,3)
-    md$t <- round(md$t,3)
-    md$p <- round(md$p,3)
+    md$t  <- round(md$t, 3)
+    md$p  <- round(md$p, 3)
+    
     out$ttable <- md
-    cat("Fixed effects\n\n")
+    
+    cat("Fixed effects (",deparse(x$model$fixed),")\n\n")
     print(md)
-    if(x$analyze.random.slopes) {
-      cat("\nRandom effects\n\n")
+    
+    cat("\nRandom effects (",deparse(x$model$random),")\n\n")
+    SD <- round(as.numeric(VarCorr(x$hplm)[,"StdDev"]),3)
+    md <- data.frame("EstimateSD" = SD)
+    rownames(md) <- names(VarCorr(x$hplm)[,2])
+    rn <- rownames(md)
+    if(!is.na(match("mt",rn)))
+      rownames(md)[match("mt",rn)] <- "Trend"
+    if(!is.na(match("(Intercept)",rn)))
+      rownames(md)[match("(Intercept)",rn)] <- "Intercept"
+    
+    rownames(md) <- gsub("phase","Level Phase ",rownames(md))
+    rownames(md) <- gsub("inter","Slope Phase ",rownames(md))
       
-      SD <- round(as.numeric(VarCorr(x$random.trend.level.slope$model)[,"StdDev"]),3)
-      L <- round(c(x$random.nointercept.trend.level.slope$LR.test$L.Ratio[2],x$random.trend$LR.test$L.Ratio[2], x$random.level$LR.test$L.Ratio[2], x$random.slope$LR.test$L.Ratio[2], NA),1)
-      round(c(as.numeric(VarCorr(x$random.trend.level.slope$model)[,2])),3)
-      coef(x$random.trend.level.slope$model)
-      md <- data.frame("EstimateSD" = SD, L = round(c(x$random.nointercept.trend.level.slope$LR.test$L.Ratio[2],x$random.trend$LR.test$L.Ratio[2], x$random.level$LR.test$L.Ratio[2], x$random.slope$LR.test$L.Ratio[2], NA),1), p = round(c(x$random.nointercept.trend.level.slope$LR.test$"p-value"[2],x$random.trend$LR.test$"p-value"[2], x$random.level$LR.test$"p-value"[2], x$random.slope$LR.test$"p-value"[2], NA),3))
-      #rownames(md) <- c("Intercept", "Trend","Level", "Slope","Residual")
-      rownames(md) <- names(VarCorr(x$random.trend.level.slope$model)[,2])
-      rn <- rownames(md)
-      if(!is.na(match("mt",rn)))
-        rownames(md)[match("mt",rn)] <- "Trend"
-      if(!is.na(match("phase",rn)))
-        rownames(md)[match("phase",rn)] <- "Level"
-      if(!is.na(match("inter",rn)))
-        rownames(md)[match("inter",rn)] <- "Slope"
-      if(!is.na(match("(intercept)",rn)))
-        rownames(md)[match("(intercept)",rn)] <- "Intercept"
+    if(x$model$lr.test) {
+      if(is.null(x$LR.test[[1]]$L.Ratio)) {
+        x$LR.test[[1]]$L.Ratio <- NA
+        x$LR.test[[1]]$"p-value" <- NA
+        x$LR.test[[1]]$df <- NA
+      }
       
-      print(md)
-      
+      md$L  <- c(round(unlist(lapply(x$LR.test, function(x) x$L.Ratio[2])), 2),NA)
+      md$df <- c(unlist(lapply(x$LR.test, function(x) {x$df[2]-x$df[1]})), NA)
+      md$p  <- c(round(unlist(lapply(x$LR.test, function(x) x$"p-value"[2])), 3), NA)
     }
+    
+    print(md, na.print = "-")
     invisible(out)
   }
   

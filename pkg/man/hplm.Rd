@@ -7,8 +7,7 @@ The \code{hplm} function computes a hierarchical piecewise regression model.
 
 \usage{
 hplm(data, model = "B&L-B", method = "ML", control = list(opt = "optim"),
-  random.slopes = FALSE, ICC = TRUE, phases = c("A", "B"),
-  formula = values ~ 1 + mt + phase + inter, data.l2 = NULL)
+  random.slopes = FALSE, ICC = TRUE, lr.test = FALSE, fixed = NULL, random = NUll, data.l2 = NULL)
 }
 
 \arguments{
