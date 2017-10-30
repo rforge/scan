@@ -247,11 +247,14 @@ print.sc <- function(x, ...) {
       res <- summary(x$full.model)$coefficients
     if(x$ar > 0)
       res <- summary(x$full.model)$tTable
-
-    res <- cbind(res[,1], suppressMessages(confint(x$full)), res[,2:4])
+    if(nrow(res) == 1) {
+      res <- cbind(res[,1, drop = FALSE],t(suppressMessages(confint(x$full))), res[,2:4, drop = FALSE])
+    } else res <- cbind(res[,1], suppressMessages(confint(x$full)), res[,2:4])
+    
     res <- round(res,3)
     res <- as.data.frame(res)
-    res$R2 <- c("",format(round(x$r.squares,4)))
+    if(!is.null(x$r.squares))
+       res$R2 <- c("",format(round(x$r.squares,4)))
     rn <- rownames(res)
     if(!is.na(match("mt",rn)))
       rownames(res)[match("mt",rn)] <- "Trend"
@@ -266,7 +269,12 @@ print.sc <- function(x, ...) {
         #if(!is.na(match("inter",rn)))
     #  rownames(res)[match("inter",rn)] <- "Slope"
      
-    colnames(res) <- c("B","2.5%","97.5%","SE", "t","p", "R-Square")		
+    if(!is.null(x$r.squares))
+      colnames(res) <- c("B","2.5%","97.5%","SE", "t","p", "R-Square")		
+    if(is.null(x$r.squares))
+      colnames(res) <- c("B","2.5%","97.5%","SE", "t","p")		
+    
+    
     if(x$family == "poisson" || x$family == "nbinomial") {
       OR <- exp(res[,1:3])
       Q <- (OR-1)/(OR+1)

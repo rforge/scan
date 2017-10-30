@@ -1,5 +1,5 @@
 
-plm <- function(data, AR = 0, model = "B&L-B", phases = NULL, family = "gaussian", formula = NULL, na.action = na.omit, ...) {
+plm <- function(data, AR = 0, model = "B&L-B", phases = NULL, family = "gaussian", trend = TRUE, level = TRUE, slope = TRUE,formula = NULL, na.action = na.omit, ...) {
 
   if (AR > 0 && !family == "gaussian")
     stop("Autoregression models could only be applied if distribution familiy = 'gaussian'.\n")
@@ -22,9 +22,20 @@ plm <- function(data, AR = 0, model = "B&L-B", phases = NULL, family = "gaussian
   VAR_PHASE <- names(dat_inter)[2:(n_Var+1)]
   
   if(is.null(formula)) {
-    INTER <- paste0(VAR_INTER, collapse = "+")
-    PHASE <- paste0(VAR_PHASE, collapse = "+")
-    formula <- as.formula(paste0("values ~ 1 + mt + ", PHASE, "+", INTER))
+    INTER <- ""
+    PHASE <- ""
+    MT    <- ""
+    if(slope) {
+      INTER <- paste0(VAR_INTER, collapse = "+")
+      INTER <- paste0("+ ", INTER)
+    }
+    if(level) {
+      PHASE <- paste0(VAR_PHASE, collapse = "+")
+      PHASE <- paste0("+ ", PHASE)
+    }
+    if(trend)
+      MT <- "+ mt "
+    formula <- as.formula(paste0("values ~ 1",MT, PHASE, INTER))
   } 
   
   PREDICTORS <- as.character(formula[3])
@@ -93,6 +104,16 @@ plm <- function(data, AR = 0, model = "B&L-B", phases = NULL, family = "gaussian
     } 
   }
   
+  if(phase.dummy && model == "JW") {
+    for(phase in 2:length(design$values)) {
+      length.phase <- design$lengths[phase]
+      pre <- sum(design$lengths[1:(phase-1)])
+      dummy <- rep(0,N)
+      dummy[(pre + 1):N] <- 1
+      out[,paste0("phase",design$values[phase])] <- dummy
+    } 
+  }
+  
   if(model == "B&L-B") {
     for(phase in 2:length(design$values)) {
       inter <- rep(0,N)
@@ -111,6 +132,15 @@ plm <- function(data, AR = 0, model = "B&L-B", phases = NULL, family = "gaussian
         out[,paste0("inter",design$values[phase])] <- inter
     }
       
+  }
+  if(model == "JW") {
+    for(phase in 2:length(design$values)) {
+      inter <- rep(0,N)
+      length.phase <- design$lengths[phase]
+      pre <- sum(design$lengths[1:(phase-1)])
+      inter[(pre +1):N] <- MT[(pre +1):N]- MT[(pre)]#1:length.phase
+      out[,paste0("inter",design$values[phase])] <- inter
+    }
   }
   out
 }
