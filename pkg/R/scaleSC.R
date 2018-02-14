@@ -1,3 +1,27 @@
+#' Scaling values of an scdf file
+#'
+#' This function scales the measured values of an scdf file. It allows for mean
+#' centering and standardization based on each scingle-case data set or a
+#' scaling across all cases included in an scdf.
+#'
+#' @param data A single-case data frame. See \code{\link{scdf}} to learn about
+#'   this format.
+#' @param center If set TRUE, data are mean centered.
+#' @param scale If set TRUE, the standard deviation is set.
+#' @param m The target mean for centering.
+#' @param sd The target standard deviation for scaling
+#' @param grand If set TRUE, scaling is based on the mean and standarddeviation
+#'   of all measurements across all single-cases within the scdf.
+#' @param var A character string or a vector of character strings with variable
+#'   names that are scaled. The default is "values".
+#' @return An scdf with the scaled values.
+#' @author Juergen Wilbert
+
+#' @examples
+#' 
+#' ## Standardize a multiple case scdf and compute an hplm
+#' ex_sc <- scaleSC(exampleAB_50, center = TRUE, scale = TRUE)
+#' hplm(ex_sc)
 
 scaleSC <- function(data, center = TRUE, scale = FALSE, m = 0, sd = 1, grand = TRUE, var = "values") {
   

@@ -1,8 +1,42 @@
-
+#' Overlap indices for single-case data
+#' 
+#' The \code{overlapSC} function provides the most common overlap indices for
+#' single-case data and some additional statistics.
+#' 
+#' 
+#' @param data A single-case data frame. See \code{\link{scdf}} to learn about
+#' this format.
+#' @param decreasing If you expect data to be lower in the B phase, set
+#' \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.
+#' @param phases A vector of two characters or numbers indicating the two
+#' phases that should be compared. E.g., \code{phases = c("A","C")} or
+#' \code{phases = c(2,4)} for comparing the second to the fourth phase. Phases
+#' could be combined by providing a list with two elements. E.g., \code{phases
+#' = list(A = c(1,3), B = c(2,4))} will compare phases 1 and 3 (as A) against 2
+#' and 4 (as B). Default is \code{phases = c("A","B")}.
+#' @return \item{overlap}{A data frame consisting of the following indices for
+#' each single-case for all cases: PND, PEM, PET, NAP, PAND, Tau-U (A vs. B -
+#' Trend A), Diff_mean, Diff_trend, SMD.}
+#' @author Juergen Wilbert
+#' @examples
+#' 
+#' ## Display overlap indices for one single-case
+#' overlapSC(Huitema2000, decreasing = TRUE)
+#' 
+#' ## Display overlap indices for six single-cases
+#' overlapSC(GruenkeWilbert2014)
+#' 
+#' ## Combining phases for analyszing designs with more than two phases   
+#' overlapSC(exampleA1B1A2B2, phases = list(c("A1","A2"), c("B1","B2")))
+#' 
+#' ## Write overlap indices to .csv-file
+#' overl <- overlapSC(Waddell2011)
+#' write.csv(overl$overlap, file = "overlap_indices.csv")
+#' 
 overlapSC <- function(data, decreasing = FALSE, phases = c("A","B")) {
   data.list <- .SCprepareData(data)
 
-  keep <- keepphasesSC(data.list, phases = phases)
+  keep <- .keepphasesSC(data.list, phases = phases)
 
   data.list <- keep$data
   
@@ -41,7 +75,7 @@ overlapSC <- function(data, decreasing = FALSE, phases = c("A","B")) {
   }
   
 
-  out <- list(overlap = d.f, phases.A = keep$phases.A, phases.B = keep$phases.B, design = design)
+  out <- list(overlap = d.f, phases.A = keep$phases.A, phases.B = keep$phases.B, design = keep$design[[1]]$values)
   class(out) <- c("sc","overlap")
   out
 }

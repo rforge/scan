@@ -1,3 +1,25 @@
+#' Autocorrelation for single-case data
+#' 
+#' The autocorrSC function calculates autocorrelations within each phase and
+#' across all phases.
+#' 
+#' 
+#' @param data A single-case data frame. See \code{\link{scdf}} to learn about this format.
+#' @param lag.max The lag up to which autocorrelations will be computed.
+#' Default is \code{lag.max = 3}.
+#' @return autocorr A data frame containing separate autocorrelations for each
+#' phase and for all phases (for each single-case). If \code{lag.max} exceeds
+#' the length of a phase minus one, NA is returned for this cell.
+#' @author Juergen Wilbert
+#' @seealso \code{\link{trendSC}}, \code{\link{plm}}, \code{\link{hplm}}
+#' @examples
+#' 
+#'  
+#' ## Compute autocorrelations for a list of four single-cases with max.lag = 2
+#' autocorrSC(Huber2014, lag.max = 2)
+#' 
+#' @concept Autocorrelation
+#' @concept Seiral correlation
 
 autocorrSC <- function(data, lag.max = 3) {
   data <- .SCprepareData(data)
@@ -37,20 +59,7 @@ autocorrSC <- function(data, lag.max = 3) {
     ac[(case-1)*(length(design)+1)+(length(design)+1),VAR[1:lag]] <- acf(y, lag.max = lag, plot = FALSE)$acf[-1]
     
   }
-  #for(i in (0:(N-1)*3)) {
-    #data <- data.list[[(i/3+1)]]
-    #A <- data[,2][data[,1] == "A"]
-    #B <- data[,2][data[,1] == "B"]
-    #if(length(A)-1 < lag.max) lagA <- length(A)-1 else lagA <- lag.max
-    #if(length(B)-1 < lag.max) lagB <- length(B)-1 else lagB <- lag.max
-    #if(length(c(A,B))-1 < lag.max) lagAB <- length(c(A,B))-1 else lagAB <- lag.max
-    
-    
-    #ac[i+1,VAR[1:lagA]] <- acf(A, lag.max = lagA, plot = FALSE)$acf[-1]
-    #ac[i+2,VAR[1:lagB]] <- acf(B, lag.max = lagB, plot = FALSE)$acf[-1]
-    #ac[i+3,VAR[1:lagAB]] <- acf(c(A,B), lag.max = lagAB, plot = FALSE)$acf[-1]
-   #}
-
+ 
   out <- list(autocorr = ac)
   class(out) <- c("sc","autocorr")
   out

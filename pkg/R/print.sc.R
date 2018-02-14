@@ -6,6 +6,7 @@ print.sc <- function(x, ...) {
   if(value == "autocorr") {
     cat("Autocorrelations\n\n")
     x <- x$autocorr
+    x[,-c(1,2)] <- round(x[,-c(1,2)],2)
     print(x)
   }
   
@@ -226,7 +227,7 @@ print.sc <- function(x, ...) {
     invisible(out)
   }
   
-  if(value == "pr") {
+  if(value == "pr"){
     cat("Piecewise Regression Analysis\n\n")
     cat("Regression model: ", x$model,"\n\n")
     cat("Fitted a", x$family, "distribution.\n\n")		
@@ -336,10 +337,15 @@ print.sc <- function(x, ...) {
   if(value == "describe") {
     cat("Describe Single-Case Data\n\n")
     cat("Design: ", x$design, "\n\n")
-    print(round(t(x$descriptives),2), ...)
+    out <- as.data.frame(round(t(x$descriptives),2))
+   
+    rownames(out) <- format(rownames(out), justify = "right")
     
-    return()
- 
+    
+    print(out[1:(2*length(x$design)),], ...)
+    cat("\n")
+    print(out[-(1:(2*length(x$design))),], ...)
+    
   }	
   
   if(value == "outlier") {

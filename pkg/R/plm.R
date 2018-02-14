@@ -1,5 +1,78 @@
-
-plm <- function(data, AR = 0, model = "B&L-B", phases = NULL, family = "gaussian", trend = TRUE, level = TRUE, slope = TRUE,formula = NULL, na.action = na.omit, ...) {
+#' Piecewise linear model / piecewise regression
+#' 
+#' The \code{plm} function computes a piecewise regression model (see Huitema &
+#' McKean, 2000).
+#' 
+#' 
+#' @param data A single-case data frame or a list of single-case data frames.
+#' See \code{\link{makeSCDF}} to learn about this format.
+#' @param AR Maximal lag of autoregression. Modeled based on the
+#' Autoregressive-Moving Average (ARMA) function.  When AR is set, the family
+#' argument must be set to \code{family = "gaussian"}.
+#' @param model Regression model used for computation (see Huitema & McKean,
+#' 2000). Default is \code{model = "B&L-B"}. Possible values are:
+#' \code{"B&L-B"}, \code{"H-M"}, \code{"Mohr#1"}, \code{"Mohr#2"},
+#' \code{"Manly"}, \code{"JW"}, and , \code{"JW2"}.
+#' @param family Set the distributioin family. Defaults to a gaussian
+#' distribution. See the \code{family} function for more details.
+#' @param phases -
+#' @param formula -
+#' @param na.action Defines how to deal with missing values
+#' @param ... Further arguments passed to the glm function.
+#' @return \item{model}{Character string from function call (see
+#' \code{Arguments} above).} \item{F}{F value for specified model.}
+#' \item{df1}{Degrees of freedom (Regression).} \item{df2}{Degrees of freedom
+#' (Residual).} \item{p}{P value for specified model.} \item{R2}{Explained
+#' variance R squared.} \item{R2.adj}{Adjusted R squared.}
+#' \item{count.data}{Logical argument from function call (see \code{Arguments}
+#' above).} \item{ES.slope}{Effect size / Explained variance gain of slope.}
+#' \item{ES.trend}{Effect size / Explained variance gain of trend.}
+#' \item{full.model}{Full regression model list (including \code{coefficients},
+#' \code{residuals} and many others} \item{MT}{Number of measurements.}
+#' \item{data}{Single-case data frame passed to the function.} \item{N}{Number
+#' of single-cases.} \item{family}{Character string from function call (see
+#' \code{Arguments} above).}
+#' @author Juergen Wilbert
+#' @seealso \code{\link{hplm}}
+#' @references Beretvas, S., & Chung, H. (2008). An evaluation of modified
+#' R2-change effect size indices for single-subject experimental designs.
+#' \emph{Evidence-Based Communication Assessment and Intervention, 2}, 120-128.
+#' 
+#' Huitema, B. E., & McKean, J. W. (2000). Design specification issues in
+#' time-series intervention models. \emph{Educational and Psychological
+#' Measurement, 60}, 38-58.
+#' @examples
+#' 
+#' ## Compute a piecewise regression model for a random single-case
+#' set.seed(123)
+#' AB <- design.rSC(n = 1, phase.design = list(A = 10, B = 20), 
+#'             level = list(A = 0, B = 1), slope = list(A = 0, B = 0.05), 
+#'             trend = list(0.05))
+#' dat <- rSC(design = AB)
+#' plm(dat, AR = 3)
+#' 
+#' ## Another example with a more complex design
+#' 
+#' set.seed(123)
+#' A1B1A2B2 <- design.rSC(n = 1, rtt = 0.8,   m = 50, s = 10,
+#'                   phase.design = list(A1 = 15, B1 = 20, A2 = 15, B2 = 20), 
+#'                   level = list(A1 = 0, B1 = 1, A2 = -1, B2 = 1),
+#'                   slope = list(A1 = 0, B1 = 0.0, A1 = 0, B2 = 0.0),
+#'                   trend = list(0.0))
+#' dat <- rSC(design = A1B1A2B2)
+#' plm(dat, model = "JW")
+#' 
+#' ## no slope effects were found. Therefore you might want to drop slope estimation:
+#' plm(dat, slope = FALSE, model = "JW")
+#' 
+#' ## and now drop the trend estimation as well
+#' plm(dat, slope = FALSE, trend = FALSE, model = "JW")
+#' 
+#' 
+#' 
+#' 
+#' 
+plm <- function(data, AR = 0, model = "B&L-B", phases = NULL, family = "gaussian", trend = TRUE, level = TRUE, slope = TRUE,formula = NULL, update = NULL, na.action = na.omit, ...) {
 
   if (AR > 0 && !family == "gaussian")
     stop("Autoregression models could only be applied if distribution familiy = 'gaussian'.\n")
@@ -10,11 +83,11 @@ plm <- function(data, AR = 0, model = "B&L-B", phases = NULL, family = "gaussian
     stop("Procedure could not be applied to more than one case.\nConsider to use the hplm function.")
   
   if(!is.null(phases))
-     data <- keepphasesSC(data, phases = phases)$data
+     data <- .keepphasesSC(data, phases = phases)$data
   data <- data[[1]]
   
   ### model definition
-  dat_inter <- .plm.predictor(data, model = model)
+  dat_inter <- .plm.dummy(data, model = model)
   data$mt   <- dat_inter$mt
   data      <- cbind(data,dat_inter[,-1])
   n_Var     <- (ncol(dat_inter) - 1) / 2
@@ -37,6 +110,9 @@ plm <- function(data, AR = 0, model = "B&L-B", phases = NULL, family = "gaussian
       MT <- "+ mt "
     formula <- as.formula(paste0("values ~ 1",MT, PHASE, INTER))
   } 
+  
+  if(!is.null(update))
+    formula <- update(formula, update)
   
   PREDICTORS <- as.character(formula[3])
   PREDICTORS <- unlist(strsplit(PREDICTORS, "\\+"))
@@ -84,8 +160,11 @@ plm <- function(data, AR = 0, model = "B&L-B", phases = NULL, family = "gaussian
 }
 
 
-.plm.predictor <- function(data, model, phase.dummy = TRUE) {
+.plm.dummy <- function(data, model, phase.dummy = TRUE) {
 
+  if(!model %in% c("H-M", "B&L-B", "JW","JW2"))
+    stop("Model ",model," unknown.\n")
+    
   MT <- data$mt
   D  <- data$phase
   N  <- length(D)
@@ -99,49 +178,64 @@ plm <- function(data, AR = 0, model = "B&L-B", phases = NULL, family = "gaussian
       length.phase <- design$lengths[phase]
       pre <- sum(design$lengths[1:(phase-1)])
       dummy <- rep(0,N)
-      dummy[(pre + 1):(pre + length.phase)] <- 1
-      out[,paste0("phase",design$values[phase])] <- dummy
-    } 
-  }
-  
-  if(phase.dummy && model == "JW") {
-    for(phase in 2:length(design$values)) {
-      length.phase <- design$lengths[phase]
-      pre <- sum(design$lengths[1:(phase-1)])
-      dummy <- rep(0,N)
-      dummy[(pre + 1):N] <- 1
-      out[,paste0("phase",design$values[phase])] <- dummy
-    } 
-  }
-  
-  if(model == "B&L-B") {
-    for(phase in 2:length(design$values)) {
-      inter <- rep(0,N)
-      length.phase <- design$lengths[phase]
-      pre <- sum(design$lengths[1:(phase-1)])
-      inter[(pre +1):(pre + length.phase)] <- MT[(pre +1):(pre + length.phase)] - MT[(pre)]#1:length.phase
-      out[,paste0("inter",design$values[phase])] <- inter
-    }
-  }
-  if(model == "H-M") {
-      for(phase in 2:length(design$values)) {
-        inter <- rep(0,N)
-        length.phase <- design$lengths[phase]
-        pre <- sum(design$lengths[1:(phase-1)])
-        inter[(pre +1):(pre + length.phase)] <- MT[(pre +1):(pre + length.phase)] - MT[(pre + 1)]#1:length.phase
-        out[,paste0("inter",design$values[phase])] <- inter
-    }
       
+      if(model == "JW") {
+        dummy[(pre + 1):N] <- 1
+      } else {
+        dummy[(pre + 1):(pre + length.phase)] <- 1
+      }
+      
+      out[,paste0("phase",design$values[phase])] <- dummy
+    } 
   }
-  if(model == "JW") {
-    for(phase in 2:length(design$values)) {
-      inter <- rep(0,N)
-      length.phase <- design$lengths[phase]
-      pre <- sum(design$lengths[1:(phase-1)])
-      inter[(pre +1):N] <- MT[(pre +1):N]- MT[(pre)]#1:length.phase
-      out[,paste0("inter",design$values[phase])] <- inter
+  
+  
+  for(phase in 2:length(design$values)) {
+    inter <- rep(0,N)
+    length.phase <- design$lengths[phase]
+    pre <- sum(design$lengths[1:(phase-1)])
+    
+    if(model == "B&L-B") { 
+      inter[(pre +1):(pre + length.phase)] <- MT[(pre +1):(pre + length.phase)] - MT[(pre)]
+    } else if (model == "H-M") {
+      inter[(pre +1):(pre + length.phase)] <- MT[(pre +1):(pre + length.phase)] - MT[(pre + 1)]
+    } else if (model == "JW" || model == "JW2") {
+      inter[(pre +1):N] <- MT[(pre +1):N]- MT[(pre)]
     }
+    
+    out[,paste0("inter",design$values[phase])] <- inter
   }
+  
+  
+  # if(model == "B&L-B") {
+  #   for(phase in 2:length(design$values)) {
+  #     inter <- rep(0,N)
+  #     length.phase <- design$lengths[phase]
+  #     pre <- sum(design$lengths[1:(phase-1)])
+  #     inter[(pre +1):(pre + length.phase)] <- MT[(pre +1):(pre + length.phase)] - MT[(pre)]#1:length.phase
+  #     out[,paste0("inter",design$values[phase])] <- inter
+  #   }
+  # }
+  # if(model == "H-M") {
+  #     for(phase in 2:length(design$values)) {
+  #       inter <- rep(0,N)
+  #       length.phase <- design$lengths[phase]
+  #       pre <- sum(design$lengths[1:(phase-1)])
+  #       inter[(pre +1):(pre + length.phase)] <- MT[(pre +1):(pre + length.phase)] - MT[(pre + 1)]#1:length.phase
+  #       out[,paste0("inter",design$values[phase])] <- inter
+  #   }
+  #     
+  # }
+  # if(model == "JW" || model == "JW2") {
+  #   for(phase in 2:length(design$values)) {
+  #     inter <- rep(0,N)
+  #     length.phase <- design$lengths[phase]
+  #     pre <- sum(design$lengths[1:(phase-1)])
+  #     inter[(pre +1):N] <- MT[(pre +1):N]- MT[(pre)]#1:length.phase
+  #     out[,paste0("inter",design$values[phase])] <- inter
+  #   }
+  # }
+  
   out
 }
 
@@ -151,7 +245,7 @@ plm <- function(data, AR = 0, model = "B&L-B", phases = NULL, family = "gaussian
   if(N > 1)
     stop("Multiple single-cases are given. Calculations could only be applied to a single data set.\n")
   
-  if(class(data)=="list")
+  if("list"%in%class(data))
     data <- data[[1]]
   if(ncol(data) < 3)
     data[,3] <- 1:nrow(data)

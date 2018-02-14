@@ -1,4 +1,3 @@
-
 .onAttach <- function(lib, pkg, ...) {
 	out <- paste0("scan ",packageVersion("scan"),"\n","Single-Case Data Analysis for Single and Multiple Baseline Designs\n",
 	              "Caution! This is a beta version and heavily under construction!\n")
@@ -67,18 +66,18 @@
   if(is.null(attributes(data)$values))
     attr(data,"values") <- "values"
   
-	var.phase <- attributes(data)$phase
-	var.mt <- attributes(data)$mt
+	var.phase  <- attributes(data)$phase
+	var.mt     <- attributes(data)$mt
 	var.values <- attributes(data)$values
 	
 	for(case in 1:length(data)) {
 	  VARS <- names(data[[case]])
 		if(is.na(var.values %in% VARS))
-	    stop("No variable with the name ",var.values," in the scdf.")
+	    stop("No variable with the name ",var.values, " in the scdf.")
 	  if(is.na(var.phase %in% VARS))
-	    stop("No variable with the name ",var.phase," in the scdf.")
+	    stop("No variable with the name ",var.phase,  " in the scdf.")
 	  if(is.na(var.mt %in% VARS))
-	    stop("No variable with the name ",var.mt," in the scdf.")
+	    stop("No variable with the name ",var.mt,     " in the scdf.")
 	  
     if(var.values != "values") {
 	    if(!is.na("values" %in% VARS)) {
@@ -111,7 +110,10 @@
 	return(data)
 }
 
-keepphasesSC <- function(data, phases = c("A","B"), set.phases = TRUE) {
+
+keepphasesSC <- function(...) {.keepphasesSC(...)}
+
+.keepphasesSC <- function(data, phases = c("A","B"), set.phases = TRUE) {
 
   
   if(is.data.frame(data))
@@ -122,7 +124,7 @@ keepphasesSC <- function(data, phases = c("A","B"), set.phases = TRUE) {
 
   if (class(phases) == "character" || class(phases) == "numeric") {
     if(!length(phases) == 2) 
-      stop("Phases argument not correctly set. Please provide a vector with two charcters or two numbers. E.g., phases = c(1,3).")
+      stop("Phases argument not set correctly. Please provide a vector with two charcters or two numbers. E.g., phases = c(1,3).")
     phases.A <- phases[1]
     phases.B <- phases[2]
   }
@@ -175,44 +177,6 @@ keepphasesSC <- function(data, phases = c("A","B"), set.phases = TRUE) {
   out <- list(data = data, designs = design.list, N = N, phases.A = phases.A, phases.B = phases.B)
   return(out)
 }
-
-
-longSCDF <- function(data, l2 = NULL, id = "case", model = NULL, ...) {
-  dat <- .SCprepareData(data)
-  label <- names(dat)
-  if (is.null(label))
-    label <- as.character(1:length(dat))
-  outdat <- vector()
-  
-  
-  if(!is.null(model)) {
-    for(case in 1:length(dat)) {
-      data.inter <- plm.predictor(dat[[case]], model = model)
-      dat[[case]]$mt <- data.inter$mt
-      dat[[case]] <- cbind(dat[[case]],data.inter[,-1])
-    }
-  }
-  
-  
-  for (case in 1:length(dat)) {
-	  dat[[case]]$case <- label[case]
-		outdat <- rbind(outdat, dat[[case]])
-  }
-  
-  outdat <- cbind(outdat[,ncol(outdat)],outdat[,-ncol(outdat)])
-  colnames(outdat)[1] <- "case"
-  
-
-  
-  if(!is.null(l2)) {
-    outdat <- merge(outdat, l2, by = id, ...)
-    
-    
-  }
-  return(outdat)
-}
-
-
 
 .onAttach()
 
