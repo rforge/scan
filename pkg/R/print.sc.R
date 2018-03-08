@@ -342,9 +342,9 @@ print.sc <- function(x, ...) {
     rownames(out) <- format(rownames(out), justify = "right")
     
     
-    print(out[1:(2*length(x$design)),], ...)
+    print(out[1:(2*length(x$design)),,drop = FALSE], ...)
     cat("\n")
-    print(out[-(1:(2*length(x$design))),], ...)
+    print(out[-(1:(2*length(x$design))),,drop = FALSE], ...)
     
   }	
   
