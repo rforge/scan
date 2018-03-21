@@ -4,8 +4,8 @@
 #' McKean, 2000).
 #' 
 #' 
-#' @param data A single-case data frame or a list of single-case data frames.
-#' See \code{\link{makeSCDF}} to learn about this format.
+#' @param data A single-case data frame.
+#' See \code{\link{scdf}} to learn about this format.
 #' @param AR Maximal lag of autoregression. Modeled based on the
 #' Autoregressive-Moving Average (ARMA) function.  When AR is set, the family
 #' argument must be set to \code{family = "gaussian"}.
@@ -15,8 +15,14 @@
 #' \code{"Manly"}, \code{"JW"}, and , \code{"JW2"}.
 #' @param family Set the distributioin family. Defaults to a gaussian
 #' distribution. See the \code{family} function for more details.
-#' @param phases -
-#' @param formula -
+#' @param trend A logical indicating if a trend parameters is included in the model.
+#' @param level A logical indicating if a level parameters is included in the model.
+#' @param slope A logical indicating if a slope parameters is included in the model.
+##' @param formula Defaults to the standard piecewise regression model. The
+#' parameter phase followed by the phase name (e.g., phaseB) indicates the level effect of the corresponding phase. The parameter 'inter' followed by the phase name (e.g., interB) adresses the slope effect based on the method
+#' provide in the model argument (e.g., "B&L-B"). The formula can be changed
+#' for example to include further variables into the regression model.
+#' @param update An easier way to change the regression formula (e.g., . ~ . + newvariable).
 #' @param na.action Defines how to deal with missing values
 #' @param ... Further arguments passed to the glm function.
 #' @return \item{model}{Character string from function call (see
@@ -72,7 +78,7 @@
 #' 
 #' 
 #' 
-plm <- function(data, AR = 0, model = "B&L-B", phases = NULL, family = "gaussian", trend = TRUE, level = TRUE, slope = TRUE,formula = NULL, update = NULL, na.action = na.omit, ...) {
+plm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE, level = TRUE, slope = TRUE,formula = NULL, update = NULL, na.action = na.omit, ...) {
 
   if (AR > 0 && !family == "gaussian")
     stop("Autoregression models could only be applied if distribution familiy = 'gaussian'.\n")
@@ -82,8 +88,9 @@ plm <- function(data, AR = 0, model = "B&L-B", phases = NULL, family = "gaussian
   if(N > 1)
     stop("Procedure could not be applied to more than one case.\nConsider to use the hplm function.")
   
-  if(!is.null(phases))
-     data <- .keepphasesSC(data, phases = phases)$data
+  #if(!is.null(phases))
+  #   data <- .keepphasesSC(data, phases = phases)$data
+  
   data <- data[[1]]
   
   ### model definition

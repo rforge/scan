@@ -4,13 +4,13 @@
 \alias{plm}
 \title{Piecewise linear model / piecewise regression}
 \usage{
-plm(data, AR = 0, model = "B&L-B", phases = NULL, family = "gaussian",
-  trend = TRUE, level = TRUE, slope = TRUE, formula = NULL,
-  update = NULL, na.action = na.omit, ...)
+plm(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE,
+  level = TRUE, slope = TRUE, formula = NULL, update = NULL,
+  na.action = na.omit, ...)
 }
 \arguments{
-\item{data}{A single-case data frame or a list of single-case data frames.
-See \code{\link{makeSCDF}} to learn about this format.}
+\item{data}{A single-case data frame.
+See \code{\link{scdf}} to learn about this format.}
 
 \item{AR}{Maximal lag of autoregression. Modeled based on the
 Autoregressive-Moving Average (ARMA) function.  When AR is set, the family
@@ -21,12 +21,21 @@ argument must be set to \code{family = "gaussian"}.}
 \code{"B&L-B"}, \code{"H-M"}, \code{"Mohr#1"}, \code{"Mohr#2"},
 \code{"Manly"}, \code{"JW"}, and , \code{"JW2"}.}
 
-\item{phases}{-}
-
 \item{family}{Set the distributioin family. Defaults to a gaussian
 distribution. See the \code{family} function for more details.}
 
-\item{formula}{-}
+\item{trend}{A logical indicating if a trend parameters is included in the model.}
+
+\item{level}{A logical indicating if a level parameters is included in the model.}
+
+\item{slope}{A logical indicating if a slope parameters is included in the model.}
+
+\item{formula}{Defaults to the standard piecewise regression model. The
+parameter phase followed by the phase name (e.g., phaseB) indicates the level effect of the corresponding phase. The parameter 'inter' followed by the phase name (e.g., interB) adresses the slope effect based on the method
+provide in the model argument (e.g., "B&L-B"). The formula can be changed
+for example to include further variables into the regression model.}
+
+\item{update}{An easier way to change the regression formula (e.g., . ~ . + newvariable).}
 
 \item{na.action}{Defines how to deal with missing values}
 

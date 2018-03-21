@@ -5,8 +5,7 @@
 #' 
 #' 
 #' @aliases plotSC plot.scdf
-#' @param data A single-case data frame or a list of single-case data frames.
-#' See \code{\link{makeSCDF}} to learn about this format.
+#' @param data A single-case data frame. See \code{\link{scdf}} to learn about this format.
 #' @param ylim Lower and upper limits of the y-axis (e.g., \code{ylim = c(0,
 #' 20)} sets the y-axis to a scale from 0 to 20). With multiple single-cases
 #' you can use \code{ylim = c(0, NA)} to scale the y-axis from 0 to the maximum
@@ -17,19 +16,7 @@
 #' you can use \code{ylim = c(0, NA)} to scale the x-axis from 0 to the maximum
 #' of each case. \code{xlim} is not set by default, which makes \code{scan} set
 #' a proper scale based on the given data.
-#' @param style \itemize{ \item\code{fill} If set, the area under the line is
-#' filled with the given color (e.g., \code{fill = "tomato"}). Use the standard
-#' R command colors() to get a list of all possible colours. \code{fill} is
-#' empty by default.  \item\code{annotations}A list of parameters defining
-#' annotations to each data point. This adds the score of each MT to your plot.
-#' \itemize{ \item\code{"pos"} Position of the annotations: 1 = below, 2 =
-#' left, 3 = above, 4 = right.  \item\code{"col"} Color of the annotations.
-#' \item\code{"cex"} Size of the annotations.  \item\code{"round"} Rounds the
-#' values to the specified decimal.  } \code{annotations = list(pos = 3, col =
-#' "brown", round = 1)} adds scores rounded to one decimal above the data point
-#' in brown color to the plot.
-#' 
-#' }
+#' @param style Either a character with the name of a pre-implemented style or a style object. See \code{\link{style.plotSC}} to learn about this format. 
 #' @param lines A character or list defining one or more lines or curves to be
 #' plotted. The argument is either passed as a character string (e.g.,
 #' \code{lines = "median"}) or as a list (e.g., \code{list("median", "trend")}.
@@ -48,7 +35,7 @@
 #' using the additional argument (e.g., \code{lines = list(meanA = 0.2)}).
 #' \item\code{"plm"} Regression lines for piecewise linear regression model.
 #' \item\code{"plm.ar"} Regression lines for piecewise autoregression model.
-#' The lag is specified like this: \code{lines = list(plm.ar = 2)}.
+#' The lag is specified like this: \code{lines = list(plm.ar = 2)}. Default lag is set to 2.
 #' \item\code{"movingMean"} Draws a moving mean curve, with a specified lag:
 #' \code{lines = list(movingMean = 2)}. Default is a lag 1 curve.
 #' \item\code{"movingMedian"} Draws a moving median curve, with a specified
@@ -92,24 +79,24 @@
 #' @param ... Further arguments passed to the plot command.
 #' @return Returns a plot of one or multiple single-cases.
 #' @author Juergen Wilbert
-#' @seealso \code{\link{describeSC}}, \code{\link{overlapSC}}
+#' @seealso \code{\link{style.plotSC}}, \code{\link{describeSC}}, \code{\link{overlapSC}}
 #' @examples
 #' 
 #' ## Request the default plot of the data from Borckhardt (2014)
-#' plotSC(Borckardt2014)
+#' plot(Borckardt2014)
 #' 
 #' ## Plot the three cases from Grosche (2011) and visualize the phase A trend
-#' plotSC(Grosche2011, style = list(fill = "tomato"), lines = "trendA")
+#' plot(Grosche2011, style = list(fill = "tomato"), lines = "trendA")
 #' 
 #' ## Request the local regression line for Georg from that data set and customize the plot
-#' plotSC(Grosche2011$Georg, style = list(fill = "grey", type = "n"), ylim = c(0,NA),
+#' plot(Grosche2011$Georg, style = list(fill = "grey", type = "n"), ylim = c(0,NA),
 #'        xlab = "Training session", ylab = "Words per minute",
 #'        phase.names = c("Baseline", "Intervention"), 
 #'        lines = list("loreg", lty = "solid", col = "black", lwd = 3))
 #' 
 #' ## Plot a random MBD over three cases and mark interesting MTs
-#' dat <- rSC(3)
-#' plotSC(dat, marks = list(positions = list(c(2,4,5),c(1,2,3),c(7,8,9)), col = "blue",
+#' dat <- rSC(design = design.rSC(3))
+#' plot(dat, marks = list(positions = list(c(2,4,5),c(1,2,3),c(7,8,9)), col = "blue",
 #'        cex = 1.4),annotations = list(label = "values","col" = "red", cex = 0.75,
 #'        offset = 1, round = 0))
 #' 
@@ -436,6 +423,7 @@ plotSC <- function(data, ylim = NULL, xlim = NULL, lines = "", marks = NULL, pha
     if (any(names(lines) == "plm.ar")) {
       id <- which(names(lines) == "plm.ar")
       lines.par <- as.numeric(lines[[id]])
+      if (is.na(lines.par)) lines.par <- 2
       pr <- plm(data, AR = lines.par)
       y <- pr$full.model$fitted
       lines(data$mt, y, lty = lty.line, col = col.line, lwd = lwd.line)

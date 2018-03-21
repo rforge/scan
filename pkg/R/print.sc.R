@@ -91,12 +91,12 @@ print.sc <- function(x, ...) {
   
   if(value == "trend") {
     x$trend <- round(x$trend,3)
-    cat("Trend in phases A and B\n\n")
+    cat("Trend for each phase\n\n")
     #cat("N cases = ", x$N,"\n")
     #cat("\n")
     print(x$trend)
     cat("\n")
-    cat("Note. Measurement-times of phase B start at", 1+x$B.offset, "\n")
+    cat("Note. Measurement-times of phase B start at", 1 + x$offset, "\n")
   }
   
   
@@ -293,15 +293,13 @@ print.sc <- function(x, ...) {
     cat("Percentage of all non-overlapping data\n\n")
     cat("PAND = ", round(x$PAND,1), "%\n")
     cat("Phi = ", round(x$phi,3), " ; Phi-Square = ", round(x$phi^2,3), "\n\n")
-    cat("Number of Cases: ", x$N, "\n")
-    cat("Total measurements: ", x$n, "\n")
-    cat("in phase A: ", x$nA, "\n")
-    cat("in phase B: ", x$nB, "\n")
+    cat("Number of Cases:", x$N, "\n")
+    cat("Total measurements:", x$n, " ")
+    cat("( in phase A:", x$nA, "; in phase B:", x$nB, ")\n")
     cat("n overlapping data per case: ")
     cat(x$OD.PP, sep = ", ")
     cat("\n")
-    cat("n Overlapping data: ",x$OD, "\n")
-    cat("% Overlapping data: ",round(x$POD,1), "\n")
+    cat("Total overlapping data: n =",x$OD, "; percentage =",round(x$POD,1), "\n")
     ma <- x$matrix
     cat("\n")
     cat("2 x 2 Matrix of proportions\n")

@@ -73,7 +73,7 @@ Methods for the \code{sdf} class are \code{print}, \code{summary}, and
 ## Scores on a letter naming task were collected on eleven days in a row. The intervention
 ## started after the fifth measurement, so the first B phase measurement was 6 (B.start = 6).
 klaas <- scdf(c(5, 7, 8, 5, 7, 12, 16, 18, 15, 14, 19), B.start = 6, name = "Klaas")
-plotSC(klaas)
+plot(klaas)
 
 ## Unfortunately in a similar SCDR there were no data collected on days 3 and 9. Use NA to
 ## pass them to the package.
@@ -96,7 +96,7 @@ overlapSC(mbd)
 frida <- scdf(c(3, 2, 4, 2, 2, 3, 5, 6, 8, 10, 8, 12, 14, 13, 12), B.start = 9,
     MT = c(1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18))
 summary(frida)
-plotSC(frida)
+plot(frida)
 describeSC(frida)
 
 

@@ -13,6 +13,7 @@
 \alias{Grosche2014}
 \alias{GruenkeWilbert2014}
 \alias{Huber2014}
+\alias{exampleAB_simple}
 \alias{exampleAB}
 \alias{exampleAB_add}
 \alias{exampleABC}

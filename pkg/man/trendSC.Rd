@@ -4,15 +4,15 @@
 \alias{trendSC}
 \title{Trend analysis for single-cases data}
 \usage{
-trendSC(data, B.offset = -1, model = NA)
+trendSC(data, offset = -1, model = NULL)
 }
 \arguments{
-\item{data}{A single-case data frame. See \code{\link{makeSCDF}} to learn
+\item{data}{A single-case data frame. See \code{\link{scdf}} to learn
 about this format.}
 
-\item{B.offset}{An offset for the first phase B measurement-time (MT). If
-set \code{B.offset = 0}, the first phase B measurement is handled as MT 1.
-Default is \code{B.offset = -1}, making the first value of phase B MT = 0.}
+\item{offset}{An offset for the first measurement-time of each phase (MT). If
+set \code{offset = 0}, the phase measurement is handled as MT 1.
+Default is \code{offset = -1}, making the first value MT = 0.}
 
 \item{model}{A string or a list of (named) strings each depicting one
 regression model. This is a formula expression of the standard R class. The
@@ -21,14 +21,14 @@ parameters of the model are \code{values}, \code{mt} and \code{phase}.}
 \value{
 \item{trend}{A matrix containing the results (Intercept, B and beta)
 of separate regression models for phase A, phase B, and the whole data.}
-\item{B.offset}{Numeric argument from function call (see \code{Arguments}
+\item{offset}{Numeric argument from function call (see \code{Arguments}
 section).}
 }
 \description{
 The \code{trendSC} function provides an overview of linear trends in
 single-case data.  By default, it gives you the intercept and slope of a
 linear and a squared regression of measurement-time on scores.  Models are
-computed separately for the A phase, the B-phase, and the whole data.  For a
+computed separately for each phase and across all phases.  For a
 more advanced application, you can add regression models using the R
 specific formula class.
 }
@@ -42,7 +42,7 @@ trendSC(matthea)
 ## a) a cubic model, and b) the values predicted by the natural logarithm of the
 ## measurement time.
 ben <- rSC(slope = 0.3)
-trendSC(ben, B.offset = 0, model = c("Cubic" = "values ~ I(mt^3)", "Log Time" = "values ~ log(mt)"))
+trendSC(ben, offset = 0, model = c("Cubic" = values ~ I(mt^3), "Log Time" = values ~ log(mt)))
 
 }
 \seealso{

@@ -6,7 +6,7 @@
 #' 
 #' @aliases example Beretvas2008 Borckardt2014 Huitema2000 Waddell2011
 #' byHeart2011 example1 Grosche2011 Grosche2014 GruenkeWilbert2014 Huber2014
-#' exampleAB exampleAB_add exampleABC exampleABC_outlier exampleABC_50
+#' exampleAB_simple exampleAB exampleAB_add exampleABC exampleABC_outlier exampleABC_50
 #' exampleABAB exampleA1B1A2B2 exampleAB_50 exampleAB_50.l2 Huber2014
 #' @return \item{Beretvas2008}{Fictitious single-case intervention study.
 #' \bold{Reference:} Beretvas, S., & Chung, H. (2008). An evaluation of

@@ -40,8 +40,8 @@ readSC <- function(filename = NULL, sep = ",", dec = ".", sort.labels = FALSE, t
   if(type == "csv")
     dat <- read.table(filename, header = TRUE, sep = sep, dec = dec, stringsAsFactors = FALSE, ...)
   if(type == "excel") {
-    stop("Excel import currently not supported.")
-    #dat <- as.data.frame(read_excel(filename, ...))
+    #stop("Excel import currently not supported.")
+    dat <- as.data.frame(read_excel(filename, ...))
   }
   
   columns <- ncol(dat)

@@ -29,17 +29,29 @@ the default values passed to the function \code{lmeControl} of the
 \item{random.slopes}{If \code{random.slopes = TRUE} random slope effects of
 the level, trend, and treatment parameter are estimated.}
 
+\item{lr.test}{If set TRUE likelihood ratio tests are calculated comparing model with vs. without random slope parameters.}
+
 \item{ICC}{If \code{ICC = TRUE} an intraclass-correlation is estimated.}
+
+\item{trend}{A logical indicating if a trend parameters is included in the model.}
+
+\item{level}{A logical indicating if a level parameters is included in the model.}
+
+\item{slope}{A logical indicating if a slope parameters is included in the model.}
+
+\item{fixed}{Defaults to the fixed part of the standard piecewise regression model. The
+parameter phase followed by the phase name (e.g., phaseB) indicates the level effect of the corresponding phase. The parameter 'inter' followed by the phase name (e.g., interB) adresses the slope effect based on the method
+provide in the model argument (e.g., "B&L-B"). The formula can be changed
+for example to include further L1 or L2 variables into the regression model.}
+
+\item{random}{The random part of the model.}
+
+\item{update.fixed}{An easier way to change the fixed model part (e.g., . ~ . + newvariable).}
 
 \item{data.l2}{A dataframe providing additional variables at Level 2. The
 scdf File has to have names for all cases and the Level 2 dataframe has to
 have a column named 'cases' with the names of the cases the Level 2
 variables belong to.}
-
-\item{formula}{Defaults to the standard piecewise regression model. The
-parameter 'inter' adresses the intercation term defined based on the method
-provide in the model argument (e.g., "B&L-B"). The formula can be changed
-for example to include further L1 or L2 variables into the regression model.}
 }
 \value{
 \item{model}{List containing infromation about the applied model} 

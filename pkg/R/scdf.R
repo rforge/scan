@@ -57,9 +57,9 @@ summary.scdf <- function(object, var.names = FALSE, ...) {
 
 as.scdf <- function(object) {
   
-  if(is.data.frame((object))) {
+  if(is.data.frame((object)))
     object <- list(object)
-  }
+
   if(!is.list(object))
     stop("Object must be a data.frame or a list of data.frames.")
   
@@ -91,15 +91,23 @@ print.scdf <- function(x, cases = 3, rows = 15, row.names = FALSE, long = FALSE,
   for(i in 1:length(x)) {
     names(x[[i]])[1] <- paste0(names(x)[i],": ",names(x[[i]])[1])
   }
-  min.row <- min(unlist(lapply(x[1:cases], nrow)))
   max.row <- max(unlist(lapply(x, nrow)))
+  
+  for(i in 1:cases){
+    n.row <- nrow(x[[i]])
+    x[[i]][,1] <- as.character(x[[i]][,1])
+    if(n.row < max.row) 
+      x[[i]][(n.row + 1):max.row, names(x[[i]])] <- ""
+  }
+  
+  #min.row <- min(unlist(lapply(x[1:cases], nrow)))
   
   if(rows == "all") {
     long <- TRUE
   }
   if(!long) {
-    if(min.row < rows) 
-      rows <- min.row
+    if(max.row < rows) 
+      rows <- max.row
     out <- lapply(x, function(x) x[1:rows,])
     if(cases > 1)
       out <- lapply(out, function(x) {x$"|" <- "|"; x})
@@ -200,7 +208,7 @@ print.scdf <- function(x, cases = 3, rows = 15, row.names = FALSE, long = FALSE,
 #' ## Scores on a letter naming task were collected on eleven days in a row. The intervention
 #' ## started after the fifth measurement, so the first B phase measurement was 6 (B.start = 6).
 #' klaas <- scdf(c(5, 7, 8, 5, 7, 12, 16, 18, 15, 14, 19), B.start = 6, name = "Klaas")
-#' plotSC(klaas)
+#' plot(klaas)
 #' 
 #' ## Unfortunately in a similar SCDR there were no data collected on days 3 and 9. Use NA to
 #' ## pass them to the package.
@@ -223,7 +231,7 @@ print.scdf <- function(x, cases = 3, rows = 15, row.names = FALSE, long = FALSE,
 #' frida <- scdf(c(3, 2, 4, 2, 2, 3, 5, 6, 8, 10, 8, 12, 14, 13, 12), B.start = 9,
 #'     MT = c(1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18))
 #' summary(frida)
-#' plotSC(frida)
+#' plot(frida)
 #' describeSC(frida)
 #' 
 #' 
@@ -290,6 +298,7 @@ checkSCDF <- function(data) {
   phases <- rle(as.character(data[[1]]$phase))$values
   if(!all(unlist(lapply(data, function(x) identical(rle(as.character(x$phase))$values, phases)))))
     cat("Warning: Phases are not identical for all cases.\n")
+  cat("Done!\n")
   return(invisible(FALSE))
 }
 

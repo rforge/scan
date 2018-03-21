@@ -13,7 +13,7 @@ A package to analyze single-case data.
 Most procedures also support multiple-baseline designs.
 
 \tabular{ll}{ Package: \tab scan\cr Type: \tab Package\cr Version: \tab
-0.3.22\cr Date: \tab 2018-01-19\cr License: \tab GPL (version 2 or newer)\cr
+0.3.25\cr Date: \tab 2018-03-19\cr License: \tab GPL (version 2 or newer)\cr
 }
 }
 \author{
