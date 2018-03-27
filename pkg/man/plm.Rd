@@ -43,10 +43,8 @@ for example to include further variables into the regression model.}
 }
 \value{
 \item{model}{Character string from function call (see
-\code{Arguments} above).} \item{F}{F value for specified model.}
-\item{df1}{Degrees of freedom (Regression).} \item{df2}{Degrees of freedom
-(Residual).} \item{p}{P value for specified model.} \item{R2}{Explained
-variance R squared.} \item{R2.adj}{Adjusted R squared.}
+\code{Arguments} above).} \item{F.test}{F-test values of modelfit.}
+\item{R2}{Explained variance R squared.} \item{R2.adj}{Adjusted R squared.}
 \item{count.data}{Logical argument from function call (see \code{Arguments}
 above).} \item{ES.slope}{Effect size / Explained variance gain of slope.}
 \item{ES.trend}{Effect size / Explained variance gain of trend.}

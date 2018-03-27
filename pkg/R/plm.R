@@ -26,10 +26,8 @@
 #' @param na.action Defines how to deal with missing values
 #' @param ... Further arguments passed to the glm function.
 #' @return \item{model}{Character string from function call (see
-#' \code{Arguments} above).} \item{F}{F value for specified model.}
-#' \item{df1}{Degrees of freedom (Regression).} \item{df2}{Degrees of freedom
-#' (Residual).} \item{p}{P value for specified model.} \item{R2}{Explained
-#' variance R squared.} \item{R2.adj}{Adjusted R squared.}
+#' \code{Arguments} above).} \item{F.test}{F-test values of modelfit.}
+#' \item{R2}{Explained variance R squared.} \item{R2.adj}{Adjusted R squared.}
 #' \item{count.data}{Logical argument from function call (see \code{Arguments}
 #' above).} \item{ES.slope}{Effect size / Explained variance gain of slope.}
 #' \item{ES.trend}{Effect size / Explained variance gain of trend.}
@@ -134,32 +132,37 @@ plm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE
     full <- glm(formula.full, data = data, family = family, na.action = na.action, ...)
     restricted.models <- lapply(formulas.ir, function(x) glm(x, data = data, family = family, na.action = na.action, ...))
     df2.full <- full$df.residual
+    df.int <- if (attr(full$terms, "intercept")) 1 else 0
   }
 
   if(AR > 0) {
     full <- gls(formula.full, data = data, correlation=corARMA(p=AR), method="ML", na.action = na.action)
     restricted.models <- lapply(formulas.ir, function(x) gls(model = x, data = data, correlation=corARMA(p=AR), method="ML", na.action = na.action))
     df2.full <- full$dims$N - full$dims$p
+    df.int <- if ("(Intercept)" %in% names(full$parAssign)) 1 else 0
   }
   
-  ### inference
+  n <- length(full$residuals)
+  df1.full <- n-1-df2.full
+  
   QSE <- sum(full$residuals^2, na.rm = TRUE)
   QST <- sum((data$values - mean(data$values))^2)
-  MQSA <- (QST - QSE) / 3
+  MQSA <- (QST - QSE) / df1.full
   MQSE <- QSE / df2.full
   F.full <- MQSA / MQSE
-  p.full <- pf(F.full,3,df2.full, lower.tail = FALSE)
+  p.full <- pf(F.full,df1.full,df2.full, lower.tail = FALSE)
   
-  #r2.full <- 1 - (QSE / QST)
   
   total.variance <- var(data$values)
   r2.full <- 1-(var(full$residuals)/total.variance)
-  r2.full.adj <- r2.full-(1-r2.full)*(3/(length(data$values)-3-1))
+  
+  r2.full.adj <- 1 - (1 - r2.full) * ((n - df.int)/df2.full)#r2.full-(1-r2.full)*(3/(n-df1.full-1))
+  #r2.full.adj <- r2.full-(1-r2.full)*(3/(length(data$values)-3-1))
  
   r.squares <- unlist(lapply(restricted.models, function(x) r2.full-(1-(var(x$residuals, na.rm = TRUE)/total.variance))))
   
   ### output
-  F.test <- c(F = F.full, df1 = 3, df2 = df2.full, p = p.full, R2 = r2.full, R2.adj = r2.full.adj)
+  F.test <- c(F = F.full, df1 = df1.full, df2 = df2.full, p = p.full, R2 = r2.full, R2.adj = r2.full.adj)
   out <- list(model = model, F.test = F.test, r.squares = r.squares, ar = AR, family = family, full.model = full, data = data)
 
   class(out) <- c("sc", "pr")
