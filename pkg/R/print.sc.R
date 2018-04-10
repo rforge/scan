@@ -2,6 +2,27 @@
 print.sc <- function(x, ...) {
   value <- class(x)[2]
 
+  if(value == "mpr") {
+    
+    cat("Multivariate piecewise linear model\n\n")
+    cat("Dummy model:",x$model,"\n\n")
+    
+    cof <- x$full.model$coefficients
+    rownames(cof) <- gsub("(Intercept)","Intercept",rownames(cof))
+    rownames(cof) <- gsub("mt","Trend",rownames(cof))
+    rownames(cof) <- gsub("phase","Level Phase ",rownames(cof))
+    rownames(cof) <- gsub("inter","Slope Phase ",rownames(cof))
+    cat("Coefficients:\n")
+    print(cof)
+    
+    res <- Anova(x$full.model, type = 3)
+    res$terms <- gsub("(Intercept)","Intercept",res$terms)
+    res$terms <- gsub("mt","Trend",res$terms)
+    res$terms <- gsub("phase","Level Phase ",res$terms)
+    res$terms <- gsub("inter","Slope Phase ",res$terms)
+    
+    print(res)
+  }
     
   if(value == "autocorr") {
     cat("Autocorrelations\n\n")
@@ -229,7 +250,7 @@ print.sc <- function(x, ...) {
   
   if(value == "pr"){
     cat("Piecewise Regression Analysis\n\n")
-    cat("Regression model: ", x$model,"\n\n")
+    cat("Dummy model: ", x$model,"\n\n")
     cat("Fitted a", x$family, "distribution.\n\n")		
     
     if (x$ar > 0)
@@ -242,7 +263,6 @@ print.sc <- function(x, ...) {
     } else {
       cat(sprintf("F(%d, %d) = %.2f; p = %0.3f; R-Square = %0.3f; Adjusted R-Square = %0.3f\n\n", x$F.test["df1"], x$F.test["df2"], x$F.test["F"], x$F.test["p"], x$F.test["R2"], x$F.test["R2.adj"]))	
     }
-    
     
     if(x$ar == 0)
       res <- summary(x$full.model)$coefficients
