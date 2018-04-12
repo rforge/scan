@@ -9,7 +9,7 @@
 #' @param AR Maximal lag of autoregression. Modeled based on the
 #' Autoregressive-Moving Average (ARMA) function.  When AR is set, the family
 #' argument must be set to \code{family = "gaussian"}.
-#' @param model Regression model used for computation (see Huitema & McKean,
+#' @param model Model used for computing dummy variables for the level and slope effects (see Huitema & McKean,
 #' 2000). Default is \code{model = "B&L-B"}. Possible values are:
 #' \code{"B&L-B"}, \code{"H-M"}, \code{"Mohr#1"}, \code{"Mohr#2"},
 #' \code{"Manly"}, \code{"JW"}, and , \code{"JW2"}.
@@ -25,19 +25,16 @@
 #' @param update An easier way to change the regression formula (e.g., . ~ . + newvariable).
 #' @param na.action Defines how to deal with missing values
 #' @param ... Further arguments passed to the glm function.
-#' @return \item{model}{Character string from function call (see
-#' \code{Arguments} above).} \item{F.test}{F-test values of modelfit.}
-#' \item{R2}{Explained variance R squared.} \item{R2.adj}{Adjusted R squared.}
-#' \item{count.data}{Logical argument from function call (see \code{Arguments}
-#' above).} \item{ES.slope}{Effect size / Explained variance gain of slope.}
-#' \item{ES.trend}{Effect size / Explained variance gain of trend.}
-#' \item{full.model}{Full regression model list (including \code{coefficients},
-#' \code{residuals} and many others} \item{MT}{Number of measurements.}
-#' \item{data}{Single-case data frame passed to the function.} \item{N}{Number
-#' of single-cases.} \item{family}{Character string from function call (see
-#' \code{Arguments} above).}
+#' @return 
+#' \item{formula}{plm formula. Uselful if you want to use the update or formula argument and you don't know the names of the parameters.}
+#' \item{model}{Character string from function call (see \code{Arguments} above).} 
+#' \item{F.test}{F-test values of modelfit.}
+#' \item{r.squares}{Explained variance R squared for each model parameter.}
+#' \item{ar}{Autoregression lag from function call (see \code{Arguments} above).}
+#' \item{family}{Distribution family from function call (see \code{Arguments} above).}
+#' \item{full.model}{Full regression model list from the gls or glm function.}
 #' @author Juergen Wilbert
-#' @seealso \code{\link{hplm}}
+#' @seealso \code{\link{hplm}}, \code{\link{glm}}, \code{\link{gls}}
 #' @references Beretvas, S., & Chung, H. (2008). An evaluation of modified
 #' R2-change effect size indices for single-subject experimental designs.
 #' \emph{Evidence-Based Communication Assessment and Intervention, 2}, 120-128.
@@ -163,7 +160,7 @@ plm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE
   
   ### output
   F.test <- c(F = F.full, df1 = df1.full, df2 = df2.full, p = p.full, R2 = r2.full, R2.adj = r2.full.adj)
-  out <- list(model = model, F.test = F.test, r.squares = r.squares, ar = AR, family = family, full.model = full, data = data)
+  out <- list(formula = formula.full, model = model, F.test = F.test, r.squares = r.squares, ar = AR, family = family, full.model = full, data = data)
 
   class(out) <- c("sc", "pr")
   out

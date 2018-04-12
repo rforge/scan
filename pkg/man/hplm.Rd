@@ -56,10 +56,11 @@ variables belong to.}
 \value{
 \item{model}{List containing infromation about the applied model} 
 \item{N}{Number of single-cases.}
+\item{formla}{A list containing the fixed and the random formulas of the hplm model.}
 \item{hplm}{Object of class lme contaning the multilevel model} 
 \item{model.0}{Object of class lme containing the Zero Model.} 
-\item{model.without}{Object of class gls containing fixed effect model.}
 \item{ICC}{List containing intraclass correlation and test parameters.}
+\item{model.without}{Object of class gls containing the fixed effect model.}
 }
 \description{
 The \code{hplm} function computes a hierarchical piecewise regression model.

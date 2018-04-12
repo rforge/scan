@@ -16,7 +16,7 @@ See \code{\link{scdf}} to learn about this format.}
 Autoregressive-Moving Average (ARMA) function.  When AR is set, the family
 argument must be set to \code{family = "gaussian"}.}
 
-\item{model}{Regression model used for computation (see Huitema & McKean,
+\item{model}{Model used for computing dummy variables for the level and slope effects (see Huitema & McKean,
 2000). Default is \code{model = "B&L-B"}. Possible values are:
 \code{"B&L-B"}, \code{"H-M"}, \code{"Mohr#1"}, \code{"Mohr#2"},
 \code{"Manly"}, \code{"JW"}, and , \code{"JW2"}.}
@@ -42,17 +42,13 @@ for example to include further variables into the regression model.}
 \item{...}{Further arguments passed to the glm function.}
 }
 \value{
-\item{model}{Character string from function call (see
-\code{Arguments} above).} \item{F.test}{F-test values of modelfit.}
-\item{R2}{Explained variance R squared.} \item{R2.adj}{Adjusted R squared.}
-\item{count.data}{Logical argument from function call (see \code{Arguments}
-above).} \item{ES.slope}{Effect size / Explained variance gain of slope.}
-\item{ES.trend}{Effect size / Explained variance gain of trend.}
-\item{full.model}{Full regression model list (including \code{coefficients},
-\code{residuals} and many others} \item{MT}{Number of measurements.}
-\item{data}{Single-case data frame passed to the function.} \item{N}{Number
-of single-cases.} \item{family}{Character string from function call (see
-\code{Arguments} above).}
+\item{formula}{plm formula. Uselful if you want to use the update or formula argument and you don't know the names of the parameters.}
+\item{model}{Character string from function call (see \code{Arguments} above).} 
+\item{F.test}{F-test values of modelfit.}
+\item{r.squares}{Explained variance R squared for each model parameter.}
+\item{ar}{Autoregression lag from function call (see \code{Arguments} above).}
+\item{family}{Distribution family from function call (see \code{Arguments} above).}
+\item{full.model}{Full regression model list from the gls or glm function.}
 }
 \description{
 The \code{plm} function computes a piecewise regression model (see Huitema &
@@ -100,7 +96,7 @@ time-series intervention models. \emph{Educational and Psychological
 Measurement, 60}, 38-58.
 }
 \seealso{
-\code{\link{hplm}}
+\code{\link{hplm}}, \code{\link{glm}}, \code{\link{gls}}
 }
 \author{
 Juergen Wilbert

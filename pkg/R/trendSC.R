@@ -12,7 +12,7 @@
 #' about this format.
 #' @param offset An offset for the first measurement-time of each phase (MT). If
 #' set \code{offset = 0}, the phase measurement is handled as MT 1.
-#' Default is \code{offset = -1}, making the first value MT = 0.
+#' Default is \code{offset = -1}, setting the first value of MT to 0.
 #' @param model A string or a list of (named) strings each depicting one
 #' regression model. This is a formula expression of the standard R class. The
 #' parameters of the model are \code{values}, \code{mt} and \code{phase}.
@@ -21,18 +21,20 @@
 #' \item{offset}{Numeric argument from function call (see \code{Arguments}
 #' section).}
 #' @author Juergen Wilbert
-#' @seealso \code{\link{describeSC}}, \code{\link{overlapSC}},
-#' \code{\link{plm}}, \code{\link{hplm}}
+#' @seealso \code{\link{describeSC}}, \code{\link{autocorrSC}},
+#' \code{\link{plm}}
 #' @examples
 #' 
 #' ## Compute the linear and squared regression for a random single-case
-#' matthea <- rSC(slope = 0.5)
+#' design <- design.rSC(slope = 0.5)
+#' matthea <- rSC(design)
 #' trendSC(matthea)
 #' 
 #' ## Besides the linear and squared regression models compute two custom models:
 #' ## a) a cubic model, and b) the values predicted by the natural logarithm of the
 #' ## measurement time.
-#' ben <- rSC(slope = 0.3)
+#' design <- design.rSC(slope = 0.3)
+#' ben <- rSC(design)
 #' trendSC(ben, offset = 0, model = c("Cubic" = values ~ I(mt^3), "Log Time" = values ~ log(mt)))
 #' 
 trendSC <- function(data, offset = -1,model = NULL) {
@@ -46,17 +48,11 @@ trendSC <- function(data, offset = -1,model = NULL) {
   data <- data[[1]]
   
   design <- rle(as.character(data$phase))$values
-  
   while(any(duplicated(design))) {
     design[anyDuplicated(design)] <- paste0(design[anyDuplicated(design)],".phase",anyDuplicated(design))
   }
   
-  phases <- rle(as.character(data$phase))
-  phases$values <- design
-  phases$start <- c(1,cumsum(phases$lengths)+1)[1:length(phases$lengths)]
-  phases$stop <- cumsum(phases$lengths)
-  class(phases) <- "list"
-  
+  phases <- .phasestructure(data)
   
   FORMULAS <- c(values ~ mt, values ~ I(mt^2)) 
   FORMULAS.NAMES <- c("Linear","Squared")

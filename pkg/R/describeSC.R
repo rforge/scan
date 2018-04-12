@@ -48,10 +48,7 @@ describeSC <- function(data) {
   for(case in 1:N) {
     data <- data.list[[case]]
     for(i in 1:length(design)) {
-      phases <- rle(as.character(data$phase))
-      phases$start <- c(1,cumsum(phases$lengths)+1)[1:length(phases$lengths)]
-      phases$stop <- cumsum(phases$lengths)
-      class(phases) <- "list"
+      phases <- .phasestructure(data)
       x <- data$mt[phases$start[i]:phases$stop[i]]
       y <- data$values[phases$start[i]:phases$stop[i]]
       phase <- design[i]

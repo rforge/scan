@@ -7,11 +7,12 @@
 #' @param data A single-case data frame. See \code{\link{scdf}} to learn about this format.
 #' @param lag.max The lag up to which autocorrelations will be computed.
 #' Default is \code{lag.max = 3}.
+#' @param ... Further arguments passed to the \code{\link{acf}} function
 #' @return autocorr A data frame containing separate autocorrelations for each
 #' phase and for all phases (for each single-case). If \code{lag.max} exceeds
 #' the length of a phase minus one, NA is returned for this cell.
 #' @author Juergen Wilbert
-#' @seealso \code{\link{trendSC}}, \code{\link{plm}}, \code{\link{hplm}}
+#' @seealso \code{\link{trendSC}}, \code{\link{plm}}, \code{\link{acf}}
 #' @examples
 #' 
 #'  
@@ -21,7 +22,7 @@
 #' @concept Autocorrelation
 #' @concept Seiral correlation
 
-autocorrSC <- function(data, lag.max = 3) {
+autocorrSC <- function(data, lag.max = 3, ...) {
   data <- .SCprepareData(data)
   
   N <- length(data)
@@ -37,26 +38,23 @@ autocorrSC <- function(data, lag.max = 3) {
   }
   
   
-  ac <- data.frame(case = rep(case.names, each = length(design)+1), phase = rep(c(design,"all"), N))
-  ac[,VAR] <- NA
+  ac <- data.frame(case = rep(case.names, each = length(design) + 1), phase = rep(c(design, "all"), N))
+  ac[, VAR] <- NA
   
   
   for(case in 1:N) {
-    phases <- rle(as.character(data[[case]]$phase))
-    phases$start <- c(1,cumsum(phases$lengths)+1)[1:length(phases$lengths)]
-    phases$stop <- cumsum(phases$lengths)
-    class(phases) <- "list"
+    phases <- .phasestructure(data[[case]])
     
     for(phase in 1:length(design)) {
       y <- data[[case]]$values[phases$start[phase]:phases$stop[phase]]
-      if(length(y)-1 < lag.max) lag <- length(y)-1 else lag <- lag.max
+      if(length(y) - 1 < lag.max) lag <- length(y) - 1 else lag <- lag.max
       
-      ac[(case-1)*(length(design)+1)+phase,VAR[1:lag]] <- acf(y, lag.max = lag, plot = FALSE)$acf[-1]
+      ac[(case - 1) * (length(design) + 1) + phase, VAR[1:lag]] <- acf(y, lag.max = lag, plot = FALSE, ...)$acf[-1]
     }
     y <- data[[case]]$values
-    if(length(y)-1 < lag.max) lag <- length(y)-1 else lag <- lag.max
+    if(length(y) - 1 < lag.max) lag <- length(y) - 1 else lag <- lag.max
     
-    ac[(case-1)*(length(design)+1)+(length(design)+1),VAR[1:lag]] <- acf(y, lag.max = lag, plot = FALSE)$acf[-1]
+    ac[(case - 1) * (length(design) + 1) + (length(design) + 1), VAR[1:lag]] <- acf(y, lag.max = lag, plot = FALSE, ...)$acf[-1]
     
   }
  

@@ -4,13 +4,15 @@
 \alias{autocorrSC}
 \title{Autocorrelation for single-case data}
 \usage{
-autocorrSC(data, lag.max = 3)
+autocorrSC(data, lag.max = 3, ...)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
 \item{lag.max}{The lag up to which autocorrelations will be computed.
 Default is \code{lag.max = 3}.}
+
+\item{...}{Further arguments passed to the \code{\link{acf}} function}
 }
 \value{
 autocorr A data frame containing separate autocorrelations for each
@@ -29,7 +31,7 @@ autocorrSC(Huber2014, lag.max = 2)
 
 }
 \seealso{
-\code{\link{trendSC}}, \code{\link{plm}}, \code{\link{hplm}}
+\code{\link{trendSC}}, \code{\link{plm}}, \code{\link{acf}}
 }
 \author{
 Juergen Wilbert

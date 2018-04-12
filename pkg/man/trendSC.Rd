@@ -12,7 +12,7 @@ about this format.}
 
 \item{offset}{An offset for the first measurement-time of each phase (MT). If
 set \code{offset = 0}, the phase measurement is handled as MT 1.
-Default is \code{offset = -1}, making the first value MT = 0.}
+Default is \code{offset = -1}, setting the first value of MT to 0.}
 
 \item{model}{A string or a list of (named) strings each depicting one
 regression model. This is a formula expression of the standard R class. The
@@ -35,19 +35,21 @@ specific formula class.
 \examples{
 
 ## Compute the linear and squared regression for a random single-case
-matthea <- rSC(slope = 0.5)
+design <- design.rSC(slope = 0.5)
+matthea <- rSC(design)
 trendSC(matthea)
 
 ## Besides the linear and squared regression models compute two custom models:
 ## a) a cubic model, and b) the values predicted by the natural logarithm of the
 ## measurement time.
-ben <- rSC(slope = 0.3)
+design <- design.rSC(slope = 0.3)
+ben <- rSC(design)
 trendSC(ben, offset = 0, model = c("Cubic" = values ~ I(mt^3), "Log Time" = values ~ log(mt)))
 
 }
 \seealso{
-\code{\link{describeSC}}, \code{\link{overlapSC}},
-\code{\link{plm}}, \code{\link{hplm}}
+\code{\link{describeSC}}, \code{\link{autocorrSC}},
+\code{\link{plm}}
 }
 \author{
 Juergen Wilbert

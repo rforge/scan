@@ -32,12 +32,14 @@
 #' scdf File has to have names for all cases and the Level 2 dataframe has to
 #' have a column named 'cases' with the names of the cases the Level 2
 #' variables belong to.
-#' @return \item{model}{List containing infromation about the applied model} 
+#' @return 
+#' \item{model}{List containing infromation about the applied model} 
 #' \item{N}{Number of single-cases.}
+#' \item{formla}{A list containing the fixed and the random formulas of the hplm model.}
 #' \item{hplm}{Object of class lme contaning the multilevel model} 
 #' \item{model.0}{Object of class lme containing the Zero Model.} 
-#' \item{model.without}{Object of class gls containing fixed effect model.}
 #' \item{ICC}{List containing intraclass correlation and test parameters.}
+#' \item{model.without}{Object of class gls containing the fixed effect model.}
 #' @author Juergen Wilbert
 #' @seealso \code{\link{plm}}
 #' @examples
@@ -112,7 +114,9 @@ hplm <- function(data, model = "B&L-B", method = "ML", control = list(opt = "opt
     
   }
   
-  fixed <<- fixed
+  
+  out$formula <- list(fixed = fixed, random = random)
+  
   out$hplm <- lme(fixed, random = random, data = dat, na.action=na.omit, method = method, control=control, keep.data = FALSE, ...)
 
   if(lr.test) {

@@ -111,6 +111,15 @@
 }
 
 
+.phasestructure <- function(data) {
+  phases <- rle(as.character(data$phase))
+  phases$start <- c(1, cumsum(phases$lengths) + 1)[1 : length(phases$lengths)]
+  phases$stop <- cumsum(phases$lengths)
+  class(phases) <- "list"
+  return(phases)
+}
+
+
 keepphasesSC <- function(...) {.keepphasesSC(...)}
 
 .keepphasesSC <- function(data, phases = c("A","B"), set.phases = TRUE) {
