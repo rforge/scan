@@ -79,7 +79,7 @@ pand <- function(data, decreasing = FALSE, correction = TRUE, phases = c("A","B"
     B[[i]] <- data[[i]][2][data[[i]][1] == "B"]
     if(class(data[[i]][[1]]) != "factor")
       data[[i]][[1]] <- factor(data[[i]][[1]])
-    phase.real[[i]] <- as.numeric(data[[i]][order(data[[i]][2]),1])
+    phase.real[[i]]     <- as.numeric(data[[i]][order(data[[i]][2]),1])
     phase.expected[[i]] <- as.numeric(data[[i]][[1]])
     
   }	
