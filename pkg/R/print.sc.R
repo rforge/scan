@@ -42,6 +42,8 @@ print.sc <- function(x, ...) {
 
   
   if(value == "TAU-U") {	
+    cat("Tau-U\n")
+    cat("Method: ",x$method,"\n\n")
     cat("Overall Tau-U: \n")
     print(x$Overall_tau_u)
     cat("\n\n")
@@ -51,9 +53,10 @@ print.sc <- function(x, ...) {
     if(any(names(arg) == "complete")) {
       complete <- arg$complete
     }
-    if(complete == FALSE)
-      out <- lapply(x$table,function(x)round(x[c(-1,-2,-3,-4),c(-1,-2,-3,-4, -9, -10)],3))
-    
+    if(complete == FALSE) {
+      VAR <- c("S","D","Tau","Tau.b","Z","p")
+      out <- lapply(x$table,function(x)round(x[c(-1,-2,-3,-4),VAR],3))
+    }
     print(out)
     #print(x$table)
   }

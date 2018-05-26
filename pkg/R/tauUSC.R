@@ -154,22 +154,22 @@ tauUSC <- function (data, ties.method = "omit", method = "complete", phases = c(
     
     if(method == "parker") {
       out$pairs <- c(
-        nA*nB, 
-        (nA*(nA-1))/2, 
-        (nB*(nB-1))/2, 
-        (nA*(nA-1))/2 + (nB*(nB-1))/2,
-        #(nAB*(nAB-1))/2, 
-        nA*nB,
-        nA*nB + (nB*(nB-1))/2, 
-        nA*nB + (nB*(nB-1))/2
+        nA*nB,                                   # A vs. B
+        (nA*(nA-1))/2,                           # A vs. A
+        (nB*(nB-1))/2,                           # B vs. B
+        (nA*(nA-1))/2 + (nB*(nB-1))/2,           # A vs. A - B vs. B
+        #(nAB*(nAB-1))/2,                        
+        nA*nB + (nA*(nA-1))/2,                   # A vs. B - A vs. A 
+        nA*nB + (nB*(nB-1))/2,                   # A vs. B + B vs. B
+        (nAB*(nAB-1))/2 #nA*nB + (nB*(nB-1))/2   # A vs. B + B vs. B - A vs. A
       )
     }
     
     if(method == "complete") {
       out$pairs <- c(
-        nA*nB, 
-        (nA*(nA-1))/2, 
-        (nB*(nB-1))/2, 
+        nA*nB,                                    #A vs. B
+        (nA*(nA-1))/2,                            #A vs. A
+        (nB*(nB-1))/2,                            
         (nB*(nB-1))/2 + (nA*(nA-1))/2,
         #(nAB*(nAB-1))/2, 
         nA*nB + (nA*(nA-1))/2,
@@ -214,8 +214,6 @@ tauUSC <- function (data, ties.method = "omit", method = "complete", phases = c(
     
     out$S <- out$pos-out$neg
     
-    
-   
     out$D <- c(
       out$pairs[1]-out$ties[1]/2,
       AvAKen$D,
@@ -241,6 +239,8 @@ tauUSC <- function (data, ties.method = "omit", method = "complete", phases = c(
       sqrt(AvB_B_AKen$varS)
     )
     out$VAR <- out$SD^2
+    out$SE.Tau.b <- out$SD/out$D
+    
     out$Z <- out$S/out$SD
     out$p <- pnorm(abs(out$Z), lower.tail = FALSE)*2
     

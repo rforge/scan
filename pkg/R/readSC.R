@@ -40,6 +40,10 @@ readSC <- function(filename = NULL, sep = ",", dec = ".", sort.labels = FALSE, t
   if(type == "csv")
     dat <- read.table(filename, header = TRUE, sep = sep, dec = dec, stringsAsFactors = FALSE, ...)
   if(type == "excel") {
+    if (!requireNamespace("readxl", quietly = TRUE)) {
+      stop("Package readxl needed for this function to work. Please install it.",
+           call. = FALSE)
+    }
     #stop("Excel import currently not supported.")
     dat <- as.data.frame(readxl::read_excel(filename, ...))
   }
