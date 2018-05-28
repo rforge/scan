@@ -29,7 +29,7 @@
 #' \code{lines = list(mean = 0.2)} draws a 20\%-trimmed mean line).
 #' \item\code{"trend"} Separate lines for phase A and B trends.
 #' \item\code{"trendA"} Trend line for phase A, extrapolated throughout phase
-#' B.  \item\code{"maxA"} Line at the level of the highest phase A score.
+#' B.  \item\code{"maxA/minA"} Line at the level of the highest or lowest phase A score.
 #' \item\code{"medianA"} Line at the phase A median score.  \item\code{"meanA"}
 #' Line at the phase A 10\%-trimmed mean score. Apply a different trim, by
 #' using the additional argument (e.g., \code{lines = list(meanA = 0.2)}).
@@ -385,12 +385,21 @@ plotSC <- function(data, ylim = NULL, xlim = NULL, lines = "", marks = NULL, pha
       #labelxy <- c(max(Bx), (max(AB)-min(AB))/2+min(AB))
       #label <- "Local Regression"
     }
-    
+
     if (any(names(lines) == "pnd") || any(names(lines) == "maxA")) {
       x <- data$mt[design$start[1]:design$stop[1]]
       y <- data$values[design$start[1]:design$stop[1]]
       maxMT <- max(data$mt)
       lines(c(min(x), maxMT), c(max(y), max(y)), lty = lty.line, col = col.line, lwd = lwd.line)		
+      #labelxy <- c(max(Bx), max(A))
+      #label <- "Max A"
+    }
+    
+    if (any(names(lines) == "minA")) {
+      x <- data$mt[design$start[1]:design$stop[1]]
+      y <- data$values[design$start[1]:design$stop[1]]
+      maxMT <- max(data$mt)
+      lines(c(min(x), maxMT), c(min(y), min(y)), lty = lty.line, col = col.line, lwd = lwd.line)		
       #labelxy <- c(max(Bx), max(A))
       #label <- "Max A"
     }
