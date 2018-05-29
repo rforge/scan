@@ -5,9 +5,9 @@
 \alias{plot.scdf}
 \title{Plot single-case data}
 \usage{
-plotSC(data, ylim = NULL, xlim = NULL, lines = "", marks = NULL,
+plotSC(data, ylim = NULL, xlim = NULL, lines = NULL, marks = NULL,
   phase.names = NULL, xlab = "Measurement time", ylab = "Score",
-  main = "", style = "default", ...)
+  main = "", case.names = NULL, style = "default", ...)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
@@ -75,6 +75,8 @@ time"}.}
 \item{ylab}{The labels of the y-axis. Default is \code{ylab = "Score"}.}
 
 \item{main}{Main title of the plot.}
+
+\item{case.names}{Case names. If not provided, names are taken from the scdf or left blank if the scdf does not contain case names.}
 
 \item{style}{Either a character with the name of a pre-implemented style or a style object. See \code{\link{style.plotSC}} to learn about this format.}
 

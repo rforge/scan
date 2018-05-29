@@ -74,6 +74,7 @@
 #' argument is useful in combination with the lines argument (e.g., \code{type
 #' = "n", lines = "loreg"}).
 #' @param main Main title of the plot.
+#' @param case.names Case names. If not provided, names are taken from the scdf or left blank if the scdf does not contain case names.
 #' @param mai Sets the margins of the plot.
 #' @param bty -
 #' @param ... Further arguments passed to the plot command.
@@ -101,7 +102,7 @@
 #'        offset = 1, round = 0))
 #' 
 
-plotSC <- function(data, ylim = NULL, xlim = NULL, lines = "", marks = NULL, phase.names = NULL, xlab = "Measurement time", ylab = "Score", main = "", style = "default", ...) {
+plotSC <- function(data, ylim = NULL, xlim = NULL, lines = NULL, marks = NULL, phase.names = NULL, xlab = "Measurement time", ylab = "Score", main = "", case.names = NULL, style = "default", ...) {
   
   dots <- list(...)
   op <- par(no.readonly = TRUE)
@@ -110,6 +111,9 @@ plotSC <- function(data, ylim = NULL, xlim = NULL, lines = "", marks = NULL, pha
   data.list <- .SCprepareData(data)
   N <- length(data.list)
   if(N > 1) par(mfrow = c(N, 1))
+  
+  if(!is.null(case.names))
+    names(data.list) <- case.names
   
   ### define style
   
@@ -216,6 +220,7 @@ plotSC <- function(data, ylim = NULL, xlim = NULL, lines = "", marks = NULL, pha
     #axis(1, col.ticks = col, xaxp = c(xlim[1],xlim[2],xlim[2] - xlim[1]), cex.axis = cex.axis)
     #axis(2, col.ticks = col, cex.axis = cex.axis)
     #mtext(ylab, side = 2, las = 1, line = 2, at = usr[4], cex = style$cex.lab, col = style$col.text)
+    
     if(!is.na(style$fill.bg)) {
       rect(usr[1],usr[3],usr[2],usr[4], col = style$fill.bg, border = NA)#, border = par("fg"))
     }
@@ -252,6 +257,10 @@ plotSC <- function(data, ylim = NULL, xlim = NULL, lines = "", marks = NULL, pha
       
     }
 
+    if(case == 1)
+      title(main)
+    
+    
     if(!is.null(marks)) {
       marks.cex <- 1
       marks.col <- "red"
@@ -316,144 +325,144 @@ plotSC <- function(data, ylim = NULL, xlim = NULL, lines = "", marks = NULL, pha
       text(data$mt,data$values, label = annotations.label, col = annotations.col, pos = annotations.pos, offset = annotations.offset, cex = annotations.cex, ...)
     }
     
-    
-    
-    #### START: Adding help-lines
-    #label <- ""
-    #labelxy <- c(0,0)
-    lty.line <- "dashed"
-    lwd.line <- 2
-    col.line <- "black"
-    
-    if (any(names(lines) == "lty")) {
-      id <- which(names(lines) == "lty")
-      lty.line <- lines[[id]]
-    }
-    if (any(names(lines) == "col")) {
-      id <- which(names(lines) == "col")
-      col.line <- lines[[id]]
-    }
-    if (any(names(lines) == "lwd")) {
-      id <- which(names(lines) == "lwd")
-      lwd.line <- lines[[id]]
-    }
-    if (any(names(lines) == "trend")) {
-      for(i in 1:length(design$values)) {
-        x <- data$mt[design$start[i]:design$stop[i]]
-        y <- data$values[design$start[i]:design$stop[i]]
+    if(!is.null(lines)) { #### START: Adding help-lines
+      
+      
+      #label <- ""
+      #labelxy <- c(0,0)
+      lty.line <- "dashed"
+      lwd.line <- 2
+      col.line <- "black"
+      
+      if (any(names(lines) == "lty")) {
+        id <- which(names(lines) == "lty")
+        lty.line <- lines[[id]]
+      }
+      if (any(names(lines) == "col")) {
+        id <- which(names(lines) == "col")
+        col.line <- lines[[id]]
+      }
+      if (any(names(lines) == "lwd")) {
+        id <- which(names(lines) == "lwd")
+        lwd.line <- lines[[id]]
+      }
+      if (any(names(lines) == "trend")) {
+        for(i in 1:length(design$values)) {
+          x <- data$mt[design$start[i]:design$stop[i]]
+          y <- data$values[design$start[i]:design$stop[i]]
+          reg <- lm(y~x)
+          lines(c(min(x), max(x)), c(reg$coefficients[1] + min(x) * reg$coefficients[2], reg$coefficients[1] + max(x) * reg$coefficients[2]), lty = lty.line, col = col.line, lwd = lwd.line)
+        }
+      }
+      if (any(names(lines) == "median")) {
+        for(i in 1:length(design$values)) {
+          x <- data$mt[design$start[i]:design$stop[i]]
+          y <- data$values[design$start[i]:design$stop[i]]
+          lines(c(min(x), max(x)), c(median(y, na.rm = TRUE), median(y, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)
+        }      
+        #labelxy <- c(max(Bx), median(B,na.rm = TRUE))
+        #label <- "Median"
+      }
+      if (any(names(lines) == "mean")) {
+        id <- which(names(lines) == "mean")
+        lines.par <- lines[[id]]
+        if (is.na(lines.par)) lines.par <- 0.1
+        
+        for(i in 1:length(design$values)) {
+          x <- data$mt[design$start[i]:design$stop[i]]
+          y <- data$values[design$start[i]:design$stop[i]]
+          lines(c(min(x), max(x)), c(mean(y, trim = lines.par, na.rm = TRUE), mean(y, trim = lines.par, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)
+        }
+        #labelxy <- c(max(Bx), mean(B, trim = lines.par, na.rm = TRUE))
+        #label <- "Trimmed mean"
+      }
+      if (any(names(lines) == "trendA")) {
+        x <- data$mt[design$start[1]:design$stop[1]]
+        y <- data$values[design$start[1]:design$stop[1]]
+        maxMT <- max(data$mt)
         reg <- lm(y~x)
-        lines(c(min(x), max(x)), c(reg$coefficients[1] + min(x) * reg$coefficients[2], reg$coefficients[1] + max(x) * reg$coefficients[2]), lty = lty.line, col = col.line, lwd = lwd.line)
+        lines(c(min(x), maxMT), c(reg$coefficients[1]  + min(x) * reg$coefficients[2], reg$coefficients[1] + maxMT * reg$coefficients[2]), lty = lty.line, col = col.line, lwd = lwd.line)
+        #labelxy <- c(max(Bx), reg$coefficients[1] + (max(Bx) - min(Bx)) * reg$coefficients[2])
+        #label <- "Trend A"
       }
-    }
-    if (any(names(lines) == "median")) {
-      for(i in 1:length(design$values)) {
-        x <- data$mt[design$start[i]:design$stop[i]]
-        y <- data$values[design$start[i]:design$stop[i]]
-        lines(c(min(x), max(x)), c(median(y, na.rm = TRUE), median(y, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)
-      }      
-      #labelxy <- c(max(Bx), median(B,na.rm = TRUE))
-      #label <- "Median"
-    }
-    if (any(names(lines) == "mean")) {
-      id <- which(names(lines) == "mean")
-      lines.par <- lines[[id]]
-      if (is.na(lines.par)) lines.par <- 0.1
-      
-      for(i in 1:length(design$values)) {
-        x <- data$mt[design$start[i]:design$stop[i]]
-        y <- data$values[design$start[i]:design$stop[i]]
-        lines(c(min(x), max(x)), c(mean(y, trim = lines.par, na.rm = TRUE), mean(y, trim = lines.par, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)
+      if (any(names(lines) == "loreg")) {
+        id <- which(names(lines) == "loreg")
+        lines.par <- lines[[id]]
+        if (is.na(lines.par)) lines.par <- 0.5
+        reg <- lowess(data$values~data$mt, f = lines.par)
+        lines(reg, lty = lty.line, col = col.line, lwd = lwd.line)
+        #labelxy <- c(max(Bx), (max(AB)-min(AB))/2+min(AB))
+        #label <- "Local Regression"
       }
-      #labelxy <- c(max(Bx), mean(B, trim = lines.par, na.rm = TRUE))
-      #label <- "Trimmed mean"
-    }
-    if (any(names(lines) == "trendA")) {
-      x <- data$mt[design$start[1]:design$stop[1]]
-      y <- data$values[design$start[1]:design$stop[1]]
-      maxMT <- max(data$mt)
-      reg <- lm(y~x)
-      lines(c(min(x), maxMT), c(reg$coefficients[1]  + min(x) * reg$coefficients[2], reg$coefficients[1] + maxMT * reg$coefficients[2]), lty = lty.line, col = col.line, lwd = lwd.line)
-      #labelxy <- c(max(Bx), reg$coefficients[1] + (max(Bx) - min(Bx)) * reg$coefficients[2])
-      #label <- "Trend A"
-    }
-    if (any(names(lines) == "loreg")) {
-      id <- which(names(lines) == "loreg")
-      lines.par <- lines[[id]]
-      if (is.na(lines.par)) lines.par <- 0.5
-      reg <- lowess(data$values~data$mt, f = lines.par)
-      lines(reg, lty = lty.line, col = col.line, lwd = lwd.line)
-      #labelxy <- c(max(Bx), (max(AB)-min(AB))/2+min(AB))
-      #label <- "Local Regression"
-    }
-
-    if (any(names(lines) == "pnd") || any(names(lines) == "maxA")) {
-      x <- data$mt[design$start[1]:design$stop[1]]
-      y <- data$values[design$start[1]:design$stop[1]]
-      maxMT <- max(data$mt)
-      lines(c(min(x), maxMT), c(max(y), max(y)), lty = lty.line, col = col.line, lwd = lwd.line)		
-      #labelxy <- c(max(Bx), max(A))
-      #label <- "Max A"
-    }
-    
-    if (any(names(lines) == "minA")) {
-      x <- data$mt[design$start[1]:design$stop[1]]
-      y <- data$values[design$start[1]:design$stop[1]]
-      maxMT <- max(data$mt)
-      lines(c(min(x), maxMT), c(min(y), min(y)), lty = lty.line, col = col.line, lwd = lwd.line)		
-      #labelxy <- c(max(Bx), max(A))
-      #label <- "Max A"
-    }
-    if (any(names(lines) == "medianA")) {
-      x <- data$mt[design$start[1]:design$stop[1]]
-      y <- data$values[design$start[1]:design$stop[1]]
-      maxMT <- max(data$mt)
+  
+      if (any(names(lines) == "pnd") || any(names(lines) == "maxA")) {
+        x <- data$mt[design$start[1]:design$stop[1]]
+        y <- data$values[design$start[1]:design$stop[1]]
+        maxMT <- max(data$mt)
+        lines(c(min(x), maxMT), c(max(y), max(y)), lty = lty.line, col = col.line, lwd = lwd.line)		
+        #labelxy <- c(max(Bx), max(A))
+        #label <- "Max A"
+      }
       
-      lines(c(min(x), maxMT), c(median(y, na.rm = TRUE), median(y, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)		
-      #labelxy <- c(max(Bx), median(A, na.rm = TRUE))
-      #label <- "Median A"
-    }
-    if (any(names(lines) == "meanA")) {
-      id <- which(names(lines) == "meanA")
-      lines.par <- lines[[id]]
-      if (is.na(lines.par)) lines.par <- 0.1
+      if (any(names(lines) == "minA")) {
+        x <- data$mt[design$start[1]:design$stop[1]]
+        y <- data$values[design$start[1]:design$stop[1]]
+        maxMT <- max(data$mt)
+        lines(c(min(x), maxMT), c(min(y), min(y)), lty = lty.line, col = col.line, lwd = lwd.line)		
+        #labelxy <- c(max(Bx), max(A))
+        #label <- "Max A"
+      }
+      if (any(names(lines) == "medianA")) {
+        x <- data$mt[design$start[1]:design$stop[1]]
+        y <- data$values[design$start[1]:design$stop[1]]
+        maxMT <- max(data$mt)
+        
+        lines(c(min(x), maxMT), c(median(y, na.rm = TRUE), median(y, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)		
+        #labelxy <- c(max(Bx), median(A, na.rm = TRUE))
+        #label <- "Median A"
+      }
+      if (any(names(lines) == "meanA")) {
+        id <- which(names(lines) == "meanA")
+        lines.par <- lines[[id]]
+        if (is.na(lines.par)) lines.par <- 0.1
+        
+        x <- data$mt[design$start[1]:design$stop[1]]
+        y <- data$values[design$start[1]:design$stop[1]]
+        maxMT <- max(data$mt)
+        lines(c(min(x), maxMT), c(mean(y, trim = lines.par, na.rm = TRUE), mean(y, trim = lines.par, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)		
+        #labelxy <- c(max(Bx), mean(A, trim = lines.par, na.rm = TRUE))
+        #label <- "Mean A"
+      }
+      if (any(names(lines) == "plm")) {
+        pr <- plm(data)
+        y <- pr$full.model$fitted.values
+        lines(data$mt, y, lty = lty.line, col = col.line, lwd = lwd.line)
+      }
+      if (any(names(lines) == "plm.ar")) {
+        id <- which(names(lines) == "plm.ar")
+        lines.par <- as.numeric(lines[[id]])
+        if (is.na(lines.par)) lines.par <- 2
+        pr <- plm(data, AR = lines.par)
+        y <- pr$full.model$fitted
+        lines(data$mt, y, lty = lty.line, col = col.line, lwd = lwd.line)
+      }
       
-      x <- data$mt[design$start[1]:design$stop[1]]
-      y <- data$values[design$start[1]:design$stop[1]]
-      maxMT <- max(data$mt)
-      lines(c(min(x), maxMT), c(mean(y, trim = lines.par, na.rm = TRUE), mean(y, trim = lines.par, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)		
-      #labelxy <- c(max(Bx), mean(A, trim = lines.par, na.rm = TRUE))
-      #label <- "Mean A"
-    }
-    if (any(names(lines) == "plm")) {
-      pr <- plm(data)
-      y <- pr$full.model$fitted.values
-      lines(data$mt, y, lty = lty.line, col = col.line, lwd = lwd.line)
-    }
-    if (any(names(lines) == "plm.ar")) {
-      id <- which(names(lines) == "plm.ar")
-      lines.par <- as.numeric(lines[[id]])
-      if (is.na(lines.par)) lines.par <- 2
-      pr <- plm(data, AR = lines.par)
-      y <- pr$full.model$fitted
-      lines(data$mt, y, lty = lty.line, col = col.line, lwd = lwd.line)
-    }
+      if (any(names(lines) == "movingMean")) {
+        id <- which(names(lines) == "movingMean")
+        lines.par <- lines[[id]]
+        if (is.na(lines.par)) lines.par <- 1
+        y <- .SCmovingAverage(data$values,lines.par, mean)
+        lines(data$mt, y, lty = lty.line, col = col.line, lwd = lwd.line)
+      }
+      if (any(names(lines) == "movingMedian")) {
+        id <- which(names(lines) == "movingMedian")
+        lines.par <- lines[[id]]
+        if (is.na(lines.par)) lines.par <- 1
+        y <- .SCmovingAverage(data$values,lines.par, median)
+        lines(data$mt, y, lty = lty.line, col = col.line, lwd = lwd.line)
+      }
     
-    if (any(names(lines) == "movingMean")) {
-      id <- which(names(lines) == "movingMean")
-      lines.par <- lines[[id]]
-      if (is.na(lines.par)) lines.par <- 1
-      y <- .SCmovingAverage(data$values,lines.par, mean)
-      lines(data$mt, y, lty = lty.line, col = col.line, lwd = lwd.line)
-    }
-    if (any(names(lines) == "movingMedian")) {
-      id <- which(names(lines) == "movingMedian")
-      lines.par <- lines[[id]]
-      if (is.na(lines.par)) lines.par <- 1
-      y <- .SCmovingAverage(data$values,lines.par, median)
-      lines(data$mt, y, lty = lty.line, col = col.line, lwd = lwd.line)
-    }
-    
-    #### END: Adding help-lines
+    }#### END: Adding help-lines
     
     ### Adding phase names
     if (is.null(phase.names))
@@ -483,7 +492,7 @@ plotSC <- function(data, ylim = NULL, xlim = NULL, lines = "", marks = NULL, pha
       mtext(case.names[case], side = 3, line = -1, adj = 0, at = 1, cex = style$cex.text, ...)	
   }
   
-  title(main)
+
   
 }
 
