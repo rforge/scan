@@ -52,6 +52,8 @@ for example to include further L1 or L2 variables into the regression model.}
 scdf File has to have names for all cases and the Level 2 dataframe has to
 have a column named 'cases' with the names of the cases the Level 2
 variables belong to.}
+
+\item{...}{Further arguments passed to the lme function.}
 }
 \value{
 \item{model}{List containing infromation about the applied model} 

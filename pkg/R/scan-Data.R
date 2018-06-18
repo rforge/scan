@@ -17,6 +17,7 @@
 #' exampleAB_simple 
 #' exampleAB 
 #' exampleAB_add 
+#' exampleAB_decreasing
 #' exampleABC 
 #' exampleABC_outlier 
 #' exampleABC_50
@@ -28,8 +29,6 @@
 #' Lenz2013
 #' SSDforR2017
 #' Parker2011
-#' @usage -
-#' @format -
 #' @return
 #' \item{Beretvas2008}{Fictitious single-case intervention study.
 #' \bold{Reference:} Beretvas, S., & Chung, H. (2008). An evaluation of

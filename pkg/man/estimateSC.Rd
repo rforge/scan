@@ -13,6 +13,10 @@ this format.}
 \item{s}{The standard deviation depcting the between case variance of the overall performance. If more than two single-cases are included in the scdf, the variance is estimated if s is set to NULL.}
 
 \item{rtt}{The reliability of the measurements. The reliability is estimated when rtt = NULL.}
+
+\item{model}{Model for calculating the interaction term.}
+
+\item{...}{Further arguments passed to the lm function.}
 }
 \value{
 A list of parameters for each single-case. Parameters include name, length, and starting measurementtime of each phase, trend level, and slope effects for each phase, mean, standarddeviation, and reliability for each case.

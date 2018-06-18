@@ -6,8 +6,8 @@
 \title{Plot single-case data}
 \usage{
 plotSC(data, ylim = NULL, xlim = NULL, lines = NULL, marks = NULL,
-  phase.names = NULL, xlab = "Measurement time", ylab = "Score",
-  main = "", case.names = NULL, style = "default", ...)
+  phase.names = NULL, xlab = NULL, ylab = NULL, main = "",
+  case.names = NULL, style = "default", ...)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
@@ -81,26 +81,6 @@ time"}.}
 \item{style}{Either a character with the name of a pre-implemented style or a style object. See \code{\link{style.plotSC}} to learn about this format.}
 
 \item{...}{Further arguments passed to the plot command.}
-
-\item{FUN.AB}{Not in use.}
-
-\item{text.ABlag}{By default a vertical line separates phases A and B in the
-plot. Alternatively, you could print a character string between the two
-phases using this argument: \code{text.ABlag = "Start"}.}
-
-\item{lwd}{Width of the plot line. Default is \code{lwd = 2}.}
-
-\item{pch}{Point type. Default is \code{pch = 17} (triangles). Other options
-are for example: 16 (filled circles) or "A" (uses the letter A).}
-
-\item{type}{Line type. "l" draws lines, "p" points, "b" draws lines and
-points, and "n" draws nothing. Default is \code{type = "b"}). The "n"
-argument is useful in combination with the lines argument (e.g., \code{type
-= "n", lines = "loreg"}).}
-
-\item{mai}{Sets the margins of the plot.}
-
-\item{bty}{-}
 }
 \value{
 Returns a plot of one or multiple single-cases.

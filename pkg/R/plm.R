@@ -79,6 +79,8 @@ plm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE
     stop("Autoregression models could only be applied if distribution familiy = 'gaussian'.\n")
   
   data <- .SCprepareData(data, na.rm = TRUE)
+  ATTRIBUTES <- attributes(data)
+  
   N <- length(data)
   if(N > 1)
     stop("Procedure could not be applied to more than one case.\nConsider to use the hplm function.")
@@ -163,6 +165,9 @@ plm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE
   out <- list(formula = formula.full, model = model, F.test = F.test, r.squares = r.squares, ar = AR, family = family, full.model = full, data = data)
 
   class(out) <- c("sc", "pr")
+  attr(out, "var.phase")  <- ATTRIBUTES$var.phase
+  attr(out, "var.mt")     <- ATTRIBUTES$var.mt
+  attr(out, "var.values") <- ATTRIBUTES$var.values
   out
 }
 
@@ -174,7 +179,7 @@ plm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE
     
   MT <- data$mt
   D  <- data$phase
-  N  <- length(D)
+  N  <- nrow(data)
   
   out    <- data.frame(mt = MT)
   design <- rle(as.character(data$phase))

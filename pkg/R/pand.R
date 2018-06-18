@@ -54,15 +54,15 @@
 #' @examples
 #' 
 #' ## Calculate the PAND for a MMBD over three cases
-#' gunnar <- makeSCDF(c(2,3,1,5,3,4,2,6,4,7), B.start = 5)
-#' birgit <- makeSCDF(c(3,3,2,4,7,4,2,1,4,7), B.start = 4)
-#' bodo <- makeSCDF(c(2,3,4,5,3,4,7,6,8,7), B.start = 6)
-#' mbd <- list(gunnar, birgit, bodo)
+#' gunnar <- scdf(c(2,3,1,5,3,4,2,6,4,7), B.start = 5)
+#' birgit <- scdf(c(3,3,2,4,7,4,2,1,4,7), B.start = 4)
+#' bodo <- scdf(c(2,3,4,5,3,4,7,6,8,7), B.start = 6)
+#' mbd <- c(gunnar, birgit, bodo)
 #' pand(mbd)
 #' pand(bodo)
 #' 
 #' ## Calculate the PAND with an expected decrease of phase B scores
-#' cubs <- makeSCDF(c(20,22,24,17,21,13,10,9,20,9,18), B.start = 5)
+#' cubs <- scdf(c(20,22,24,17,21,13,10,9,20,9,18), B.start = 5)
 #' pand(cubs, decreasing = TRUE)
 #' 
 pand <- function(data, decreasing = FALSE, correction = TRUE, phases = c("A","B")) {
@@ -70,17 +70,20 @@ pand <- function(data, decreasing = FALSE, correction = TRUE, phases = c("A","B"
   data <- .keepphasesSC(data, phases = phases)$data
   
   phase.expected <- list()
-  phase.real <- list()
-  A <- list()
-  B <- list()
+  phase.real     <- list()
+  A              <- list()
+  B              <- list()
+  
   N <- length(data)
+  
   for (i in 1:N) {
-    A[[i]] <- data[[i]][2][data[[i]][1] == "A"]
-    B[[i]] <- data[[i]][2][data[[i]][1] == "B"]
-    if(class(data[[i]][[1]]) != "factor")
-      data[[i]][[1]] <- factor(data[[i]][[1]])
-    phase.real[[i]]     <- as.numeric(data[[i]][order(data[[i]][2]),1])
-    phase.expected[[i]] <- as.numeric(data[[i]][[1]])
+    A[[i]] <- data[[i]]$values[data[[i]]$phase == "A"]
+    B[[i]] <- data[[i]]$values[data[[i]]$phase == "B"]
+    if(class(data[[i]]$phase) != "factor")
+      data[[i]]$phase <- factor(data[[i]]$phase)
+    
+    phase.real[[i]]     <- as.numeric(data[[i]][order(data[[i]]$values),"phase"])
+    phase.expected[[i]] <- as.numeric(data[[i]]$phase)
     
   }	
   
@@ -101,14 +104,15 @@ pand <- function(data, decreasing = FALSE, correction = TRUE, phases = c("A","B"
   OD.PP <- rep(NA,N)
   OD.A <- 0
   OD.B <- 0
+  
   for (i in 1:N) {
-    z <- data[[i]][2]
+    z <- data[[i]][, "values", drop = FALSE]
     n1 <- length(A[[i]])
     n2 <- length(B[[i]])
     n12 <- n1 + n2
     
     rang <- order(z, decreasing = decreasing)
-    AB <- sum(rang[1:n1] > n1, na.rm = TRUE)
+    AB <- sum(rang[1:n1]        > n1, na.rm = TRUE)
     BA <- sum(rang[(n1+1):n12] <= n1, na.rm = TRUE)
     if(correction) {
       ord <- z[rang,]
@@ -133,7 +137,9 @@ pand <- function(data, decreasing = FALSE, correction = TRUE, phases = c("A","B"
   PAND <- 100 - POD
   mat <- matrix(c(a,b,c,d), nrow = 2)
   mat2 <- mat * n
+  
   out <- list(PAND = PAND, phi = phi, POD = POD, OD.PP = OD.PP, OD = OD, n = n, N = N, nA = nA, nB = nB, pA = pA, pB = pB, matrix = mat, matrix.counts = mat2, correlation = results.cor, correction = correction)
+  
   class(out) <- c("sc","PAND")
   out
 }

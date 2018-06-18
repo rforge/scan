@@ -47,8 +47,8 @@ nap <- function(data, decreasing = FALSE, phases = c("A","B")) {
   
   data <- data[[1]]
   
-  A <- data[data[,1] == "A",2]
-  B <- data[data[,1] == "B",2]
+  A <- data[data[,"phase"] == "A","values"]
+  B <- data[data[,"phase"] == "B","values"]
   n1 <- length(A)
   n2 <- length(B)
   

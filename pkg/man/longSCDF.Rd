@@ -5,7 +5,7 @@
 \title{Creating a long format data frame from several single-case data frames
 (scdf).}
 \usage{
-longSCDF(data, l2 = NULL, id = "case", model = NULL, ...)
+longSCDF(data, l2 = NULL, id = "case", model = NULL, check = TRUE, ...)
 }
 \arguments{
 \item{data}{A single-case data frame (scdf).}
@@ -20,8 +20,9 @@ names.}
 \item{model}{If set, calculates interaction terms (see 'method' argument in
 plm function).}
 
-\item{...}{Additional arguments provided to the internally used merge
-function.}
+\item{check}{Indicating whether the scd is checked.}
+
+\item{...}{Additional arguments provided to the internally used merge function.}
 }
 \value{
 Returns one data frame with data of all single-cases structured by

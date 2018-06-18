@@ -10,6 +10,8 @@
 #' this format.
 #' @param s The standard deviation depcting the between case variance of the overall performance. If more than two single-cases are included in the scdf, the variance is estimated if s is set to NULL.
 #' @param rtt The reliability of the measurements. The reliability is estimated when rtt = NULL.
+#' @param model Model for calculating the interaction term.
+#' @param ... Further arguments passed to the lm function.
 #'
 #' @return A list of parameters for each single-case. Parameters include name, length, and starting measurementtime of each phase, trend level, and slope effects for each phase, mean, standarddeviation, and reliability for each case.
 #' @export
@@ -37,9 +39,9 @@ estimateSC <- function(data, s = NULL, rtt = NULL, model = "B&L-B", ...) {
   B.start <- unlist(lapply(phases, function(x) x$start[2]))
   MT      <- unlist(lapply(phases, function(x) sum(x$length)))
   
-  d.level <- c()
-  d.slope <- c()
-  d.trend <- c()
+  level <- c()
+  slope <- c()
+  trend <- c()
   m <- c()
   rtt <- c()
   error <- c()
@@ -56,9 +58,9 @@ estimateSC <- function(data, s = NULL, rtt = NULL, model = "B&L-B", ...) {
     phases[[i]]$true <- var(plm.model$fitted.values)
     phases[[i]]$rtt <- var(plm.model$fitted.values)/(var(plm.model$fitted.values)+var(plm.model$residuals))
     m <- c(m,res[1])
-    d.trend <- c(d.trend,res[2])
-    d.level <- c(d.level,res[3])
-    d.slope <- c(d.slope,res[4])
+    trend <- c(trend,res[2])
+    level <- c(level,res[3])
+    slope <- c(slope,res[4])
     error <- c(error, var(plm.model$residuals))
     fitted <- c(fitted, var(plm.model$fitted.values))
     
@@ -76,9 +78,9 @@ estimateSC <- function(data, s = NULL, rtt = NULL, model = "B&L-B", ...) {
     rtt <- 1-(error/s^2)
   }
   rtt.total <- sum(fitted) / (sum(fitted) + sum(error))
-  d.level <- d.level / s
-  d.slope <- d.slope / s
-  d.trend <- d.trend / s
+  level <- level / s
+  slope <- slope / s
+  trend <- trend / s
   
   for(i in 1:cases) {
     phases[[i]]$level <- phases[[i]]$level/s
@@ -86,7 +88,7 @@ estimateSC <- function(data, s = NULL, rtt = NULL, model = "B&L-B", ...) {
   }
   
   out <- list(N = cases, case.names = case.names, MT = MT, B.start = B.start, m = m, 
-              s = s, d.level = d.level, d.slope = d.slope, d.trend = d.trend, rtt = rtt, 
+              s = s, level = level, slope = slope, trend = trend, rtt = rtt, 
               design = phases, rtt.total = rtt.total)
   #class(out) <- c("sc","parameters")
   out

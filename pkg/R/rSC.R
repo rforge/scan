@@ -16,6 +16,8 @@
 #' @param seed A seed number for the random generator.
 #' @param ... Paramteres that are directly passed from the rSC function to the design.rSC function for a more concise coding.
 #' @param n Number of cases to be created (Default is \code{n = 1}).
+#' @param phase.design A vector defining the length and label of each phase.
+#' E.g., \code{phase.length = c(A1 = 10, B1 = 10, A2 = 10, B2 = 10)}.
 #' @param MT Number of measurements (in each study). Default is \code{MT = 20}.
 #' @param B.start Phase B starting point. The default setting \code{B.start = 6}
 #'   would assign the first five scores (of each case) to phase A, and all
@@ -60,12 +62,6 @@
 #'   the number of cases exceeds the length of the vector, values are repeated.
 #'   \code{rtt} has no effect when you're using binomial or poisson distributed
 #'   scores.
-#' @param concise \code{TRUE} by default. If set \code{concise = FALSE}, input
-#'   parameters (see above) for the sampling distribution are printed to the
-#'   output.
-#' @param cases Number of cases per study. \code{rSC(n = 10, cases = 3, B.start
-#'   = c(7,9,11))} creates 10 multiple-baseline designs, each with three cases
-#'   (with phase B starting points at MT 7, 9, and 11).
 #' @param extreme.p Probability of extreme values. \code{extreme.p = .05} gives
 #'   a five percent probability of an extreme value. A vector of values assigns
 #'   different probabilities to multiple cases. If the number of cases exceeds
@@ -91,14 +87,6 @@
 #'   common for count-data like behavioral observations. There's no measurement
 #'   error is included. \code{m} defines the expectation value of the poisson
 #'   distribution, lambda.
-#' @param start.values.fixed If set \code{TRUE}, the true value at the first
-#'   measurement of each case is set to \code{m}. The default setting is
-#'   \code{start.value.fixed = FALSE}, which results in a true value for each
-#'   case drawn from a distribution (defined above: \code{distribution}) with
-#'   the expected value \code{m} and standard deviation \code{s}.
-#' @param output.long If set \code{TRUE}, the true value, implemented trend,
-#'   level and slope effect, as well as error values are included for each MT.
-#'   Default is \code{output.long = FALSE}.
 #' @return A single-case data frame or a list of single-case data frames. See
 #'   \code{\link{scdf}} to learn about this format.
 #' @author Juergen Wibert

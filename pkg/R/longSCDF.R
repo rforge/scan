@@ -14,8 +14,8 @@
 #' names.
 #' @param model If set, calculates interaction terms (see 'method' argument in
 #' plm function).
-#' @param ... Additional arguments provided to the internally used merge
-#' function.
+#' @param ... Additional arguments provided to the internally used merge function.
+#' @param check Indicating whether the scd is checked.
 #' @return Returns one data frame with data of all single-cases structured by
 #' the variable 'case'.
 #' @author Juergen Wilbert
@@ -29,8 +29,12 @@
 #' Grosche2011_long <- longSCDF(Grosche2011)
 #' Grosche2011_long
 #' 
-longSCDF <- function(data, l2 = NULL, id = "case", model = NULL, ...) {
-  dat <- .SCprepareData(data)
+longSCDF <- function(data, l2 = NULL, id = "case", model = NULL, check = TRUE, ...) {
+  if(check)
+    dat <- .SCprepareData(data) 
+  else 
+    dat <- data
+  
   label <- names(dat)
   if (is.null(label))
     label <- as.character(1:length(dat))

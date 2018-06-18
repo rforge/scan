@@ -46,8 +46,8 @@ pet <- function(data, ci = 0.95, decreasing = FALSE, phases = c("A","B")) {
   pet.ci <- rep(NA, N)
   p <- rep(NA, N)
   for(i in 1:N) {
-    model <- lm(values~mt, data = data[[i]][data[[i]][,1] == "A",], na.action = na.omit)
-    B <- data[[i]][data[[i]][,1] == "B",]
+    model <- lm(values~mt, data = data[[i]][data[[i]][,"phase"] == "A",], na.action = na.omit)
+    B <- data[[i]][data[[i]][,"phase"] == "B",]
     res <- predict(model, B, se.fit = TRUE)
     nB <- nrow(B)
     if(!decreasing) {

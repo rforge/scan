@@ -1,9 +1,43 @@
 methods::setOldClass(c("scdf", "list"))
 
 c.scdf <- function(...) {
+  ATTRIBUTES <- attributes(..1)
   data <- unlist(list(...), recursive = FALSE)
+
+  # 
+  # x <- c()
+  # for(i in 1:length(data))
+  #   x <- c(x, attr((data[i]), "var.values"))
+  # if(!all(identical(x, x[1]))) 
+  #    warning("var.values differs for concatenated objects.")
+  # 
+  # x <- c()
+  # for(i in 1:length(data))
+  #   x <- c(x, attr((data[i]), "var.phase"))
+  # 
+  # if(!all(identical(x, x[1]))) 
+  #   warning("var.phase differs for concatenated objects.")
+  # 
+  # x <- c()
+  # for(i in 1:length(data))
+  #   x <- c(x, attr((data[i]), "var.mt"))
+  # 
+  # if(!all(identical(x, x[1]))) 
+  #   warning("var.mt differs for concatenated objects.")
+  # 
+  #   
+  # attr(data, "var.values") <- attr(data[1], "var.values")
+  # attr(data, "var.phase")  <- attr(data[1], "var.phase")
+  # attr(data, "var.mt")     <- attr(data[1], "var.mt")
+  # 
+  attributes(data) <- .defaultAttributesSCDF()
+  if(!is.null(ATTRIBUTES$var.values))
+    setvarSCDF(data, "values") <- ATTRIBUTES$var.values
+  if(!is.null(ATTRIBUTES$var.phase))
+    setvarSCDF(data, "phase") <- ATTRIBUTES$var.phase
+  if(!is.null(ATTRIBUTES$var.mt))
+    setvarSCDF(data, "mt") <- ATTRIBUTES$var.mt
   
-  attributes(data) <- .defaultAttributesSCDF(attributes(data)) 
   return(data)
 }
 
@@ -14,7 +48,7 @@ c.scdf <- function(...) {
   ATTRIBUTES <- attributes(x)
   
   out <- x[i]
-  attributes(out)[c("phase","values", "mt")] <- ATTRIBUTES[c("phase","values", "mt")]
+  attributes(out)[c("var.phase","var.values", "var.mt")] <- ATTRIBUTES[c("var.phase","var.values", "var.mt")]
   class(out) <- c("scdf","list")
   out
 }
@@ -24,12 +58,12 @@ c.scdf <- function(...) {
   
   class(x) <- "list"
   out <- x[i]
-  attributes(out)[c("phase","values", "mt")] <- ATTRIBUTES[c("phase","values", "mt")]
+  attributes(out)[c("var.phase","var.values", "var.mt")] <- ATTRIBUTES[c("var.phase","var.values", "var.mt")]
   class(out) <- c("scdf","list")
   out
 }
 
-summary.scdf <- function(object, var.names = FALSE, ...) {
+summary.scdf <- function(object, var.names = TRUE, ...) {
   cat("#A single-case data frame with", length(object),"cases\n\n")
   designs <- lapply(object, function(x) paste0(rle(as.character(x$phase))$values,collapse = ""))
   rows <- lapply(object, nrow)
@@ -37,9 +71,10 @@ summary.scdf <- function(object, var.names = FALSE, ...) {
   if(!is.null(names(object)))
     row.names(out) <- names(object)
   if(var.names) {
-    cat(paste0("Variable name of values: ",attr(object,"values")),"\n")
-    cat(paste0("Variable name of phase: ",attr(object,"phase")),"\n")
-    cat(paste0("Variable name of mt: ",attr(object,"mt")),"\n")
+    cat("Variable names\n")
+    cat(paste0("values: ",attr(object,"var.values")),"\n")
+    cat(paste0("phase:  ",attr(object,"var.phase")),"\n")
+    cat(paste0("mt:     ",attr(object,"var.mt")),"\n")
     cat("\n")
   }
   print(out)
@@ -72,9 +107,19 @@ as.scdf <- function(object) {
   
 }
 
-
-
-print.scdf <- function(x, cases = 3, rows = 15, row.names = FALSE, long = FALSE, ...) {
+#' Print an scdf
+#'
+#' @param x An scdf object
+#' @param cases Number of cases to be printed.
+#' @param rows Number of rows to be printed. 
+#' @param cols Columns to be printed.
+#' @param row.names Logical. If TRUE row names are printed.
+#' @param long Logical. If TRUE cases are printed in one by a time.
+#' @param ... Further arguments passed to the print function. 
+#'
+#' @export
+#'
+print.scdf <- function(x, cases = 3, rows = 15, cols = "all", row.names = FALSE, long = FALSE, ...) {
   N <- length(x)
   if(is.null(names(x)))
     names(x) <- paste("Case",1:N, sep = "")
@@ -86,11 +131,22 @@ print.scdf <- function(x, cases = 3, rows = 15, row.names = FALSE, long = FALSE,
     cat("#A single-case data frame with one case\n\n")
   if(N > 1)
     cat("#A single-case data frame with",N,"cases\n\n")
+  
+  if(cols[1] == "smart")
+    cols = c(attr(x, "var.phase"), attr(x, "var.values"), attr(x, "var.mt"))
 
-  x <- x[1:cases]
-  for(i in 1:length(x)) {
-    names(x[[i]])[1] <- paste0(names(x)[i],": ",names(x[[i]])[1])
+  for(i in 1:N) {
+    MAXCOLS <- ncol(x[[i]])
+    COLS <- cols
+    if(cols[1] == "all")
+      COLS <- 1:MAXCOLS
+    x[[i]] <- x[[i]][, COLS]
   }
+  
+  
+  for(i in 1:N)
+    names(x[[i]])[1] <- paste0(names(x)[i],": ",names(x[[i]])[1])
+
   max.row <- max(unlist(lapply(x, nrow)))
   
   for(i in 1:cases){
@@ -108,7 +164,7 @@ print.scdf <- function(x, cases = 3, rows = 15, row.names = FALSE, long = FALSE,
   if(!long) {
     if(max.row < rows) 
       rows <- max.row
-    out <- lapply(x, function(x) x[1:rows,])
+    out <- lapply(x[1:cases], function(x) x[1:rows,])
     if(cases > 1)
       out <- lapply(out, function(x) {x$"|" <- "|"; x})
     names <- lapply(out, names)
@@ -141,7 +197,7 @@ print.scdf <- function(x, cases = 3, rows = 15, row.names = FALSE, long = FALSE,
     print(out, row.names = row.names, ...)
   }
   if(long) {
-    for(case in 1:length(x)) {
+    for(case in 1:N) {
       print(x[[case]], row.names = row.names, ...)
       cat("\n")
     }
@@ -160,9 +216,6 @@ print.scdf <- function(x, cases = 3, rows = 15, row.names = FALSE, long = FALSE,
 }
 
 
-#scdf <- function (data, B.start = NULL, MT = NULL, phase.length = NULL, pvar = NULL, name = NULL){
-
-
 #' Single case data frame
 #' 
 #' The class \code{scdf} stores single-case study data with one or more
@@ -175,33 +228,27 @@ print.scdf <- function(x, cases = 3, rows = 15, row.names = FALSE, long = FALSE,
 #' Methods for the \code{sdf} class are \code{print}, \code{summary}, and
 #' \code{plot}.
 #' 
-#' @aliases scdf scdf-class summary.scdf print.scdf as.scdf c.scdf checkSCDF
+#' @aliases scdf scdf-class summary.scdf as.scdf c.scdf checkSCDF
 #' makeSCDF
-#' @param data A vector containing measurement values of the target variable.
+#' @param values A vector containing measurement values of the target variable.
 #' @param B.start The first measurement of phase B (simple coding if design is
 #' strictly AB).
-#' @param MT A vector defining measurement times. Default is \code{MT =
+#' @param mt A vector defining measurement times. Default is \code{MT =
 #' (1,2,3,...,n)}.
 #' @param phase.design A vector defining the length and label of each phase.
 #' E.g., \code{phase.length = c(A1 = 10, B1 = 10, A2 = 10, B2 = 10)}.
 #' @param name A name for the case.
-#' @param phase -
-#' @param values -
-#' @param mt -
-#' @param object -
-#' @param x -
-#' @param cases -
-#' @param rows -
-#' @param row.names -
-#' @param long -
-#' @param var.names -
+#' @param phase A vector defining phase assignment.
+#' @param var.values A character string with the name of the dependend variable.
+#' @param var.phase A character string with the name of the phase variable.
+#' @param var.mt A character string with the name of the measurement-time variable.
 #' @param ...  Additional variables. E.g., \code{teacher = c(0,1,0,1,0,0,1),
 #' lesson = c(1,3,4,5,2,3)}.
 #' @return Returns a single-case data frame \code{scdf} suitable for all
 #' functions of the \code{scan} package. Multiple data sets (e.g. from Multiple
 #' Baseline Designs) can be listed.
 #' @author Juergen Wilbert
-#' @seealso \code{\link{longSCDF}}, \code{\link{makesingleSC}},
+#' @seealso \code{\link{longSCDF}}, \code{\link{readSC}}
 #' \code{\link{writeSC}}
 #' @examples
 #' 
@@ -229,13 +276,13 @@ print.scdf <- function(x, cases = 3, rows = 15, row.names = FALSE, long = FALSE,
 #' ## only on schooldays. The sequence of measurements is passed to the package by using a
 #' ## vector of measurement times.
 #' frida <- scdf(c(3, 2, 4, 2, 2, 3, 5, 6, 8, 10, 8, 12, 14, 13, 12), B.start = 9,
-#'     MT = c(1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18))
+#'     mt = c(1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18))
 #' summary(frida)
 #' plot(frida)
 #' describeSC(frida)
 #' 
 #' 
-scdf <- function (values = NULL, B.start = NULL, mt = NULL, phase = NULL, phase.design = NULL, name = NULL, ...){
+scdf <- function (values = NULL, B.start = NULL, mt = NULL, phase = NULL, phase.design = NULL, name = NULL, var.values = "values", var.phase = "phase", var.mt = "mt", ...){
   add.var <- data.frame(...)
   names.var <- names(add.var)
   if ("MT" %in% names.var && is.null(mt)) {
@@ -269,6 +316,11 @@ scdf <- function (values = NULL, B.start = NULL, mt = NULL, phase = NULL, phase.
      data <- cbind(data,add.var)
   data <- list(data)
   attributes(data) <- .defaultAttributesSCDF() 
+  
+  attr(data, "var.values") <- var.values
+  attr(data, "var.phase")  <- var.phase
+  attr(data, "var.mt")     <- var.mt
+  
   names(data) <- name
   data
 }
@@ -307,4 +359,34 @@ makeSCDF <- function (data, B.start = NULL, MT = NULL){
   warning("This function is deprecated. Please use the scdf function.\n\n")
   
   scdf(values = data, B.start = B.start, mt = MT)[[1]]
+}
+
+
+
+#' Set the variables of an scdf 
+#' 
+#' By default scan uses the variable names 'values'
+#' as the dependend variable, 'phase' as indicator of a phase, and 'mt' as the
+#' measurement-time. These variable names are attributes of an scdf. But you
+#' might have other variables you want to use (e.g., another dependend
+#' variable). With this function you can change these attributes of an scdf.
+#' 
+#' @aliases setvarSCDF
+#' @param x An scdf.
+#' @param var A character string specifying which variable you like to assign ("values", "phase", or "mt").
+#' @param value A character string with the variable name.
+#'
+#' @examples
+#' setvarSCDF(exampleAB_add) <- "depression"
+#' describeSC(exampleAB_add)
+#' setvarSCDF(exampleAB_add) <- "wellbeing"
+"setvarSCDF<-" <- function(x, var = "values", value) {
+  VALID <- c("values","phase","mt")
+  if(!(var %in% VALID))
+    stop("Wrong variable name.\n")
+  if(var == "values") attr(x, "var.values") <- value
+  if(var == "phase")  attr(x, "var.phase")  <- value
+  if(var == "mt")     attr(x, "var.mt")     <- value
+  
+  x
 }

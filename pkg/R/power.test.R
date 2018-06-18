@@ -323,11 +323,13 @@ power.testSC <- function(data = NULL, parameters = NULL,stat = c("rand.test","pl
   
   rand.sample <- list()
   for(i in 1:n) {
-    rand.sample[[i]] <- rSC(n = cases, MT = MT, m = m, s = s,
-                            B.start = B.start, level = level, 
-                            slope = slope, trend = trend, extreme.p = extreme.p, 
-                            extreme.d = extreme.d, rtt = rtt, 
-                            distribution = distribution)
+  
+    design <- design.rSC(n = cases, MT = MT, m = m, s = s,
+                         B.start = B.start, level = level, 
+                         slope = slope, trend = trend, extreme.p = extreme.p, 
+                         extreme.d = extreme.d, rtt = rtt, 
+                         distribution = distribution)
+    rand.sample[[i]] <- rSC(design = design)
   }
   #if(cases == 1)
   #  rand.sample <- lapply(rand.sample, list)

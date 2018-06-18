@@ -1,7 +1,8 @@
 
 print.sc <- function(x, ...) {
   value <- class(x)[2]
-
+  note <- FALSE
+  
   if(value == "mpr") {
     
     cat("Multivariate piecewise linear model\n\n")
@@ -15,7 +16,7 @@ print.sc <- function(x, ...) {
     cat("Coefficients:\n")
     print(cof)
     
-    res <- Anova(x$full.model, type = 3)
+    res <- car::Anova(x$full.model, type = 3)
     res$terms <- gsub("(Intercept)","Intercept",res$terms)
     res$terms <- gsub("mt","Trend",res$terms)
     res$terms <- gsub("phase","Level Phase ",res$terms)
@@ -38,6 +39,7 @@ print.sc <- function(x, ...) {
     cat("Comparing phase", unlist(x$phases.A),"to",unlist(x$phases.B),"\n\n")
 
     print(round(t(x$overlap),2),...)
+    note = TRUE
   }
 
   
@@ -248,6 +250,8 @@ print.sc <- function(x, ...) {
     }
     
     print(md, na.print = "-")
+    
+    note <- TRUE
     invisible(out)
   }
   
@@ -310,6 +314,7 @@ print.sc <- function(x, ...) {
     cat("Autocorrelation of the Residuals\n")
     print(data.frame(lag = 1:5,r = round(acf(residuals(x$full.model), lag.max = 5,plot = FALSE)$acf[2:6],2)))
     cat("\n")
+    note <- TRUE
   }
   
   if(value == "PAND") {
@@ -366,7 +371,7 @@ print.sc <- function(x, ...) {
     print(out[1:(2*length(x$design)),,drop = FALSE], ...)
     cat("\n")
     print(out[-(1:(2*length(x$design))),,drop = FALSE], ...)
-    
+    note = TRUE
   }	
   
   if(value == "outlier") {
@@ -395,4 +400,12 @@ print.sc <- function(x, ...) {
     }
     cat("\n")
   }
+  
+  if(note) {
+    if(attr(x, "var.values") != "values" || attr(x, "var.phase") != "phase" || attr(x, "var.mt") != "mt")
+      cat("\nNote. The following variables were used in this analysis:\n      '", attr(x, "var.values"), "' as values, '", attr(x, "var.phase"), "' as phase ,and '", attr(x, "var.mt"),"' as mt.\n", sep = "")
+    
+  }
+  
+  
 }

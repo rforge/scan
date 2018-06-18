@@ -59,24 +59,11 @@
 #' @param phase.names By default phases are labeled 'A' and 'B'. Use this
 #' argument to specify different labels: \code{phase.names = c("Baseline",
 #' "Intervention")}.
-#' @param FUN.AB Not in use.
 #' @param xlab The label of the x-axis. Default is \code{xlab = "Measurement
 #' time"}.
 #' @param ylab The labels of the y-axis. Default is \code{ylab = "Score"}.
-#' @param text.ABlag By default a vertical line separates phases A and B in the
-#' plot. Alternatively, you could print a character string between the two
-#' phases using this argument: \code{text.ABlag = "Start"}.
-#' @param lwd Width of the plot line. Default is \code{lwd = 2}.
-#' @param pch Point type. Default is \code{pch = 17} (triangles). Other options
-#' are for example: 16 (filled circles) or "A" (uses the letter A).
-#' @param type Line type. "l" draws lines, "p" points, "b" draws lines and
-#' points, and "n" draws nothing. Default is \code{type = "b"}). The "n"
-#' argument is useful in combination with the lines argument (e.g., \code{type
-#' = "n", lines = "loreg"}).
 #' @param main Main title of the plot.
 #' @param case.names Case names. If not provided, names are taken from the scdf or left blank if the scdf does not contain case names.
-#' @param mai Sets the margins of the plot.
-#' @param bty -
 #' @param ... Further arguments passed to the plot command.
 #' @return Returns a plot of one or multiple single-cases.
 #' @author Juergen Wilbert
@@ -102,7 +89,7 @@
 #'        offset = 1, round = 0))
 #' 
 
-plotSC <- function(data, ylim = NULL, xlim = NULL, lines = NULL, marks = NULL, phase.names = NULL, xlab = "Measurement time", ylab = "Score", main = "", case.names = NULL, style = "default", ...) {
+plotSC <- function(data, ylim = NULL, xlim = NULL, lines = NULL, marks = NULL, phase.names = NULL, xlab = NULL, ylab = NULL, main = "", case.names = NULL, style = "default", ...) {
   
   dots <- list(...)
   op <- par(no.readonly = TRUE)
@@ -158,11 +145,22 @@ plotSC <- function(data, ylim = NULL, xlim = NULL, lines = NULL, marks = NULL, p
   
   ### END: define style
   
-
-  
   #annotations.cex <- 0.8 ### maybe for later implementation as an argument
   
   case.names <- names(data.list)
+  if(is.null(xlab))
+    xlab <- attr(data.list, "var.mt")
+  if(is.null(ylab))
+    ylab <- attr(data.list, "var.values")
+
+  if(is.null(xlab))
+    xlab <- "Measurement time"
+  if(is.null(ylab))
+    ylab <- "Score"
+  
+  if(xlab == "mt")
+    xlab <- "Measurement time"
+
   
   if(class(lines) != "list")
     lines <- lapply(lines,function(x) x)

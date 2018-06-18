@@ -51,8 +51,8 @@ pem <- function(data, decreasing = FALSE, binom.test = TRUE, chi.test = FALSE, F
   binom.p <- rep(NA,N)
   
   for(i in 1:N) {
-    A <- data[[i]][,2][data[[i]][,1] == "A"]
-    B <- data[[i]][,2][data[[i]][,1] == "B"]
+    A <- data[[i]][, "values"][data[[i]][, "phase"] == "A"]
+    B <- data[[i]][, "values"][data[[i]][, "phase"] == "B"]
     if (!decreasing)
       PEM[i] <- mean(B > FUN(A, na.rm = TRUE,...), na.rm = TRUE) * 100
     if (decreasing)

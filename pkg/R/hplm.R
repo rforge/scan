@@ -32,6 +32,7 @@
 #' scdf File has to have names for all cases and the Level 2 dataframe has to
 #' have a column named 'cases' with the names of the cases the Level 2
 #' variables belong to.
+#' @param ... Further arguments passed to the lme function.
 #' @return 
 #' \item{model}{List containing infromation about the applied model} 
 #' \item{N}{Number of single-cases.}
@@ -51,10 +52,9 @@
 #' hplm(exampleAB_50, data.l2 = exampleAB_50.l2, update.fixed = .~. + age + sex + age:sex)
 hplm <- function(data, model = "B&L-B", method = "ML", control = list(opt = "optim"), random.slopes = FALSE, lr.test = FALSE, ICC = TRUE, trend = TRUE, level = TRUE, slope = TRUE, fixed = NULL, random = NULL, update.fixed = NULL, data.l2 = NULL, ...) {
   
-  if(!random.slopes && is.null(random))
-    random <- as.formula("~1|case")
-  
   dat <- .SCprepareData(data)
+  
+  ATTRIBUTES <- attributes(dat)
   
   N <- length(dat)
   out <- list()
@@ -65,6 +65,9 @@ hplm <- function(data, model = "B&L-B", method = "ML", control = list(opt = "opt
   out$model$ICC                 <- ICC
   out$N                         <- N
   
+  if(!random.slopes && is.null(random))
+    random <- as.formula("~1|case")
+  
   for(case in 1: N) {
     dat_dummy <- .plm.dummy(dat[[case]], model = model)
     dat[[case]]$mt <- dat_dummy$mt
@@ -74,7 +77,7 @@ hplm <- function(data, model = "B&L-B", method = "ML", control = list(opt = "opt
     VAR_PHASE <- names(dat_dummy)[2:(n_Var+1)]
   }
   
-  dat <- longSCDF(dat, l2 = data.l2)
+  dat <- longSCDF(dat, l2 = data.l2, check = FALSE)
 
   if(is.null(fixed)) {
     INTER <- ""
@@ -117,7 +120,12 @@ hplm <- function(data, model = "B&L-B", method = "ML", control = list(opt = "opt
   
   out$formula <- list(fixed = fixed, random = random)
   
-  out$hplm <- lme(fixed, random = random, data = dat, na.action=na.omit, method = method, control=control, keep.data = FALSE, ...)
+  #hack: problems with anova.lme function. .fixed.hplm is set global and deleted at the end of this function when lr.test = TRUE
+  .fixed.hplm <- fixed
+  if(lr.test)
+    .fixed.hplm <<- .fixed.hplm
+  
+  out$hplm <- lme(fixed = .fixed.hplm, random = random, data = dat, na.action=na.omit, method = method, control=control, keep.data = FALSE, ...)
 
   if(lr.test) {
     
@@ -135,13 +143,15 @@ hplm <- function(data, model = "B&L-B", method = "ML", control = list(opt = "opt
     
     out$random.ir$restricted <- list()
     
-    for(i in 1:length(random.ir))
-      out$random.ir$restricted[[i]] <- lme(fixed, random = random.ir[i], data = dat, na.action=na.omit, method = method, control=control, keep.data = FALSE, ...)
-    
+    for(i in 1:length(random.ir)) {
+      out$random.ir$restricted[[i]] <- lme(fixed = .fixed.hplm, random = random.ir[i], data = dat, na.action=na.omit, method = method, control=control, keep.data = FALSE, ...)
+    }
     out$LR.test <- list()
-    for(i in 1:length(random.ir))
-      out$LR.test[[i]] <- anova(out$random.ir$restricted[[i]], out$hplm)
     
+    for(i in 1:length(random.ir)) {
+      out$LR.test[[i]] <- anova(out$random.ir$restricted[[i]], out$hplm)
+      
+    }
     attr(out$random.ir, "parameters") <- c("Intercept", PREDIC_RAND)
   }
   
@@ -161,6 +171,13 @@ hplm <- function(data, model = "B&L-B", method = "ML", control = list(opt = "opt
   
   
   class(out) <- c("sc","hplm")
+  attr(out, "var.phase") <- ATTRIBUTES$var.phase
+  attr(out, "var.mt") <- ATTRIBUTES$var.mt
+  attr(out, "var.values") <- ATTRIBUTES$var.values
+  
+  #hack (problems with anovo.lme function)
+  if(lr.test)
+    rm(".fixed.hplm", envir = globalenv())
   
   out
 }

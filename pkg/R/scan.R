@@ -1,19 +1,21 @@
 .onAttach <- function(lib, pkg, ...) {
-	out <- paste0("scan ",packageVersion("scan"),"\n","Single-Case Data Analysis for Single and Multiple Baseline Designs\n",
-	              "Caution! This is a beta version and heavily under construction!\n")
+	out <- paste0("scan ",packageVersion("scan")," (development version",")\n", #", packageDate("scan"), ")\n",
+	              "Single-Case Data Analysis for Single and Multiple Baseline Designs\n")
 	packageStartupMessage(out)
 }	
 
 .onLoad <- function(lib, pkg, ...) {}
+
+#defaultAttributesSCDF <- function(...) {.defaultAttributesSCDF(...)}  
 
 .defaultAttributesSCDF <- function(attri = NULL) {
   out <- list()
   if(!is.null(attri))
     out <- attri
   out$class <- c("scdf","list")
-  out$phase <- "phase"
-  out$values <- "values"
-  out$mt <- "mt"
+  out$var.phase <- "phase"
+  out$var.values <- "values"
+  out$var.mt <- "mt"
 
   out
 }  
@@ -50,7 +52,7 @@
     return(c(model$coefficients,b * sx/sy))
 }
 
-.SCprepareData <- function(data, na.rm = FALSE) {
+.SCprepareData <- function(data, na.rm = FALSE, change.var.phase = TRUE, change.var.values = TRUE, change.var.mt = TRUE) {
 	
 	if(is.data.frame(data)) {
 		data <- list(data)
@@ -58,58 +60,65 @@
   }
 	if(!is.list(data))
 		stop("Wrong data format. Data must be a data frame or a list of data frames.")
+
+  if(is.null(attributes(data)$var.phase))
+    attr(data,"var.phase") <- "phase"
+  if(is.null(attributes(data)$var.mt))
+    attr(data,"var.mt") <- "mt"
+  if(is.null(attributes(data)$var.values))
+    attr(data,"var.values") <- "values"
   
-  if(is.null(attributes(data)$phase))
-    attr(data,"phase") <- "phase"
-  if(is.null(attributes(data)$mt))
-    attr(data,"mt") <- "mt"
-  if(is.null(attributes(data)$values))
-    attr(data,"values") <- "values"
-  
-	var.phase  <- attributes(data)$phase
-	var.mt     <- attributes(data)$mt
-	var.values <- attributes(data)$values
+	var.phase  <- attributes(data)$var.phase
+	var.mt     <- attributes(data)$var.mt
+	var.values <- attributes(data)$var.values
 	
 	for(case in 1:length(data)) {
 	  VARS <- names(data[[case]])
-		if(is.na(var.values %in% VARS))
-	    stop("No variable with the name ",var.values, " in the scdf.")
-	  if(is.na(var.phase %in% VARS))
-	    stop("No variable with the name ",var.phase,  " in the scdf.")
-	  if(is.na(var.mt %in% VARS))
-	    stop("No variable with the name ",var.mt,     " in the scdf.")
+		if(!(var.values %in% VARS))
+	    stop("No variable for values with the name ",var.values, " in the scdf.")
+	  if(!(var.phase %in% VARS))
+	    stop("No variable for phase with the name ",var.phase,  " in the scdf.")
+	  if(!(var.mt %in% VARS))
+	    stop("No variable for mt with the name ",var.mt,     " in the scdf.")
 	  
-    if(var.values != "values") {
-	    if(!is.na("values" %in% VARS)) {
-	      warning("Original values variable was renamed.")
+	  if(na.rm)
+	    data[[case]] <- data[[case]][!is.na(data[[case]][, var.values]),]
+	  if(!is.factor(data[[case]][, var.phase]))
+	    data[[case]][, var.phase] <- as.factor(data[[case]][, var.phase])
+	  
+	  
+    if(change.var.values && var.values != "values") {
+	    if("values" %in% VARS) {
+	      warning("Original values variable was renamed to values_renamed for this analysis.")
 	      names(data[[case]])[match("values",VARS)] <- "values_renamed"
 	    }
 	    names(data[[case]])[match(var.values, VARS)] <- "values"
     }
-
 	  
-	  if(!(var.mt %in% VARS)) {
+	  if(change.var.mt && !(var.mt %in% VARS)) {
 	    data[[case]][,var.mt] <- 1:nrow(data[[case]])
 	  }
 	  
-	  if(var.mt != "mt") {
-	    if(!is.na("mt" %in% VARS)) {
-	      warning("Original mt variable was renamed.")
+	  if(change.var.mt && var.mt != "mt") {
+	    if("mt" %in% VARS) {
+	      warning("Original mt variable was renamed to mt_renamed for this analysis.")
 	      names(data[[case]])[match("mt",VARS)] <- "mt_renamed"
 	    }
 	    names(data[[case]])[match(var.mt, VARS)] <- "mt"
 	  }
-	  
-	  
-	  if(!is.factor(data[[case]]$phase))
-	    data[[case]]$phase <- as.factor(data[[case]]$phase)
-    if(na.rm)
-	    data[[case]] <- data[[case]][!is.na(data[[case]]$values),]
-  }
 
+	  if(change.var.phase && var.phase != "phase") {
+	    if("phase" %in% VARS) {
+	      warning("Original phase variable was renamed to phase_renamed for this analysis.")
+	      names(data[[case]])[match("phase",VARS)] <- "phase_renamed"
+	    }
+	    names(data[[case]])[match(var.mt, VARS)] <- "phase"
+	  }
+	  
+   }
+  
 	return(data)
 }
-
 
 .phasestructure <- function(data) {
   phases <- rle(as.character(data$phase))
@@ -120,7 +129,7 @@
 }
 
 
-keepphasesSC <- function(...) {.keepphasesSC(...)}
+#keepphasesSC <- function(...) {.keepphasesSC(...)}
 
 .keepphasesSC <- function(data, phases = c("A","B"), set.phases = TRUE) {
 

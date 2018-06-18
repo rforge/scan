@@ -35,7 +35,7 @@
 #' 
 overlapSC <- function(data, decreasing = FALSE, phases = c("A","B")) {
   data.list <- .SCprepareData(data)
-
+  ATTRIBUTES <- attributes(data.list)
   keep <- .keepphasesSC(data.list, phases = phases)
 
   data.list <- keep$data
@@ -77,5 +77,9 @@ overlapSC <- function(data, decreasing = FALSE, phases = c("A","B")) {
 
   out <- list(overlap = d.f, phases.A = keep$phases.A, phases.B = keep$phases.B, design = keep$design[[1]]$values)
   class(out) <- c("sc","overlap")
+  attr(out, "var.phase") <- ATTRIBUTES$var.phase
+  attr(out, "var.mt") <- ATTRIBUTES$var.mt
+  attr(out, "var.values") <- ATTRIBUTES$var.values
+  
   out
 }

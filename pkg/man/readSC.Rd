@@ -6,7 +6,8 @@
 \title{Read single-case data from files}
 \usage{
 readSC(filename = NULL, sep = ",", dec = ".", sort.labels = FALSE,
-  type = "csv", ...)
+  var.case = "case", var.phase = "phase", var.values = "values",
+  var.mt = "mt", phase.names = NULL, type = "csv", ...)
 }
 \arguments{
 \item{filename}{A character string defining the file to be imported (e.g.
@@ -21,6 +22,16 @@ character. Default is \code{dec = "."}}
 
 \item{sort.labels}{If set TRUE, the resulting list is sorted by label names
 (alphabetically increasing).}
+
+\item{var.case}{Sets the variable name of the "case" variable. Deafults to \code{"case"}.}
+
+\item{var.phase}{Sets the variable name of the "phase" variable. Deafults to \code{"phase"}.}
+
+\item{var.values}{Sets the variable name of the "values" variable. Deafults to \code{"values"}.}
+
+\item{var.mt}{Sets the variable name of the "mt" variable. Deafults to \code{"mt"}.}
+
+\item{phase.names}{A character vector with phase names. Deafults to the phase names provided in the phase variable.}
 
 \item{type}{Format of the file to be imported. Either "csv" or "excel" is
 possible.}

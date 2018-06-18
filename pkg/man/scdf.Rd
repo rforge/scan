@@ -4,7 +4,6 @@
 \alias{scdf}
 \alias{scdf-class}
 \alias{summary.scdf}
-\alias{print.scdf}
 \alias{as.scdf}
 \alias{c.scdf}
 \alias{checkSCDF}
@@ -12,44 +11,33 @@
 \title{Single case data frame}
 \usage{
 scdf(values = NULL, B.start = NULL, mt = NULL, phase = NULL,
-  phase.design = NULL, name = NULL, ...)
+  phase.design = NULL, name = NULL, var.values = "values",
+  var.phase = "phase", var.mt = "mt", ...)
 }
 \arguments{
-\item{values}{-}
+\item{values}{A vector containing measurement values of the target variable.}
 
 \item{B.start}{The first measurement of phase B (simple coding if design is
 strictly AB).}
 
-\item{mt}{-}
+\item{mt}{A vector defining measurement times. Default is \code{MT =
+(1,2,3,...,n)}.}
 
-\item{phase}{-}
+\item{phase}{A vector defining phase assignment.}
 
 \item{phase.design}{A vector defining the length and label of each phase.
 E.g., \code{phase.length = c(A1 = 10, B1 = 10, A2 = 10, B2 = 10)}.}
 
 \item{name}{A name for the case.}
 
+\item{var.values}{A character string with the name of the dependend variable.}
+
+\item{var.phase}{A character string with the name of the phase variable.}
+
+\item{var.mt}{A character string with the name of the measurement-time variable.}
+
 \item{...}{Additional variables. E.g., \code{teacher = c(0,1,0,1,0,0,1),
 lesson = c(1,3,4,5,2,3)}.}
-
-\item{data}{A vector containing measurement values of the target variable.}
-
-\item{MT}{A vector defining measurement times. Default is \code{MT =
-(1,2,3,...,n)}.}
-
-\item{object}{-}
-
-\item{x}{-}
-
-\item{cases}{-}
-
-\item{rows}{-}
-
-\item{row.names}{-}
-
-\item{long}{-}
-
-\item{var.names}{-}
 }
 \value{
 Returns a single-case data frame \code{scdf} suitable for all
@@ -94,7 +82,7 @@ overlapSC(mbd)
 ## only on schooldays. The sequence of measurements is passed to the package by using a
 ## vector of measurement times.
 frida <- scdf(c(3, 2, 4, 2, 2, 3, 5, 6, 8, 10, 8, 12, 14, 13, 12), B.start = 9,
-    MT = c(1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18))
+    mt = c(1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18))
 summary(frida)
 plot(frida)
 describeSC(frida)
@@ -102,7 +90,7 @@ describeSC(frida)
 
 }
 \seealso{
-\code{\link{longSCDF}}, \code{\link{makesingleSC}},
+\code{\link{longSCDF}}, \code{\link{readSC}}
 \code{\link{writeSC}}
 }
 \author{

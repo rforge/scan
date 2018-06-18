@@ -49,6 +49,7 @@ describeSC <- function(data) {
     data <- data.list[[case]]
     for(i in 1:length(design)) {
       phases <- .phasestructure(data)
+      
       x <- data$mt[phases$start[i]:phases$stop[i]]
       y <- data$values[phases$start[i]:phases$stop[i]]
       phase <- design[i]
@@ -67,5 +68,9 @@ describeSC <- function(data) {
   
   out <- list(descriptives = d.f, design = design, N = N)
   class(out) <- c("sc","describe")
+  attr(out, "var.phase")  <- attr(data.list, "var.phase")
+  attr(out, "var.mt")     <- attr(data.list, "var.mt")
+  attr(out, "var.values") <- attr(data.list, "var.values")
+  
   out
 }

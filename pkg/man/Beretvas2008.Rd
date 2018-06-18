@@ -14,6 +14,7 @@
 \alias{exampleAB_simple}
 \alias{exampleAB}
 \alias{exampleAB_add}
+\alias{exampleAB_decreasing}
 \alias{exampleABC}
 \alias{exampleABC_outlier}
 \alias{exampleABC_50}
@@ -25,9 +26,9 @@
 \alias{SSDforR2017}
 \alias{Parker2011}
 \title{Single-case example data}
-\format{-}
+\format{An object of class \code{scdf} (inherits from \code{list}) of length 1.}
 \usage{
--
+Beretvas2008
 }
 \value{
 \item{Beretvas2008}{Fictitious single-case intervention study.

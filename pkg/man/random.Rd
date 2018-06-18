@@ -33,6 +33,9 @@ and 1,000 female names).}
 
 \item{n}{Number of cases to be created (Default is \code{n = 1}).}
 
+\item{phase.design}{A vector defining the length and label of each phase.
+E.g., \code{phase.length = c(A1 = 10, B1 = 10, A2 = 10, B2 = 10)}.}
+
 \item{trend}{Defines the effect size \emph{d} of a trend per MT added
 across the whole data-set. To assign different trends to several
 single-cases, use a vector of values (e.g. \code{trend = c(.1, .3, .5)}).
@@ -114,24 +117,6 @@ following scores to phase B. To assign different starting points for a set
 of multiple single-cases, use a vector of starting values (e.g.
 \code{B.start = c(6, 7, 8)}). If the number of cases exceeds the length of
 the vector, values will be repeated.}
-
-\item{concise}{\code{TRUE} by default. If set \code{concise = FALSE}, input
-parameters (see above) for the sampling distribution are printed to the
-output.}
-
-\item{cases}{Number of cases per study. \code{rSC(n = 10, cases = 3, B.start
-= c(7,9,11))} creates 10 multiple-baseline designs, each with three cases
-(with phase B starting points at MT 7, 9, and 11).}
-
-\item{start.values.fixed}{If set \code{TRUE}, the true value at the first
-measurement of each case is set to \code{m}. The default setting is
-\code{start.value.fixed = FALSE}, which results in a true value for each
-case drawn from a distribution (defined above: \code{distribution}) with
-the expected value \code{m} and standard deviation \code{s}.}
-
-\item{output.long}{If set \code{TRUE}, the true value, implemented trend,
-level and slope effect, as well as error values are included for each MT.
-Default is \code{output.long = FALSE}.}
 }
 \value{
 A single-case data frame or a list of single-case data frames. See
