@@ -95,10 +95,10 @@ single-cases.
 plot(Borckardt2014)
 
 ## Plot the three cases from Grosche (2011) and visualize the phase A trend
-plot(Grosche2011, style = list(fill = "tomato"), lines = "trendA")
+plot(Grosche2011, style = "grid", lines = "trendA")
 
 ## Request the local regression line for Georg from that data set and customize the plot
-plot(Grosche2011$Georg, style = list(fill = "grey", type = "n"), ylim = c(0,NA),
+plot(Grosche2011$Georg, style = "sienna", ylim = c(0,NA),
        xlab = "Training session", ylab = "Words per minute",
        phase.names = c("Baseline", "Intervention"), 
        lines = list("loreg", lty = "solid", col = "black", lwd = 3))
