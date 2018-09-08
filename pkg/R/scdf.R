@@ -2,6 +2,12 @@ methods::setOldClass(c("scdf", "list"))
 
 c.scdf <- function(...) {
   ATTRIBUTES <- attributes(..1)
+  
+  LEN <- ...length()
+  NAMES <- c()
+  for(i in 1:LEN)
+    NAMES <- c(NAMES, names(...elt(i)))
+
   data <- unlist(list(...), recursive = FALSE)
 
   # 
@@ -37,7 +43,7 @@ c.scdf <- function(...) {
     setvarSCDF(data, "phase") <- ATTRIBUTES$var.phase
   if(!is.null(ATTRIBUTES$var.mt))
     setvarSCDF(data, "mt") <- ATTRIBUTES$var.mt
-  
+  names(data) <- NAMES
   return(data)
 }
 
