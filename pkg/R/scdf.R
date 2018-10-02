@@ -70,6 +70,7 @@ c.scdf <- function(...) {
 }
 
 summary.scdf <- function(object, var.names = TRUE, ...) {
+  object <- .SCprepareData(object)
   cat("#A single-case data frame with", length(object),"cases\n\n")
   designs <- lapply(object, function(x) paste0(rle(as.character(x$phase))$values,collapse = ""))
   rows <- lapply(object, nrow)

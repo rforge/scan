@@ -112,7 +112,7 @@
 	      warning("Original phase variable was renamed to phase_renamed for this analysis.")
 	      names(data[[case]])[match("phase",VARS)] <- "phase_renamed"
 	    }
-	    names(data[[case]])[match(var.mt, VARS)] <- "phase"
+	    names(data[[case]])[match(var.phase, VARS)] <- "phase"
 	  }
 	  
    }
