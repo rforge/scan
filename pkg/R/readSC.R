@@ -26,7 +26,7 @@
 #' @return Returns a single-case data frame. See \code{\link{scdf}} to learn
 #' about the format of these data frames.
 #' @author Juergen Wilbert
-#' @seealso \code{\link{read.table}}, \code{\link{writeSC}}, \code{\link{scdf}}
+#' @seealso \code{\link{read.table}}, \code{\link{writeSC}}, \code{\link{scdf}}, \code{\link{readRDS}}
 #' @keywords manip
 #' @examples
 #' 

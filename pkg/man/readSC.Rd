@@ -57,7 +57,7 @@ Use the \code{readSC} function to import single-case data from structured
 
 }
 \seealso{
-\code{\link{read.table}}, \code{\link{writeSC}}, \code{\link{scdf}}
+\code{\link{read.table}}, \code{\link{writeSC}}, \code{\link{scdf}}, \code{\link{readRDS}}
 }
 \author{
 Juergen Wilbert

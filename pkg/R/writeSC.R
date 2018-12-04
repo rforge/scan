@@ -14,7 +14,7 @@
 #' @param \dots Further arguments passed to write.table.
 #' @author Juergen Wilbert
 #' @seealso \code{\link{write.table}}, \code{\link{readSC}},
-#' \code{\link{makeSCDF}}
+#' \code{\link{saveRDS}}
 #' @keywords manip
 #' @examples
 #' 

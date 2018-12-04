@@ -25,6 +25,7 @@
 #' exampleA1B1A2B2 
 #' exampleAB_50 
 #' exampleAB_50.l2 
+#' exampleABC_150
 #' Huber2014
 #' Lenz2013
 #' SSDforR2017

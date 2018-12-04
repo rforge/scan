@@ -36,7 +36,7 @@ writeSC(Grosche2011, "MBDdata_Grosche.csv", sep = ";", dec = ",")
 }
 \seealso{
 \code{\link{write.table}}, \code{\link{readSC}},
-\code{\link{makeSCDF}}
+\code{\link{saveRDS}}
 }
 \author{
 Juergen Wilbert

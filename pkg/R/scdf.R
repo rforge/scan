@@ -94,7 +94,6 @@ summary.scdf <- function(object, var.names = TRUE, ...) {
     
   }
   
-  
 }
 
 as.scdf <- function(object) {
@@ -317,8 +316,12 @@ scdf <- function (values = NULL, B.start = NULL, mt = NULL, phase = NULL, phase.
   if(is.null(phase))
      phase <- rep(names(phase.design),phase.design)
   
-  data <- data.frame(phase = phase, values = values, mt = mt)
- 
+  if(is.null(values))
+    data <- data.frame(phase = phase, mt = mt)
+  
+  if(!is.null(values))
+    data <- data.frame(phase = phase, values = values, mt = mt)
+
   if(nrow(add.var) > 0)
      data <- cbind(data,add.var)
   data <- list(data)

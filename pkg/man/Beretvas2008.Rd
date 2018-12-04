@@ -22,6 +22,7 @@
 \alias{exampleA1B1A2B2}
 \alias{exampleAB_50}
 \alias{exampleAB_50.l2}
+\alias{exampleABC_150}
 \alias{Lenz2013}
 \alias{SSDforR2017}
 \alias{Parker2011}

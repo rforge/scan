@@ -177,8 +177,8 @@ plotSC <- function(data, ylim = NULL, xlim = NULL, lines = NULL, marks = NULL, p
   }
   
 
-  values.tmp <- unlist(lapply(data.list, function(x) x[,2]))
-  mt.tmp     <- unlist(lapply(data.list, function(x) x[,3]))
+  values.tmp <- unlist(lapply(data.list, function(x) x[,attr(data.list, "var.values")]))
+  mt.tmp     <- unlist(lapply(data.list, function(x) x[,attr(data.list, "var.mt")]))
 
   if (is.null(ylim))
     ylim <- c(min(values.tmp, na.rm = TRUE), max(values.tmp, na.rm = TRUE))

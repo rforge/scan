@@ -10,13 +10,18 @@ tauUSC(data, ties.method = "omit", method = "complete", phases = c("A",
 \arguments{
 \item{data}{A single-case data frame.}
 
-\item{ties.method}{Defines how to handle ties. \code{"omit"} excludes all
+\item{ties.method}{Defines how to handle ties. \code{"omit"} (default) excludes all
 ties from the calculation. \code{"positive"} counts all ties as positive
 comparisons, while \code{"negative"} counts them as negative comparisons.}
 
-\item{method}{-}
+\item{method}{\code{"complete"} (default) or \code{"parker"}. Teh latter calculates the number of possible pairs as described in Parler et al. (2011) which might lead to tau-U values greater than 1.}
 
-\item{phases}{-}
+\item{phases}{hases A vector of two characters or numbers indicating the two
+phases that should be compared. E.g., \code{phases = c("A","C")} or
+\code{phases = c(2,4)} for comparing the second to the fourth phase. Phases
+could be combined by providing a list with two elements. E.g., \code{phases
+= list(A = c(1,3), B = c(2,4))} will compare phases 1 and 3 (as A) against 2
+and 4 (as B). Default is \code{phases = c("A","B")}.}
 }
 \value{
 \item{table}{A data frame containing statistics from the Tau-U
