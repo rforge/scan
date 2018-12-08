@@ -5,9 +5,10 @@
 \alias{readSC.excel}
 \title{Read single-case data from files}
 \usage{
-readSC(filename = NULL, sep = ",", dec = ".", sort.labels = FALSE,
-  var.case = "case", var.phase = "phase", var.values = "values",
-  var.mt = "mt", phase.names = NULL, type = "csv", ...)
+readSC(filename = NULL, data = NULL, sep = ",", dec = ".",
+  sort.labels = FALSE, var.case = "case", var.phase = "phase",
+  var.values = "values", var.mt = "mt", phase.names = NULL,
+  type = "csv", ...)
 }
 \arguments{
 \item{filename}{A character string defining the file to be imported (e.g.

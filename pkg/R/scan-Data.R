@@ -68,7 +68,7 @@
 #' \bold{Reference:} Huber, C. (in prep.).}
 #' \item{Lenz2013}{Fictious example from the paper Lenz, A. S. (2013). Calculating Effect Size in Single-Case Research: A Comparison of Nonoverlap Methods. Measurement and Evaluation in Counseling and Development, 46(1), 64–73.}
 #' \item{SSDforR2017}{Example from the R package SSDforR.}
-#' \item{Parker2011}{Exampe from Parker, R. I., Vannest, K. J., Davis, J. L., & Sauber, S. B. (2011). Combining Nonoverlap and Trend for Single-Case Research: Tau-U. Behavior Therapy, 42(2), 284–299. https://doi.org/10.1016/j.beth.2010.08.006}
+#' \item{Parker2011}{Example from Parker, R. I., Vannest, K. J., Davis, J. L., & Sauber, S. B. (2011). Combining Nonoverlap and Trend for Single-Case Research: Tau-U. Behavior Therapy, 42(2), 284–299. https://doi.org/10.1016/j.beth.2010.08.006}
 
 #' @author Juergen Wilbert
 "Beretvas2008"

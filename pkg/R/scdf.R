@@ -3,7 +3,8 @@ methods::setOldClass(c("scdf", "list"))
 c.scdf <- function(...) {
   ATTRIBUTES <- attributes(..1)
   
-  LEN <- ...length()
+  #LEN <- ...length()
+  LEN <- length(list(...))
   NAMES <- c()
   for(i in 1:LEN)
     NAMES <- c(NAMES, names(...elt(i)))

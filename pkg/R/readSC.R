@@ -36,10 +36,14 @@
 #' ## Read SC-data from a .csv-file with semicolon as field and comma as decimal separator
 #' # study2 <- readSC("study2.csv", sep = ";", dec = ",")
 #' 
-readSC <- function(filename = NULL, sep = ",", dec = ".", sort.labels = FALSE, var.case = "case", var.phase = "phase", var.values = "values", var.mt = "mt", phase.names = NULL, type = "csv", ...) {
-  if(is.null(filename)) {
+readSC <- function(filename = NULL, data = NULL, sep = ",", dec = ".", sort.labels = FALSE, var.case = "case", var.phase = "phase", var.values = "values", var.mt = "mt", phase.names = NULL, type = "csv", ...) {
+  if(is.null(filename) && is.null(data)) {
     filename <- file.choose()
     cat("Import file",filename,"\n\n")
+  }
+  if(!is.null(data)) {
+    type <- "data"
+    dat <- as.data.frame(data)
   }
   
   if(type == "csv")
