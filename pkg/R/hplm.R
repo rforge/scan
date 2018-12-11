@@ -49,7 +49,8 @@
 #' hplm(exampleAB_50, method = "REML", random.slopes = TRUE)
 #' 
 #' ## Analyzing with additional L2 variables
-#' hplm(exampleAB_50, data.l2 = exampleAB_50.l2, update.fixed = .~. + age + sex + age:sex)
+#' hplm(Leidig2018, data.l2 = Leidig2018_l2, update.fixed = .~. + gender + migration + ITRF_TOTAL*phaseB, slope = FALSE, random.slopes = TRUE, lr.test = TRUE)
+
 hplm <- function(data, model = "B&L-B", method = "ML", control = list(opt = "optim"), random.slopes = FALSE, lr.test = FALSE, ICC = TRUE, trend = TRUE, level = TRUE, slope = TRUE, fixed = NULL, random = NULL, update.fixed = NULL, data.l2 = NULL, ...) {
   
   dat <- .SCprepareData(data)

@@ -28,6 +28,8 @@
 #' exampleABC_150
 #' Huber2014
 #' Lenz2013
+#' Leidig2018
+#' Leidig2018_l2
 #' SSDforR2017
 #' Parker2011
 #' @return
@@ -67,9 +69,10 @@
 #' behavioral compliance. Scores refer to compliant behavior in percent.
 #' \bold{Reference:} Huber, C. (in prep.).}
 #' \item{Lenz2013}{Fictious example from the paper Lenz, A. S. (2013). Calculating Effect Size in Single-Case Research: A Comparison of Nonoverlap Methods. Measurement and Evaluation in Counseling and Development, 46(1), 64–73.}
+#' \item{Leidig2018}{}
+#' \item{Leidig2018_l2}{}
 #' \item{SSDforR2017}{Example from the R package SSDforR.}
 #' \item{Parker2011}{Example from Parker, R. I., Vannest, K. J., Davis, J. L., & Sauber, S. B. (2011). Combining Nonoverlap and Trend for Single-Case Research: Tau-U. Behavior Therapy, 42(2), 284–299. https://doi.org/10.1016/j.beth.2010.08.006}
-
 #' @author Juergen Wilbert
 "Beretvas2008"
 

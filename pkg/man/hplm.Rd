@@ -73,7 +73,7 @@ The \code{hplm} function computes a hierarchical piecewise regression model.
 hplm(exampleAB_50, method = "REML", random.slopes = TRUE)
 
 ## Analyzing with additional L2 variables
-hplm(exampleAB_50, data.l2 = exampleAB_50.l2, update.fixed = .~. + age + sex + age:sex)
+hplm(Leidig2018, data.l2 = Leidig2018_l2, update.fixed = .~. + gender + migration + ITRF_TOTAL*phaseB, slope = FALSE, random.slopes = TRUE, lr.test = TRUE)
 }
 \seealso{
 \code{\link{plm}}

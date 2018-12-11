@@ -24,6 +24,8 @@
 \alias{exampleAB_50.l2}
 \alias{exampleABC_150}
 \alias{Lenz2013}
+\alias{Leidig2018}
+\alias{Leidig2018_l2}
 \alias{SSDforR2017}
 \alias{Parker2011}
 \title{Single-case example data}
@@ -68,6 +70,8 @@ abilities. \emph{Learning Disabilities: A Contemporary Journal, 11}, 51-64.}
 behavioral compliance. Scores refer to compliant behavior in percent.
 \bold{Reference:} Huber, C. (in prep.).}
 \item{Lenz2013}{Fictious example from the paper Lenz, A. S. (2013). Calculating Effect Size in Single-Case Research: A Comparison of Nonoverlap Methods. Measurement and Evaluation in Counseling and Development, 46(1), 64–73.}
+\item{Leidig2018}{}
+\item{Leidig2018_l2}{}
 \item{SSDforR2017}{Example from the R package SSDforR.}
 \item{Parker2011}{Example from Parker, R. I., Vannest, K. J., Davis, J. L., & Sauber, S. B. (2011). Combining Nonoverlap and Trend for Single-Case Research: Tau-U. Behavior Therapy, 42(2), 284–299. https://doi.org/10.1016/j.beth.2010.08.006}
 }

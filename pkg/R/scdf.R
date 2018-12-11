@@ -299,11 +299,11 @@ scdf <- function (values = NULL, B.start = NULL, mt = NULL, phase = NULL, phase.
     names.var <- names(add.var)
   }
   
-  if ("data" %in% names.var && is.null(values)) {
-    warning("Variable is named 'data' instead of 'values'. Variable 'data' renamed to 'values'.")
-    values <- add.var$data
-    add.var <- add.var[ ,!names.var %in% "data"]
-  }
+  #if ("data" %in% names.var && is.null(values)) {
+  #  warning("Variable is named 'data' instead of 'values'. Variable 'data' renamed to 'values'.")
+  #  values <- add.var$data
+  #  add.var <- add.var[ ,!names.var %in% "data"]
+  #}
   
   if (is.null(mt))
     mt <- 1:length(values)
