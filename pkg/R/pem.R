@@ -44,11 +44,15 @@ pem <- function(data, decreasing = FALSE, binom.test = TRUE, chi.test = FALSE, F
   data <- .keepphasesSC(data, phases = phases)$data
   
   N <- length(data)
-  PEM <- rep(NA,N)
-  chi <- rep(NA,N)
-  chi.df <- rep(NA,N)
-  chi.p <- rep(NA,N)
-  binom.p <- rep(NA,N)
+  
+  PEM       <- rep(NA,N)
+  chi       <- rep(NA,N)
+  chi.df    <- rep(NA,N)
+  chi.p     <- rep(NA,N)
+  binom.p   <- rep(NA,N)
+  positives <- rep(NA,N)
+  total     <- rep(NA,N)
+  
   
   for(i in 1:N) {
     A <- data[[i]][, "values"][data[[i]][, "phase"] == "A"]
@@ -59,22 +63,28 @@ pem <- function(data, decreasing = FALSE, binom.test = TRUE, chi.test = FALSE, F
       PEM[i] <- mean(B < FUN(A, na.rm = TRUE,...), na.rm = TRUE) * 100
     if(binom.test) {
       nB <- length(B)
-      binom.p[i] <- binom.test(round(PEM[i] / 100  * nB), nB, alternative = ifelse(decreasing, "less", "greater"))$p.value
+      bi <- binom.test(round(PEM[i] / 100  * nB), nB, alternative = "greater")
+      positives[i] <- bi$statistic
+      total[i]     <- bi$parameter
+      binom.p[i]   <- bi$p.value
     }
     if(chi.test) {
       nB <- length(B)
       exceeding <- PEM[i] / 100  * nB
       res <- chisq.test(c(exceeding, nB - exceeding), p = c(0.5,0.5))
-      chi[i] <- res$statistic
+      chi[i]    <- res$statistic
       chi.df[i] <- res$parameter
-      chi.p[i] <- res$p.value
+      chi.p[i]  <- res$p.value
     }
   }
-  stats.ma <- cbind(binom.p,chi, chi.df, chi.p)
-  colnames(stats.ma) <- c("binom.p","Chi", "DF", "p")
-  if(is.null(names(data)))
-    names(data) <- paste("Case",1:N)
+  stats.ma <- cbind(positives, total,binom.p)
+  colnames(stats.ma) <- c("positives","total","binom.p")
   rownames(stats.ma) <- names(data)
+  if(chi.test) {
+    cn <- c(colnames(stats.ma),"Chi", "DF", "p")
+    stats.ma <- cbind(stats.ma, chi, chi.df, chi.p)
+    colnames(stats.ma) <- cn
+  }
   
   out <- list(PEM = PEM, test = stats.ma, decreasing = decreasing)
   class(out) <- c("sc","PEM")
