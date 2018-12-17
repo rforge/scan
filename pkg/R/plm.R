@@ -69,10 +69,6 @@
 #' ## and now drop the trend estimation as well
 #' plm(dat, slope = FALSE, trend = FALSE, model = "JW")
 #' 
-#' 
-#' 
-#' 
-#' 
 plm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE, level = TRUE, slope = TRUE,formula = NULL, update = NULL, na.action = na.omit, ...) {
 
   if (AR > 0 && !family == "gaussian")
@@ -176,13 +172,17 @@ plm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE
 
   if(!model %in% c("H-M", "B&L-B", "JW","JW2"))
     stop("Model ",model," unknown.\n")
-    
-  MT <- data$mt
-  D  <- data$phase
-  N  <- nrow(data)
   
+  VAR_PHASE  <- "phase" #attr(data, "var.phase")
+  VAR_VALUES <- "values" #attr(data, "var.values")
+  VAR_MT     <- "mt" #attr(data, "var.mt")
+  
+  MT <- data[, VAR_MT]
+  D  <- data[, VAR_PHASE]
+  N  <- nrow(data)
+
   out    <- data.frame(mt = MT)
-  design <- rle(as.character(data$phase))
+  design <- rle(as.character(data[, VAR_PHASE]))
   
   #dummy phases
   if(phase.dummy) {
@@ -197,7 +197,7 @@ plm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE
         dummy[(pre + 1):(pre + length.phase)] <- 1
       }
       
-      out[,paste0("phase",design$values[phase])] <- dummy
+      out[,paste0(VAR_PHASE,design$values[phase])] <- dummy
     } 
   }
   

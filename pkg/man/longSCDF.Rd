@@ -5,14 +5,14 @@
 \title{Creating a long format data frame from several single-case data frames
 (scdf).}
 \usage{
-longSCDF(data, l2 = NULL, id = "case", model = NULL, check = TRUE, ...)
+longSCDF(data, l2 = NULL, id = "case", model = NULL, check = FALSE, ...)
 }
 \arguments{
 \item{data}{A single-case data frame (scdf).}
 
 \item{l2}{A dataframe providing additional variables at Level 2. The scdf
 has to have names for all cases and the Level 2 dataframe has to have a
-column named 'cases' corresponding case names.}
+column with corresponding case names.}
 
 \item{id}{Variable name of the Level 2 data frame that contains the case
 names.}
@@ -20,13 +20,13 @@ names.}
 \item{model}{If set, calculates interaction terms (see 'method' argument in
 plm function).}
 
-\item{check}{Indicating whether the scd is checked.}
+\item{check}{Indicating whether the scdf is checked.}
 
 \item{...}{Additional arguments provided to the internally used merge function.}
 }
 \value{
 Returns one data frame with data of all single-cases structured by
-the variable 'case'.
+the case variable.
 }
 \description{
 The longSCDF function transposes a scdf into one long data frame.
@@ -40,6 +40,10 @@ Grosche2011
 Grosche2011_long <- longSCDF(Grosche2011)
 Grosche2011_long
 
+## Combine an scdf with data for l2
+Leidig2018_long <- longSCDF(Leidig2018, l2 = Leidig2018_l2)
+names(Leidig2018_long)
+summary(Leidig2018_long)
 }
 \seealso{
 \code{\link{scdf}}

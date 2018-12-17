@@ -42,8 +42,10 @@
 outlierSC <- function(data, criteria = c("MAD", "3.5")){
   
   data.list <- .SCprepareData(data)
+  
   if(!any(criteria[1] %in% c("MAD","Cook","SD","CI")))
     stop("Unknown criteria. Please check.")
+  
   out <- list()
   
   N <- length(data.list)
@@ -54,9 +56,6 @@ outlierSC <- function(data, criteria = c("MAD", "3.5")){
   sd.matrix <- list()
   mad.matrix <- list()
   cook <- list()
-  
-  if(is.null(case.names))
-    case.names <- paste("Case", 1:N, sep = "")
   
   for(i in 1:N) {
     data <- data.list[[i]]

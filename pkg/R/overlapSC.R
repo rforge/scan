@@ -44,9 +44,7 @@ overlapSC <- function(data, decreasing = FALSE, phases = c("A","B")) {
   N <- length(data.list)
 
   case.names <- names(data.list)
-  if (is.null(case.names))
-    case.names <- paste("Case",1:N, sep = "")
-  
+
   VAR <- c("PND","PEM","PET","NAP","NAP.rescaled","PAND","TAU_U","Diff_mean", "Diff_trend","SMD")
   d.f <- as.data.frame(matrix(nrow = N, ncol = length(VAR)))
   colnames(d.f) <- VAR
@@ -57,8 +55,8 @@ overlapSC <- function(data, decreasing = FALSE, phases = c("A","B")) {
     d.f$PND[i] <- pnd(data, decreasing = decreasing)$PND
     d.f$PEM[i] <- pem(data, decreasing = decreasing, binom.test = FALSE, chi.test = FALSE)$PEM
     d.f$PET[i] <- pet(data, decreasing = decreasing)$PET
-    d.f$NAP[i] <- nap(data, decreasing = decreasing)$NAP
-    d.f$NAP.rescaled[i] <- nap(data, decreasing = decreasing)$NAP.rescaled
+    d.f$NAP[i] <- nap(data, decreasing = decreasing)$nap$NAP[1]
+    d.f$NAP.rescaled[i] <- nap(data, decreasing = decreasing)$nap$Rescaled[1]
     d.f$PAND[i] <- pand(data, decreasing = decreasing)$PAND
     #d.f$TAU_U[i] <- tauUSC(data)$Overall_tau_u[2]
     d.f$TAU_U[i] <- tauUSC(data)$table[[1]]["A vs. B + Trend B - Trend A","Tau"]

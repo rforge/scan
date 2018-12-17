@@ -42,26 +42,35 @@ nap <- function(data, decreasing = FALSE, phases = c("A","B")) {
   data <- .keepphasesSC(data, phases = phases)$data
   
   N <- length(data)
-  if(N > 1)
-    stop("Multiple single-cases are given. Calculations could only be applied to a single data set.\n")
   
-  data <- data[[1]]
+  NAP   <- c()
+  PAIRS <- c()
+  POS   <- c()
+  TIES  <- c()
   
-  A <- data[data[,"phase"] == "A","values"]
-  B <- data[data[,"phase"] == "B","values"]
-  n1 <- length(A)
-  n2 <- length(B)
-  
-  pairs <- n1 * n2
-  if (!decreasing)
-    pos <- pairs - sum(sapply(A,function(x)x>=B), na.rm = TRUE)
-  if (decreasing)
-    pos <- pairs - sum(sapply(A,function(x)x<=B), na.rm = TRUE)
-  
-  ties <- sum(sapply(A,function(x)x==B), na.rm = TRUE)
-  NAP <- (pos + (0.5 * ties)) / pairs 
-  
-  out <- list(NAP = NAP*100, NAP.rescaled = 2 * (NAP*100) - 100)
+  for(case in 1:N) {
+    df <- data[[case]]
+
+    A     <- df[df[,"phase"] == "A", "values"]
+    B     <- df[df[,"phase"] == "B", "values"]
+    pairs <- length(A) * length(B)
+    
+    if (!decreasing)
+      pos <- pairs - sum(sapply(A,function(x)x>=B), na.rm = TRUE)
+    if (decreasing)
+      pos <- pairs - sum(sapply(A,function(x)x<=B), na.rm = TRUE)
+    
+    ties <- sum(sapply(A,function(x)x==B), na.rm = TRUE)
+    
+    NAP   <- c(NAP, (pos + (0.5 * ties)) / pairs)
+    TIES  <- c(TIES, ties)
+    PAIRS <- c(PAIRS, pairs)
+    POS   <- c(POS, pos)
+    
+  }  
+  nap <- data.frame(Case = names(data), NAP = NAP*100, Rescaled = 2 * (NAP*100) - 100, Pairs = PAIRS, Positives = POS, Ties = TIES)  
+
+  out <- list(nap = nap, N = N)
   class(out) <- c("sc","NAP")
   out
 }

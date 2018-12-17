@@ -72,6 +72,9 @@
 	var.mt     <- attributes(data)$var.mt
 	var.values <- attributes(data)$var.values
 	
+	if(is.null(names(data)))
+	   names(data) <- paste0("Case",1:length(data))
+	
 	for(case in 1:length(data)) {
 	  VARS <- names(data[[case]])
 		if(!(var.values %in% VARS))

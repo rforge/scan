@@ -81,10 +81,6 @@ plm(dat, slope = FALSE, model = "JW")
 ## and now drop the trend estimation as well
 plm(dat, slope = FALSE, trend = FALSE, model = "JW")
 
-
-
-
-
 }
 \references{
 Beretvas, S., & Chung, H. (2008). An evaluation of modified
