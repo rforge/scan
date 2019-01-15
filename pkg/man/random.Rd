@@ -6,13 +6,14 @@
 \alias{design.rSC}
 \title{Single-case data generator}
 \usage{
-rSC(design = NULL, round = NA, random.names = FALSE, seed = NULL, ...)
+rSC(design = NULL, round = NA, random.names = FALSE, seed = NULL,
+  ...)
 
-design.rSC(n = 1, phase.design = list(A = 5, B = 15), trend = list(0),
-  level = list(0), slope = list(0), rtt = list(0.8), m = list(50),
-  s = list(10), extreme.p = list(0), extreme.d = c(-4, -3),
-  missing.p = list(0), distribution = "normal", prob = 0.5, MT = NULL,
-  B.start = NULL)
+design.rSC(n = 1, phase.design = list(A = 5, B = 15),
+  trend = list(0), level = list(0), slope = list(0),
+  rtt = list(0.8), m = list(50), s = list(10), extreme.p = list(0),
+  extreme.d = c(-4, -3), missing.p = list(0),
+  distribution = "normal", prob = 0.5, MT = NULL, B.start = NULL)
 }
 \arguments{
 \item{design}{A design matrix which is created by design.rSC and specifies
@@ -132,13 +133,14 @@ for monte-carlo studies and demonstration purposes.
 ## Create random single-case data and inspect it
 design <- design.rSC(n = 3, rtt = 0.75, slope = 0.1, extreme.p = 0.1,
        missing.p = 0.1)
-dat <- rSC(design, round = 1, random.names = TRUE)
+dat <- rSC(design, round = 1, random.names = TRUE, seed = 123)
 describeSC(dat)
 plotSC(dat)
 
 ## And now have a look at poisson-distributed data
-dat <- rSC(seed = 1234, n = 3, B.start = c(6,10,14), MT = c(12,20,22), m = 10,
-       distribution = "poisson", level = -5, missing.p = 0.1)
+design <- design.rSC(n = 3, B.start = c(6,10,14), MT = c(12,20,22), m = 10,
+                    distribution = "poisson", level = -5, missing.p = 0.1)
+dat <- rSC(design, seed = 1234)
 pand(dat, decreasing = TRUE, correction = FALSE)
 }
 \author{

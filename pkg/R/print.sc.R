@@ -1,5 +1,5 @@
 
-print.sc <- function(x, ...) {
+print.sc <- function(x, lag.max = 3, ...) {
   value <- class(x)[2]
   note <- FALSE
   
@@ -259,7 +259,7 @@ print.sc <- function(x, ...) {
   if(value == "pr"){
     cat("Piecewise Regression Analysis\n\n")
     cat("Dummy model: ", x$model,"\n\n")
-    cat("Fitted a", x$family, "distribution.\n\n")		
+    cat("Fitted a", x$family, "distribution.\n")		
     
     if (x$ar > 0)
       cat("Correlated residuals up to autoregressions of lag", x$ar, "are modelled\n\n")
@@ -312,8 +312,11 @@ print.sc <- function(x, ...) {
     }
     print(res)
     cat("\n")
-    cat("Autocorrelation of the Residuals\n")
-    print(data.frame(lag = 1:5,r = round(acf(residuals(x$full.model), lag.max = 5,plot = FALSE)$acf[2:6],2)))
+    cat("Autocorrelations of the residuals\n")
+    print(data.frame(lag = 1:lag.max,r = round(acf(residuals(x$full.model), lag.max = lag.max,plot = FALSE)$acf[2:(1+lag.max)],2)), row.names = FALSE)
+    cat("\n")
+    cat("Internal formula used: ")
+    print(x$formula,showEnv = FALSE)
     cat("\n")
     note <- TRUE
   }

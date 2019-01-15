@@ -5,7 +5,8 @@
 \alias{rCi}
 \title{Reliable change index}
 \usage{
-rciSC(data, rel = 0.8, ci = 0.95, graph = FALSE, phases = c("A", "B"))
+rciSC(data, rel = 0.8, ci = 0.95, graph = FALSE, phases = c("A",
+  "B"))
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about

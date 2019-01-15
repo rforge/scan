@@ -28,7 +28,7 @@ describeSC <- function(data) {
   data.list <- .SCprepareData(data)
   N <- length(data.list)
   case.names <- names(data.list)
- 
+
   design <- rle(as.character(data.list[[1]]$phase))$values
   
   while(any(duplicated(design))) {

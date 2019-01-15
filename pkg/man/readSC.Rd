@@ -15,6 +15,8 @@ readSC(filename = NULL, data = NULL, sep = ",", dec = ".",
 \code{"SC_Anita.csv"}. If filename is left empty a dialog box for choosing
 will be opened.}
 
+\item{data}{A data frame. As an alternative to \code{filname} a dataframe could be directly provided.}
+
 \item{sep}{The field separator string. Values within rows have to be
 separated by this string. Default is \code{sep = ","}.}
 

@@ -117,9 +117,12 @@
 	    }
 	    names(data[[case]])[match(var.phase, VARS)] <- "phase"
 	  }
-	  
+	  if(is.na(names(data)[case]))
+	    names(data)[case] <- paste0("Case ", case)
    }
   
+
+	
 	return(data)
 }
 

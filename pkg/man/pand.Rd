@@ -4,7 +4,8 @@
 \alias{pand}
 \title{Percentage of all non-overlapping data}
 \usage{
-pand(data, decreasing = FALSE, correction = TRUE, phases = c("A", "B"))
+pand(data, decreasing = FALSE, correction = TRUE, phases = c("A",
+  "B"))
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about

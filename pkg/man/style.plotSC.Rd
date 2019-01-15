@@ -60,7 +60,7 @@ newstyle$annotations <- list(cex = 0.6, col = "grey10", offset = 0.4)
 plot(exampleABC, style = newstyle)
 }
 \seealso{
-\code{\link{plotSC}}
+\code{\link{plot.scdf}}
 }
 \author{
 Juergen Wilbert

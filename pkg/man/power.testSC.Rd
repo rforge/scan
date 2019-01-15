@@ -4,11 +4,12 @@
 \alias{power.testSC}
 \title{Empirical power analysis for single-case data}
 \usage{
-power.testSC(data = NULL, parameters = NULL, stat = c("rand.test", "plm"),
-  test.parameter = c("level", "slope"), rand.test.stat = c("Mean B-A", "B"),
-  cases = NULL, rtt = NULL, level = NULL, slope = NULL, MT = NULL,
-  B.start = NULL, trend = NULL, n = 100, limit = 5, m = NULL,
-  s = NULL, startpoints = NA, extreme.p = 0, extreme.d = c(-4, -3),
+power.testSC(data = NULL, parameters = NULL, stat = c("rand.test",
+  "plm"), test.parameter = c("level", "slope"),
+  rand.test.stat = c("Mean B-A", "B"), cases = NULL, rtt = NULL,
+  level = NULL, slope = NULL, MT = NULL, B.start = NULL,
+  trend = NULL, n = 100, limit = 5, m = NULL, s = NULL,
+  startpoints = NA, extreme.p = 0, extreme.d = c(-4, -3),
   exclude.equal = "auto", alpha = 0.05, distribution = "normal",
   silent = FALSE)
 }

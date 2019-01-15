@@ -5,7 +5,8 @@
 \title{Creating a long format data frame from several single-case data frames
 (scdf).}
 \usage{
-longSCDF(data, l2 = NULL, id = "case", model = NULL, check = FALSE, ...)
+longSCDF(data, l2 = NULL, id = "case", model = NULL, check = FALSE,
+  ...)
 }
 \arguments{
 \item{data}{A single-case data frame (scdf).}

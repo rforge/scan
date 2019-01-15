@@ -4,10 +4,10 @@
 \alias{hplm}
 \title{Hierarchical piecewise linear model / piecewise regression}
 \usage{
-hplm(data, model = "B&L-B", method = "ML", control = list(opt = "optim"),
-  random.slopes = FALSE, lr.test = FALSE, ICC = TRUE, trend = TRUE,
-  level = TRUE, slope = TRUE, fixed = NULL, random = NULL,
-  update.fixed = NULL, data.l2 = NULL, ...)
+hplm(data, model = "B&L-B", method = "ML", control = list(opt =
+  "optim"), random.slopes = FALSE, lr.test = FALSE, ICC = TRUE,
+  trend = TRUE, level = TRUE, slope = TRUE, fixed = NULL,
+  random = NULL, update.fixed = NULL, data.l2 = NULL, ...)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about

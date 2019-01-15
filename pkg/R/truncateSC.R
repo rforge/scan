@@ -16,18 +16,19 @@
 #' @examples
 #' 
 #' # Truncate the first two data points of both phases and compare the two data sets
-#' truHeart <- truncateSC(byHeart2011[1], list(A = c(2,0), B = c(2,0)))
-#' plotSC(c(original = byHeart2011[1], selected = truHeart))
+#' study <- c(byHeart2011[1], truncateSC(byHeart2011[1], list(A = c(2,0), B = c(2,0))))
+#' names(study) <- c("Original","Selected")
+#' plot(study)
 #' 
 truncateSC <- function (data, truncate = list(A = c(0,0), B = c(0,0))){
   data <- .SCprepareData(data)
   N = length(data)
   
   cat("Deletet measurements per case:\n\n")
-  for(i in 1:N){
-    phases <- rle(as.character(data[[i]]$phase))
-    phases$start <- c(1,cumsum(phases$lengths)+1)[1:length(phases$lengths)]
-    phases$stop <- cumsum(phases$lengths)
+  for(i in 1:N) {
+    phases        <- rle(as.character(data[[i]]$phase))
+    phases$start  <- c(1, cumsum(phases$lengths) + 1)[1 : length(phases$lengths)]
+    phases$stop   <- cumsum(phases$lengths)
     class(phases) <- "list"
     deselect <- c()
     for(ph in 1:length(phases$values)) {

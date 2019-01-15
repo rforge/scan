@@ -36,8 +36,5 @@ autocorrSC(Huber2014, lag.max = 2)
 \author{
 Juergen Wilbert
 }
-\concept{
-Autocorrelation
-
-Seiral correlation
-}
+\concept{Autocorrelation}
+\concept{Seiral correlation}

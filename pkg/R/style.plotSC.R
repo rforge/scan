@@ -44,7 +44,7 @@
 #' \item\code{"col.text"} Color of all labels of the plot.
 #' }
 #' @author Juergen Wilbert
-#' @seealso \code{\link{plotSC}}
+#' @seealso \code{\link{plot.scdf}}
 #' @examples
 #' newstyle <- style.plotSC(style = "default")
 #' newstyle$text.ABlag <- c("START","END")

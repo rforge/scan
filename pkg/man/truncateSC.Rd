@@ -23,8 +23,9 @@ This function truncates data points at the beginning and / or end each phase.
 \examples{
 
 # Truncate the first two data points of both phases and compare the two data sets
-truHeart <- truncateSC(byHeart2011[1], list(A = c(2,0), B = c(2,0)))
-plotSC(c(original = byHeart2011[1], selected = truHeart))
+study <- c(byHeart2011[1], truncateSC(byHeart2011[1], list(A = c(2,0), B = c(2,0))))
+names(study) <- c("Original","Selected")
+plot(study)
 
 }
 \seealso{

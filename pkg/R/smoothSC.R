@@ -18,18 +18,19 @@
 #' surrounding data influencing each data point, which is \code{intensity =
 #' 0.2} by default.
 #' @return Returns a data frame (for each single-case) with smoothed data
-#' points. See \code{\link{makeSCDF}} to learn about the format of these data
+#' points. See \code{\link{scdf}} to learn about the format of these data
 #' frames.
 #' @author Juergen Wilbert
 #' @keywords manip
 #' @examples
 #' 
 #' ## Use the three different smoothing functions and compare the results
-#' berta_mmd <- smoothSC(Huber2014$Berta)
-#' berta_mmn <- smoothSC(Huber2014$Berta, FUN = "movingMean")
-#' berta_lre <- smoothSC(Huber2014$Berta, FUN = "localRegression")
-#' plotSC(c("Original" = Huber2014$Berta,"Moving Median" = berta_mmd,
-#'     "Moving Mean" = berta_mmn,"Local Regression" = berta_lre))
+#' study <- c(Huber2014$Berta,
+#'            smoothSC(Huber2014$Berta, FUN = "movingMedian"),
+#'            smoothSC(Huber2014$Berta, FUN = "movingMean"),
+#'            smoothSC(Huber2014$Berta, FUN = "localRegression"))
+#' names(study) <- c("Original","Moving Median","Moving Mean", "Local Regression")
+#' plot(study)
 #' 
 smoothSC <- function(data, FUN = "movingMedian", intensity = NULL){
   data <- .SCprepareData(data)

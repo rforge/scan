@@ -12,8 +12,12 @@
 #'
 print.scdf <- function(x, cases = 3, rows = 15, cols = "all", row.names = FALSE, long = FALSE, ...) {
   N <- length(x)
+  
   if(is.null(names(x)))
-    names(x) <- paste("Case",1:N, sep = "")
+    names(x) <- paste0("Case",1:N)
+  nonames <- which(is.na(names(x)))
+  names(x)[nonames] <- paste0("Case",nonames)
+  
   
   if(cases == "all")
     cases <- N

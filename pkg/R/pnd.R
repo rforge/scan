@@ -38,6 +38,7 @@ pnd <- function(data, decreasing = FALSE, phases = c("A","B")) {
     if (decreasing)
       PND[i] <- sum(B < min(A, na.rm = TRUE), na.rm = TRUE) / length(B) * 100
   }
+  
   out <- list(PND = PND)
   class(out) <- c("sc","PND")
   out

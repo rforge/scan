@@ -8,6 +8,7 @@
 #' @param filename A character string defining the file to be imported (e.g.
 #' \code{"SC_Anita.csv"}. If filename is left empty a dialog box for choosing
 #' will be opened.
+#' @param data A data frame. As an alternative to \code{filname} a dataframe could be directly provided. 
 #' @param sep The field separator string. Values within rows have to be
 #' separated by this string. Default is \code{sep = ","}.
 #' @param dec The string used for decimal points in the file. Must be a single

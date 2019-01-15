@@ -4,8 +4,8 @@
 \alias{tauUSC}
 \title{Tau-U for single-case data}
 \usage{
-tauUSC(data, ties.method = "omit", method = "complete", phases = c("A",
-  "B"))
+tauUSC(data, ties.method = "omit", method = "complete",
+  phases = c("A", "B"))
 }
 \arguments{
 \item{data}{A single-case data frame.}
