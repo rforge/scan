@@ -11,6 +11,8 @@
 #' 
 #' @param data A single-case data frame. See \code{\link{scdf}} to learn about
 #' this format.
+#' @param dvar Character string with the name of the independend variable.
+#' @param pvar Character string with the name of the phase variable.
 #' @param decreasing If you expect data to be lower in the B phase, set
 #' \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.
 #' @param phases A vector of two characters or numbers indicating the two
@@ -37,9 +39,20 @@
 #' nap(Grosche2011)
 #' 
 
-nap <- function(data, decreasing = FALSE, phases = c("A","B")) {
-  data <- .SCprepareData(data)
-  data <- .keepphasesSC(data, phases = phases)$data
+nap <- function(data, dvar = NULL, pvar = NULL, decreasing = FALSE, phases = c(1,2)) {
+
+  if(!is.null(dvar)) 
+    attr(data, .opt$dv) <- dvar
+  else
+    dvar <- attr(data, .opt$dv)
+  
+  if(!is.null(pvar))
+    attr(data, .opt$phase) <- pvar
+  else
+    pvar <- attr(data, .opt$phase)
+  
+  data <- .SCprepareData(data, na.rm = TRUE, change.var.values = FALSE, change.var.phase = FALSE)
+  data <- .keepphasesSC(data, phases = phases, pvar = pvar)$data
   
   N <- length(data)
   
@@ -52,9 +65,9 @@ nap <- function(data, decreasing = FALSE, phases = c("A","B")) {
   
   for(case in 1:N) {
     df <- data[[case]]
-
-    A     <- df[df[,"phase"] == "A", "values"]
-    B     <- df[df[,"phase"] == "B", "values"]
+    
+    A     <- df[df[, pvar] == "A", dvar]
+    B     <- df[df[, pvar] == "B", dvar]
     PAIRS[case] <- length(A) * length(B)
     
     if (!decreasing)

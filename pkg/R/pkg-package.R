@@ -5,7 +5,7 @@
 #' Most procedures also support multiple-baseline designs.
 #' 
 #' \tabular{ll}{ Package: \tab scan\cr Type: \tab Package\cr Version: \tab
-#' 0.3.42\cr Date: \tab 2019-01-15\cr License: \tab GPL (version 2 or newer)\cr
+#' 0.3.53\cr Date: \tab 2019-02-12\cr License: \tab GPL (version 2 or newer)\cr
 #' }
 #' 
 #' @name scan-package

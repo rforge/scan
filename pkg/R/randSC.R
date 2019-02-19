@@ -9,6 +9,8 @@
 #' @aliases randSC rand.test
 #' @param data A single-case data frame or a list of single-case data frames.
 #' See \code{\link{scdf}} to learn about this format.
+#' @param dvar Character string with the name of the independend variable.
+#' @param pvar Character string with the name of the phase variable.
 #' @param statistic Defines the statistic on which the comparison of phases A
 #' and B is based on. Default setting is \code{statistic = "Mean B-A"}). The
 #' following comparisons are possible: \itemize{ \item\code{"Mean A-B"}: Uses
@@ -88,17 +90,29 @@
 #' ## Compute a randomization test on the Grosche2011 data using complete permutation
 #' randSC(Grosche2011, statistic = "Median B-A", complete = TRUE, limit = 4)
 #' 
-randSC <- function (data, statistic = "Mean B-A", number = 500, complete = FALSE,limit = 5, startpoints = NA, exclude.equal = FALSE, graph = FALSE, output = "c", phases = c("A","B")) {
+randSC <- function (data, dvar = NULL, pvar = NULL, statistic = "Mean B-A", number = 500, complete = FALSE,limit = 5, startpoints = NA, exclude.equal = FALSE, graph = FALSE, output = "c", phases = c("A","B")) {
   
-  data <- .SCprepareData(data)
-  if(!all(unlist(lapply(data, function(x) identical(rle(as.character(x$phase))$values, phases)))))
-    warning(paste0("Phase sequence is not ",paste0(phases, collapse = " "), " for all cases. Analyzes are restricted to the data of the ",paste0(phases,collapse = " ")," phases.\n"))
+  if(!is.null(dvar)) 
+    attr(data, .opt$dv) <- dvar
+  else
+    dvar <- attr(data, .opt$dv)
   
-  data <- .keepphasesSC(data, phases = phases)$data
+  if(!is.null(pvar))
+    attr(data, .opt$phase) <- pvar
+  else
+    pvar <- attr(data, .opt$phase)
+
+  #if(!all(unlist(lapply(data, function(x) identical(rle(as.character(x[,pvar]))$values, phases)))))
+  #  warning(paste0("Phase sequence is not ",paste0(phases, collapse = " "), " for all cases. Analyzes are restricted to the data of the ",paste0(phases,collapse = " ")," phases.\n"))
   
-  a <- lapply(data, function(x) x$values[x$phase == "A"])
-  b <- lapply(data, function(x) x$values[x$phase == "B"])
-  obs <- lapply(data, function(x) x$values)
+  data <- .SCprepareData(data, change.var.values = FALSE, change.var.phase = FALSE)
+  
+  keep <- .keepphasesSC(data, phases = phases, pvar = pvar)
+  data <- keep$data
+  
+  a <- lapply(data, function(x) x[x[,pvar] == "A", dvar])
+  b <- lapply(data, function(x) x[x[,pvar] == "B", dvar])
+  obs <- lapply(data, function(x) x[,dvar])
   MT <- lapply(data, nrow)
   N <- length(data)
   if(length(limit) == 1) limit[2] <- limit[1]
@@ -130,7 +144,7 @@ randSC <- function (data, statistic = "Mean B-A", number = 500, complete = FALSE
   for (i in 1:number) {
     ascores <- list()
     for (case in 1:N)
-      ascores[[case]] <- data[[case]][1:(startpts[i, case] - 1), 2]
+      ascores[[case]] <- data[[case]][1:(startpts[i, case] - 1), dvar]
     rnd.a[[i]] <- ascores
   }
   
@@ -138,7 +152,7 @@ randSC <- function (data, statistic = "Mean B-A", number = 500, complete = FALSE
   for (i in 1:number) {
     ascores <- list()
     for (case in 1:N)
-      ascores[[case]] <- data[[case]][startpts[i, case]:MT[[case]], 2]
+      ascores[[case]] <- data[[case]][startpts[i, case]:MT[[case]], dvar]
     rnd.b[[i]] <- ascores
   }
   
@@ -238,7 +252,7 @@ randSC <- function (data, statistic = "Mean B-A", number = 500, complete = FALSE
   if (output == "c") {
     possible.combinations <- cumprod(unlist(lapply(pos.startpts, length)))[N]
     
-    out <- list(statistic = statistic, N = N, n1 = length(unlist(a)), n2 = length(unlist(b)), limit = limit, startpoints = startpoints, p.value = p.value, number = number, complete = complete, observed.statistic = obs.stat, Z = Z, p.Z.single = p.Z.single, distribution = dist, possible.combinations = possible.combinations, auto.corrected.number = auto.corrected.number)	
+    out <- list(statistic = statistic, phases.A = keep$phases.A, phases.B = keep$phases.B, N = N, n1 = length(unlist(a)), n2 = length(unlist(b)), limit = limit, startpoints = startpoints, p.value = p.value, number = number, complete = complete, observed.statistic = obs.stat, Z = Z, p.Z.single = p.Z.single, distribution = dist, possible.combinations = possible.combinations, auto.corrected.number = auto.corrected.number)	
     class(out) <- c("sc","rand")
     out
   }

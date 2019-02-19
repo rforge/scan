@@ -17,6 +17,8 @@
 #' 
 #' @param data A single-case data frame. See \code{\link{scdf}} to learn about
 #' this format.
+#' @param dvar Character string with the name of the independend variable.
+#' @param pvar Character string with the name of the phase variable.
 #' @param decreasing If you expect data to be lower in the B phase, set
 #' \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.
 #' @param correction The default \code{correction = TRUE} makes \code{pand} use
@@ -56,7 +58,7 @@
 #' ## Calculate the PAND for a MMBD over three cases
 #' gunnar <- scdf(c(2,3,1,5,3,4,2,6,4,7), B.start = 5)
 #' birgit <- scdf(c(3,3,2,4,7,4,2,1,4,7), B.start = 4)
-#' bodo <- scdf(c(2,3,4,5,3,4,7,6,8,7), B.start = 6)
+#' bodo   <- scdf(c(2,3,4,5,3,4,7,6,8,7), B.start = 6)
 #' mbd <- c(gunnar, birgit, bodo)
 #' pand(mbd)
 #' pand(bodo)
@@ -65,9 +67,21 @@
 #' cubs <- scdf(c(20,22,24,17,21,13,10,9,20,9,18), B.start = 5)
 #' pand(cubs, decreasing = TRUE)
 #' 
-pand <- function(data, decreasing = FALSE, correction = TRUE, phases = c("A","B")) {
-  data <- .SCprepareData(data)
-  data <- .keepphasesSC(data, phases = phases)$data
+pand <- function(data, dvar = NULL, pvar = NULL, decreasing = FALSE, correction = TRUE, phases = c("A","B")) {
+  
+  if(!is.null(dvar)) 
+    attr(data, .opt$dv) <- dvar
+  else
+    dvar <- attr(data, .opt$dv)
+  
+  if(!is.null(pvar))
+    attr(data, .opt$phase) <- pvar
+  else
+    pvar <- attr(data, .opt$phase)
+  
+  data <- .SCprepareData(data, na.rm = TRUE, change.var.values = FALSE, change.var.phase = FALSE)
+  
+  data <- .keepphasesSC(data, phases = phases,pvar = pvar)$data
   
   phase.expected <- list()
   phase.real     <- list()
@@ -77,13 +91,13 @@ pand <- function(data, decreasing = FALSE, correction = TRUE, phases = c("A","B"
   N <- length(data)
   
   for (i in 1:N) {
-    A[[i]] <- data[[i]]$values[data[[i]]$phase == "A"]
-    B[[i]] <- data[[i]]$values[data[[i]]$phase == "B"]
-    if(class(data[[i]]$phase) != "factor")
-      data[[i]]$phase <- factor(data[[i]]$phase)
+    A[[i]] <- data[[i]][data[[i]][, pvar] == "A", dvar]
+    B[[i]] <- data[[i]][data[[i]][, pvar] == "B", dvar]
+    #if(class(data[[i]]$phase) != "factor")
+    data[[i]][, pvar] <- factor(data[[i]][, pvar])
     
-    phase.real[[i]]     <- as.numeric(data[[i]][order(data[[i]]$values),"phase"])
-    phase.expected[[i]] <- as.numeric(data[[i]]$phase)
+    phase.real[[i]]     <- as.numeric(data[[i]][order(data[[i]][, dvar]), pvar])
+    phase.expected[[i]] <- as.numeric(data[[i]][, pvar])
     
   }	
   
@@ -106,7 +120,7 @@ pand <- function(data, decreasing = FALSE, correction = TRUE, phases = c("A","B"
   OD.B <- 0
   
   for (i in 1:N) {
-    z <- data[[i]][, "values", drop = FALSE]
+    z <- data[[i]][, dvar, drop = FALSE]
     n1 <- length(A[[i]])
     n2 <- length(B[[i]])
     n12 <- n1 + n2

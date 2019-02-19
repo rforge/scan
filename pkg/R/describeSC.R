@@ -5,6 +5,9 @@
 #' 
 #' 
 #' @param data A single-case data frame. See \code{\link{scdf}} to learn about this format.
+#' @param dvar Character string with the name of the independend variable.
+#' @param pvar Character string with the name of the phase variable.
+#' @param mvar Character string with the name of the measurement time variable.
 #' @return A data frame of descriptive statistics (for each single-case), i.e.:
 #' number of observations, number of missing values, measures of central
 #' tendency, variation, and trend.
@@ -24,13 +27,30 @@
 #' study <- describeSC(Waddell2011)
 #' write.csv(study$descriptives, file = "descriptives.csv")
 #' 
-describeSC <- function(data) {
-  data.list <- .SCprepareData(data)
+describeSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL) {
+  
+  if(!is.null(dvar)) 
+    attr(data, .opt$dv) <- dvar
+  else
+    dvar <- attr(data, .opt$dv)
+  
+  if(!is.null(pvar))
+    attr(data, .opt$phase) <- pvar
+  else
+    pvar <- attr(data, .opt$phase)
+  
+  if(!is.null(mvar))
+    attr(data, .opt$mt) <- mvar
+  else
+    mvar <- attr(data, .opt$mt)
+  
+  data.list <- .SCprepareData(data,change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
+  
   N <- length(data.list)
   case.names <- names(data.list)
 
-  design <- rle(as.character(data.list[[1]]$phase))$values
-  
+  design <- rle(as.character(data.list[[1]][,pvar]))$values
+
   while(any(duplicated(design))) {
     design[anyDuplicated(design)] <- paste0(design[anyDuplicated(design)],".phase",anyDuplicated(design))
   }
@@ -46,29 +66,29 @@ describeSC <- function(data) {
   for(case in 1:N) {
     data <- data.list[[case]]
     for(i in 1:length(design)) {
-      phases <- .phasestructure(data)
-      
-      x <- data$mt[phases$start[i]:phases$stop[i]]
-      y <- data$values[phases$start[i]:phases$stop[i]]
+      phases <- .phasestructure(data, pvar = pvar)
+ 
+      x <- data[phases$start[i]:phases$stop[i],mvar]
+      y <- data[phases$start[i]:phases$stop[i],dvar]
       phase <- design[i]
 
-      d.f[case, paste0("n.",phase)] <- length(y)
-      d.f[case, paste0("mis.",phase)] <- sum(is.na(y),na.rm = TRUE) 
-      d.f[case, paste0("m.",phase)] <- mean(y,na.rm = TRUE) 
-      d.f[case, paste0("md.",phase)] <- median(y,na.rm = TRUE) 
-      d.f[case, paste0("sd.",phase)] <- sd(y,na.rm = TRUE)
-      d.f[case, paste0("mad.",phase)] <- mad(y,na.rm = TRUE) 
-      d.f[case, paste0("min.",phase)] <- min(y,na.rm = TRUE) 
-      d.f[case, paste0("max.",phase)] <- max(y,na.rm = TRUE) 
+      d.f[case, paste0("n.",phase)]     <- length(y)
+      d.f[case, paste0("mis.",phase)]   <- sum(is.na(y),na.rm = TRUE) 
+      d.f[case, paste0("m.",phase)]     <- mean(y,na.rm = TRUE) 
+      d.f[case, paste0("md.",phase)]    <- median(y,na.rm = TRUE) 
+      d.f[case, paste0("sd.",phase)]    <- sd(y,na.rm = TRUE)
+      d.f[case, paste0("mad.",phase)]   <- mad(y,na.rm = TRUE) 
+      d.f[case, paste0("min.",phase)]   <- min(y,na.rm = TRUE) 
+      d.f[case, paste0("max.",phase)]   <- max(y,na.rm = TRUE) 
       d.f[case, paste0("trend.",phase)] <- coef(lm(y~I(x-x[1]+1)))[2]
     }
   }
   
   out <- list(descriptives = d.f, design = design, N = N)
   class(out) <- c("sc","describe")
-  attr(out, "var.phase")  <- attr(data.list, "var.phase")
-  attr(out, "var.mt")     <- attr(data.list, "var.mt")
-  attr(out, "var.values") <- attr(data.list, "var.values")
+  attr(out, "var.phase")  <- pvar
+  attr(out, "var.mt")     <- mvar
+  attr(out, "var.values") <- dvar
   
   out
 }

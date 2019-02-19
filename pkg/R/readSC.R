@@ -17,10 +17,10 @@
 #' (alphabetically increasing).
 #' @param type Format of the file to be imported. Either "csv" or "excel" is
 #' possible.
-#' @param var.case Sets the variable name of the "case" variable. Deafults to \code{"case"}.
-#' @param var.phase Sets the variable name of the "phase" variable. Deafults to \code{"phase"}.
-#' @param var.values Sets the variable name of the "values" variable. Deafults to \code{"values"}.
-#' @param var.mt Sets the variable name of the "mt" variable. Deafults to \code{"mt"}.
+#' @param cvar Sets the variable name of the "case" variable. Deafults to \code{"case"}.
+#' @param pvar Sets the variable name of the "phase" variable. Deafults to \code{"phase"}.
+#' @param dvar Sets the variable name of the "values" variable. Deafults to \code{"values"}.
+#' @param mvar Sets the variable name of the "mt" variable. Deafults to \code{"mt"}.
 #' @param phase.names A character vector with phase names. Deafults to the phase names provided in the phase variable.
 #' @param \dots Further arguments passed to the \code{\link{read.table}}
 #' command.
@@ -37,7 +37,7 @@
 #' ## Read SC-data from a .csv-file with semicolon as field and comma as decimal separator
 #' # study2 <- readSC("study2.csv", sep = ";", dec = ",")
 #' 
-readSC <- function(filename = NULL, data = NULL, sep = ",", dec = ".", sort.labels = FALSE, var.case = "case", var.phase = "phase", var.values = "values", var.mt = "mt", phase.names = NULL, type = "csv", ...) {
+readSC <- function(filename = NULL, data = NULL, sep = ",", dec = ".", sort.labels = FALSE, cvar = "case", pvar = "phase", dvar = "values", mvar = "mt", phase.names = NULL, type = "csv", ...) {
   if(is.null(filename) && is.null(data)) {
     filename <- file.choose()
     cat("Import file",filename,"\n\n")
@@ -58,7 +58,7 @@ readSC <- function(filename = NULL, data = NULL, sep = ",", dec = ".", sort.labe
     dat <- as.data.frame(readxl::read_excel(filename, ...))
   }
 
-  VARS <- c(var.case, var.phase, var.values, var.mt)
+  VARS <- c(cvar, pvar, dvar, mvar)
   columns <- ncol(dat)
  
   pos <- match(VARS, names(dat))
@@ -66,17 +66,17 @@ readSC <- function(filename = NULL, data = NULL, sep = ",", dec = ".", sort.labe
   dat <- dat[, c(pos, pos.rest)]
 
   if(!sort.labels) 
-    dat[, var.case] <- factor(dat[, var.case], levels = unique(dat[, var.case]))
+    dat[, cvar] <- factor(dat[, cvar], levels = unique(dat[, cvar]))
   else
-    dat[, var.case] <- factor(dat[, var.case])
+    dat[, cvar] <- factor(dat[, cvar])
   
-  dat[,var.phase] <- factor(dat[, var.phase])
+  dat[,pvar] <- factor(dat[, pvar])
   
   if(!is.null(phase.names))
-    levels(dat[,var.phase]) <- phase.names
+    levels(dat[,pvar]) <- phase.names
   
-  lab <- levels(dat[, var.case])
-  dat <- split(dat, dat[, var.case])
+  lab <- levels(dat[, cvar])
+  dat <- split(dat, dat[, cvar])
   dat <- lapply(dat, function(x) x[,2:columns])
   for(i in 1:length(dat))
     row.names(dat[[i]]) <- 1:nrow(dat[[i]])
@@ -87,9 +87,9 @@ readSC <- function(filename = NULL, data = NULL, sep = ",", dec = ".", sort.labe
   #  dat <- .SCprepareData(dat)
   #}
   class(dat) <- c("scdf","list")
-  attr(dat, "var.phase")  <- var.phase
-  attr(dat, "var.values") <- var.values
-  attr(dat, "var.mt")     <- var.mt
+  attr(dat, .opt$phase) <- pvar
+  attr(dat, .opt$dv)    <- dvar
+  attr(dat, .opt$mt)    <- mvar
   
   
   return(dat)

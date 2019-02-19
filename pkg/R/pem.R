@@ -8,6 +8,8 @@
 #' 
 #' @param data A single-case data frame. See \code{\link{scdf}} to learn about
 #' this format.
+#' @param dvar Character string with the name of the independend variable.
+#' @param pvar Character string with the name of the phase variable.
 #' @param decreasing If you expect data to be lower in the B phase, set
 #' \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.
 #' @param binom.test Computes a binomial test for a 50/50 distribution. Default
@@ -38,10 +40,20 @@
 #' dat <- rSC(5, level = 0.5)
 #' pem(dat, chi.test = TRUE)
 #' 
-pem <- function(data, decreasing = FALSE, binom.test = TRUE, chi.test = FALSE, FUN = median, phases = c("A","B"), ...) {
+pem <- function(data, dvar = NULL, pvar = NULL, decreasing = FALSE, binom.test = TRUE, chi.test = FALSE, FUN = median, phases = c("A","B"), ...) {
+
+  if(!is.null(dvar)) 
+    attr(data, .opt$dv) <- dvar
+  else
+    dvar <- attr(data, .opt$dv)
   
-  data <- .SCprepareData(data)
-  data <- .keepphasesSC(data, phases = phases)$data
+  if(!is.null(pvar))
+    attr(data, .opt$phase) <- pvar
+  else
+    pvar <- attr(data, .opt$phase)
+  
+  data <- .SCprepareData(data, na.rm = TRUE, change.var.values = FALSE, change.var.phase = FALSE)
+  data <- .keepphasesSC(data, phases = phases,pvar = pvar)$data
   
   N <- length(data)
   
@@ -55,8 +67,8 @@ pem <- function(data, decreasing = FALSE, binom.test = TRUE, chi.test = FALSE, F
   
   
   for(i in 1:N) {
-    A <- data[[i]][, "values"][data[[i]][, "phase"] == "A"]
-    B <- data[[i]][, "values"][data[[i]][, "phase"] == "B"]
+    A <- data[[i]][, dvar][data[[i]][, pvar] == "A"]
+    B <- data[[i]][, dvar][data[[i]][, pvar] == "B"]
     if (!decreasing)
       PEM[i] <- mean(B > FUN(A, na.rm = TRUE,...), na.rm = TRUE) * 100
     if (decreasing)

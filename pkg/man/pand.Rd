@@ -4,12 +4,16 @@
 \alias{pand}
 \title{Percentage of all non-overlapping data}
 \usage{
-pand(data, decreasing = FALSE, correction = TRUE, phases = c("A",
-  "B"))
+pand(data, dvar = NULL, pvar = NULL, decreasing = FALSE,
+  correction = TRUE, phases = c("A", "B"))
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
 this format.}
+
+\item{dvar}{Character string with the name of the independend variable.}
+
+\item{pvar}{Character string with the name of the phase variable.}
 
 \item{decreasing}{If you expect data to be lower in the B phase, set
 \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.}
@@ -63,7 +67,7 @@ problem and has better precision-power (Parker, Vannest, & Davis, 2014).
 ## Calculate the PAND for a MMBD over three cases
 gunnar <- scdf(c(2,3,1,5,3,4,2,6,4,7), B.start = 5)
 birgit <- scdf(c(3,3,2,4,7,4,2,1,4,7), B.start = 4)
-bodo <- scdf(c(2,3,4,5,3,4,7,6,8,7), B.start = 6)
+bodo   <- scdf(c(2,3,4,5,3,4,7,6,8,7), B.start = 6)
 mbd <- c(gunnar, birgit, bodo)
 pand(mbd)
 pand(bodo)

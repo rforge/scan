@@ -5,6 +5,9 @@
 #' 
 #' @param data A single-case data frame. See \code{\link{makeSCDF}} to learn
 #' about this format.
+#' @param dvar Character string with the name of the independend variable.
+#' @param pvar Character string with the name of the phase variable.
+#' @param mvar Character string with the name of the measurement time variable.
 #' @param criteria Specifies the criteria for outlier identification. Set
 #' \code{criteria = c("SD", 2)} to define two standard deviations as limit.
 #' This is also the default setting. To use the 99\% Confidence Interval use
@@ -31,21 +34,36 @@
 #' 
 #' ## Identify outliers using 1.5 standard deviations as criterion
 #' susanne <- rSC(level = 1.0)
-#' res <- outlierSC(susanne, criteria = c("SD", 1.5))
-#' plotSC(susanne, marks = list(positions = res$dropped.mt))
+#' res.outlier <- outlierSC(susanne, criteria = c("SD", 1.5))
+#' plotSC(susanne, marks = res.outlier)
 #' 
 #' ## Identify outliers in the original data from Grosche (2011) using Cook's Distance
 #' ## greater than 4/n as criterion
-#' res <- outlierSC(Grosche2011, criteria = c("Cook", "4/n"))
-#' plotSC(Grosche2011, marks = list(positions = res$dropped.mt))
+#' res.outlier <- outlierSC(Grosche2011, criteria = c("Cook", "4/n"))
+#' plotSC(Grosche2011, marks = res.outlier)
 #' 
-outlierSC <- function(data, criteria = c("MAD", "3.5")){
-  
-  data.list <- .SCprepareData(data)
+outlierSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, criteria = c("MAD", "3.5")){
   
   if(!any(criteria[1] %in% c("MAD","Cook","SD","CI")))
     stop("Unknown criteria. Please check.")
   
+  if(!is.null(dvar)) 
+    attr(data, .opt$dv) <- dvar
+  else
+    dvar <- attr(data, .opt$dv)
+  
+  if(!is.null(pvar))
+    attr(data, .opt$phase) <- pvar
+  else
+    pvar <- attr(data, .opt$phase)
+  
+  if(!is.null(mvar))
+    attr(data, .opt$mt) <- mvar
+  else
+    mvar <- attr(data, .opt$mt)
+  
+  data.list <- .SCprepareData(data, change.var.values = FALSE, change.var.phase = FALSE,change.var.mt = FALSE)
+ 
   out <- list()
   
   N <- length(data.list)
@@ -60,10 +78,10 @@ outlierSC <- function(data, criteria = c("MAD", "3.5")){
   for(i in 1:N) {
     data <- data.list[[i]]
     
-    phases <- rle(as.character(data$phase))$value
-    values <- lapply(phases, function(x) data$values[data$phase == x])
+    phases <- rle(as.character(data[,pvar]))$value
+    values <- lapply(phases, function(x) data[data[,pvar] == x, dvar])
   
-    if (criteria[1] == "CI") {
+    if (identical(criteria[1], "CI")) {
       cut.off <- as.numeric(criteria[2])
       mat <- matrix(NA, length(values), ncol = 5)
       colnames(mat) <- c("phase","m","se","lower", "upper")
@@ -83,8 +101,7 @@ outlierSC <- function(data, criteria = c("MAD", "3.5")){
       mat$phase <- phases
       ci.matrix[[i]] <- mat
     }
-    
-    if (criteria[1] == "MAD") {
+    if (identical(criteria[1], "MAD")) {
       fac <- as.numeric(criteria[2])
       mat <- matrix(NA, length(values), ncol = 5)
       colnames(mat) <- c("phase","md","mad","lower", "upper")
@@ -102,7 +119,7 @@ outlierSC <- function(data, criteria = c("MAD", "3.5")){
       mad.matrix[[i]] <- mat
       
     }	
-    if (criteria[1] == "SD") {
+    if (identical(criteria[1], "SD")) {
       SD <- as.numeric(criteria[2])
       mat <- matrix(NA, length(values), ncol = 5)
       colnames(mat) <- c("phase","m","sd","lower", "upper")
@@ -120,32 +137,30 @@ outlierSC <- function(data, criteria = c("MAD", "3.5")){
       sd.matrix[[i]] <- mat
       
     }		
-    if (criteria[1] == "Cook") {
-      if(!identical(phases, c("A","B")))
-         stop("Cook criteria only available for AB-designs.")
-      A <- values[[1]]
-      B <- values[[2]]
+    if (identical(criteria[1], "Cook")) {
+      
       if (criteria[2] == "4/n")
-        cut.off <- 4/(length(A)+length(B))
+        cut.off <- 4/nrow(data) #4/(length(A)+length(B))
       else
         cut.off <- as.numeric(criteria[2])
-
-      n1 <- length(A)
-      MT <- data$mt
-      values <- data$values
-      T <- MT[n1+1]
-      D <- c(rep(0, length(A)), rep(1, length(B)))
-      int <-  D * (MT - T)
-      reg <- lm(values ~ 1 + MT + D + int)
+      
+      #n1 <- length(A)
+      #MT <- data[,mvar]
+      #values <- data[,dvar]
+      #T <- MT[n1+1]
+      #D <- c(rep(0, length(A)), rep(1, length(B)))
+      #int <-  D * (MT - T)
+      #reg <- lm(values ~ 1 + MT + D + int)
+      
+      reg <- plm(data.list[i], dvar = dvar, pvar = pvar, mvar = mvar)$full.model
+      
       cd <- cooks.distance(reg)
       filter <- cd >= cut.off
-      cook[[i]] <- data.frame(Cook = round(cd,2), MT = MT)
+      cook[[i]] <- data.frame(Cook = round(cd,2), MT = data.list[[i]][,mvar])
     }		
     
-    #data.list[[i]][,4] <- filterAB
-    #names(data.list[[i]])[4] <- "outlier"
-    dropped.mts[[i]] <- data.list[[i]]$mt[filter]
-    dropped.n[[i]] <- sum(filter)
+    dropped.mts[[i]] <- data.list[[i]][filter,mvar]
+    dropped.n[[i]]   <- sum(filter)
     
     data.list[[i]] <- data.list[[i]][!filter,]
   }

@@ -120,7 +120,6 @@ rSC <- function(design = NULL, round = NA, random.names = FALSE, seed = NULL, ..
     design <- NULL
   }
   if(is.null(design)) {
-    #design <- design.rSC(n = n, B.start = B.start, MT = MT, m = m, s = s, rtt = rtt, extreme.p = extreme.p, missing.p = missing.p, level = list(d.level), trend = list(d.trend), slope = list(d.slope), distribution = distribution, prob = prob)
     design <- design.rSC(...)
   }
   

@@ -6,6 +6,9 @@
 #' 
 #' @param data A single-case data frame.
 #' See \code{\link{scdf}} to learn about this format.
+#' @param dvar Character string with the name of the independend variable.
+#' @param pvar Character string with the name of the phase variable.
+#' @param mvar Character string with the name of the measurement time variable.
 #' @param AR Maximal lag of autoregression. Modeled based on the
 #' Autoregressive-Moving Average (ARMA) function.  When AR is set, the family
 #' argument must be set to \code{family = "gaussian"}.
@@ -69,12 +72,28 @@
 #' ## and now drop the trend estimation as well
 #' plm(dat, slope = FALSE, trend = FALSE, model = "JW")
 #' 
-plm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE, level = TRUE, slope = TRUE,formula = NULL, update = NULL, na.action = na.omit, ...) {
+plm <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE, level = TRUE, slope = TRUE,formula = NULL, update = NULL, na.action = na.omit, ...) {
 
   if (AR > 0 && !family == "gaussian")
     stop("Autoregression models could only be applied if distribution familiy = 'gaussian'.\n")
   
-  data <- .SCprepareData(data, na.rm = TRUE)
+  if(!is.null(dvar)) 
+    attr(data, .opt$dv) <- dvar
+  else
+    dvar <- attr(data, .opt$dv)
+  
+  if(!is.null(pvar))
+    attr(data, .opt$phase) <- pvar
+  else
+    pvar <- attr(data, .opt$phase)
+  
+  if(!is.null(mvar))
+    attr(data, .opt$mt) <- mvar
+  else
+    mvar <- attr(data, .opt$mt)
+  
+  data <- .SCprepareData(data, na.rm = TRUE,change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
+  
   ATTRIBUTES <- attributes(data)
   
   N <- length(data)
@@ -87,12 +106,12 @@ plm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE
   data <- data[[1]]
   
   ### model definition
-  dat_inter <- .plm.dummy(data, model = model)
-  data$mt   <- dat_inter$mt
-  data      <- cbind(data,dat_inter[,-1])
-  n_Var     <- (ncol(dat_inter) - 1) / 2
-  VAR_INTER <- names(dat_inter)[(ncol(dat_inter)-n_Var+1):ncol(dat_inter)]
-  VAR_PHASE <- names(dat_inter)[2:(n_Var+1)]
+  dat_inter   <- .plm.dummy(data, model = model, dvar = dvar, pvar = pvar, mvar = mvar)
+  data[,mvar] <- dat_inter$mt
+  data        <- cbind(data,dat_inter[,-1])
+  n_Var       <- (ncol(dat_inter) - 1) / 2
+  VAR_INTER   <- names(dat_inter)[(ncol(dat_inter)-n_Var+1):ncol(dat_inter)]
+  VAR_PHASE   <- names(dat_inter)[2:(n_Var+1)]
   
   if(is.null(formula)) {
     INTER <- ""
@@ -107,8 +126,8 @@ plm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE
       PHASE <- paste0("+ ", PHASE)
     }
     if(trend)
-      MT <- "+ mt "
-    formula <- as.formula(paste0("values ~ 1",MT, PHASE, INTER))
+      MT <- paste0("+ ",mvar," ")
+    formula <- as.formula(paste0(dvar, " ~ 1",MT, PHASE, INTER))
   } 
   
   if(!is.null(update))
@@ -132,7 +151,10 @@ plm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE
 
   if(AR > 0) {
     full <- gls(formula.full, data = data, correlation=corARMA(p=AR), method="ML", na.action = na.action)
-    restricted.models <- lapply(formulas.ir, function(x) gls(model = x, data = data, correlation=corARMA(p=AR), method="ML", na.action = na.action))
+    restricted.models <- 
+      lapply(formulas.ir, function(x) 
+        gls(model = x, data = data, correlation=corARMA(p=AR), method="ML", na.action = na.action)
+      )
     df2.full <- full$dims$N - full$dims$p
     df.int <- if ("(Intercept)" %in% names(full$parAssign)) 1 else 0
   }
@@ -141,19 +163,17 @@ plm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE
   df1.full <- n-1-df2.full
   
   QSE <- sum(full$residuals^2, na.rm = TRUE)
-  QST <- sum((data$values - mean(data$values))^2)
+  QST <- sum((data[,dvar] - mean(data[,dvar]))^2)
   MQSA <- (QST - QSE) / df1.full
   MQSE <- QSE / df2.full
   F.full <- MQSA / MQSE
   p.full <- pf(F.full,df1.full,df2.full, lower.tail = FALSE)
   
   
-  total.variance <- var(data$values)
-  r2.full <- 1-(var(full$residuals)/total.variance)
-  
-  r2.full.adj <- 1 - (1 - r2.full) * ((n - df.int)/df2.full)#r2.full-(1-r2.full)*(3/(n-df1.full-1))
-  #r2.full.adj <- r2.full-(1-r2.full)*(3/(length(data$values)-3-1))
- 
+  total.variance <- var(data[,dvar])
+  r2.full     <- 1-(var(full$residuals)/total.variance)
+  r2.full.adj <- 1 - (1 - r2.full) * ((n - df.int)/df2.full)
+
   r.squares <- unlist(lapply(restricted.models, function(x) r2.full-(1-(var(x$residuals, na.rm = TRUE)/total.variance))))
   
   ### output
@@ -161,28 +181,24 @@ plm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE
   out <- list(formula = formula.full, model = model, F.test = F.test, r.squares = r.squares, ar = AR, family = family, full.model = full, data = data)
 
   class(out) <- c("sc", "pr")
-  attr(out, "var.phase")  <- ATTRIBUTES$var.phase
-  attr(out, "var.mt")     <- ATTRIBUTES$var.mt
-  attr(out, "var.values") <- ATTRIBUTES$var.values
+  attr(out, .opt$phase)  <- ATTRIBUTES[.opt$phase]
+  attr(out, .opt$mt)     <- ATTRIBUTES[.opt$mt]
+  attr(out, .opt$dv)     <- ATTRIBUTES[.opt$dv]
   out
 }
 
 
-.plm.dummy <- function(data, model, phase.dummy = TRUE) {
+.plm.dummy <- function(data, model, phase.dummy = TRUE, dvar = "values", pvar = "phase", mvar = "mt") {
 
   if(!model %in% c("H-M", "B&L-B", "JW","JW2"))
     stop("Model ",model," unknown.\n")
   
-  VAR_PHASE  <- "phase" #attr(data, "var.phase")
-  VAR_VALUES <- "values" #attr(data, "var.values")
-  VAR_MT     <- "mt" #attr(data, "var.mt")
-  
-  MT <- data[, VAR_MT]
-  D  <- data[, VAR_PHASE]
+  MT <- data[, mvar]
+  D  <- data[, pvar]
   N  <- nrow(data)
 
   out    <- data.frame(mt = MT)
-  design <- rle(as.character(data[, VAR_PHASE]))
+  design <- rle(as.character(data[, pvar]))
   
   #dummy phases
   if(phase.dummy) {
@@ -197,7 +213,7 @@ plm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE
         dummy[(pre + 1):(pre + length.phase)] <- 1
       }
       
-      out[,paste0(VAR_PHASE,design$values[phase])] <- dummy
+      out[,paste0(pvar,design$values[phase])] <- dummy
     } 
   }
   
@@ -218,41 +234,11 @@ plm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE
     out[,paste0("inter",design$values[phase])] <- inter
   }
   
-  
-  # if(model == "B&L-B") {
-  #   for(phase in 2:length(design$values)) {
-  #     inter <- rep(0,N)
-  #     length.phase <- design$lengths[phase]
-  #     pre <- sum(design$lengths[1:(phase-1)])
-  #     inter[(pre +1):(pre + length.phase)] <- MT[(pre +1):(pre + length.phase)] - MT[(pre)]#1:length.phase
-  #     out[,paste0("inter",design$values[phase])] <- inter
-  #   }
-  # }
-  # if(model == "H-M") {
-  #     for(phase in 2:length(design$values)) {
-  #       inter <- rep(0,N)
-  #       length.phase <- design$lengths[phase]
-  #       pre <- sum(design$lengths[1:(phase-1)])
-  #       inter[(pre +1):(pre + length.phase)] <- MT[(pre +1):(pre + length.phase)] - MT[(pre + 1)]#1:length.phase
-  #       out[,paste0("inter",design$values[phase])] <- inter
-  #   }
-  #     
-  # }
-  # if(model == "JW" || model == "JW2") {
-  #   for(phase in 2:length(design$values)) {
-  #     inter <- rep(0,N)
-  #     length.phase <- design$lengths[phase]
-  #     pre <- sum(design$lengths[1:(phase-1)])
-  #     inter[(pre +1):N] <- MT[(pre +1):N]- MT[(pre)]#1:length.phase
-  #     out[,paste0("inter",design$values[phase])] <- inter
-  #   }
-  # }
-  
   out
 }
 
 
-.plm.mt <- function(data, type = "level p", model = "B&L-B", count.data = FALSE) {
+.plm.mt <- function(data, type = "level p", model = "B&L-B", dvar = "values", pvar = "phase", mvar = "mt", count.data = FALSE) {
   N <- length(data)
   if(N > 1)
     stop("Multiple single-cases are given. Calculations could only be applied to a single data set.\n")
@@ -260,32 +246,24 @@ plm <- function(data, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE
   if("list"%in%class(data))
     data <- data[[1]]
   if(ncol(data) < 3)
-    data[,3] <- 1:nrow(data)
+    data[,mvar] <- 1:nrow(data)
   
-  y <- data[,2]
-  n1 <- sum(data[,1] == "A")
-  n2 <- sum(data[,1] == "B")
+  y <- data[,dvar]
+  n1 <- sum(data[,pvar] == "A")
+  n2 <- sum(data[,pvar] == "B")
   
+  MT <- data[,mvar]
+  D <- c(rep(0, n1), rep(1, n2))
   if(model == "H-M") {
-    MT <- data[,3]
-    D <- c(rep(0, n1), rep(1, n2))
     inter <- (MT-MT[n1+1])*D	
   } else if (model == "B&L-B") {
-    MT <- data[,3]
-    D <- c(rep(0, n1), rep(1, n2))
     inter <- (MT-MT[n1])*D	
   } else if (model == "Mohr#1") {
-    MT <- data[,3]
-    D <- c(rep(0, n1), rep(1, n2))
     inter <- MT*D	
   } else if (model == "Mohr#2") {
-    MT <- data[,3]
-    D <- c(rep(0, n1), rep(1, n2))
     inter <- (MT-MT[n1+1])*D
     MT <- MT-MT[n1+1]
   } else if (model == "Manly") {
-    MT <- data[,3]
-    D <- c(rep(0, n1), rep(1, n2))
     inter <- MT*D
   }	
   

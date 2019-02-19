@@ -10,6 +10,9 @@
 #' 
 #' @param data A single-case data frame. See \code{\link{scdf}} to learn
 #' about this format.
+#' @param dvar Character string with the name of the independend variable.
+#' @param pvar Character string with the name of the phase variable.
+#' @param mvar Character string with the name of the measurement time variable.
 #' @param offset An offset for the first measurement-time of each phase (MT). If
 #' set \code{offset = 0}, the phase measurement is handled as MT 1.
 #' Default is \code{offset = -1}, setting the first value of MT to 0.
@@ -37,24 +40,41 @@
 #' ben <- rSC(design)
 #' trendSC(ben, offset = 0, model = c("Cubic" = values ~ I(mt^3), "Log Time" = values ~ log(mt)))
 #' 
-trendSC <- function(data, offset = -1,model = NULL) {
-  phase <- NULL
-  data <- .SCprepareData(data)
+trendSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, offset = -1,model = NULL) {
+
+  if(!is.null(dvar)) 
+    attr(data, .opt$dv) <- dvar
+  else
+    dvar <- attr(data, .opt$dv)
   
+  if(!is.null(pvar))
+    attr(data, .opt$phase) <- pvar
+  else
+    pvar <- attr(data, .opt$phase)
+  
+  if(!is.null(mvar))
+    attr(data, .opt$mt) <- mvar
+  else
+    mvar <- attr(data, .opt$mt)
+  
+  data <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
+
+  phase <- NULL
   N <- length(data)
   if(N > 1)
     stop("Multiple single-cases are given. Calculations can only be applied to one single-case data set.\n")
   
   data <- data[[1]]
   
-  design <- rle(as.character(data$phase))$values
+  design <- rle(as.character(data[, pvar]))$values
   while(any(duplicated(design))) {
     design[anyDuplicated(design)] <- paste0(design[anyDuplicated(design)],".phase",anyDuplicated(design))
   }
   
-  phases <- .phasestructure(data)
+  phases <- .phasestructure(data, pvar = pvar)
   
-  FORMULAS <- c(values ~ mt, values ~ I(mt^2)) 
+  FORMULAS <- c(formula(paste0(dvar," ~ ",mvar)) , 
+                formula(paste0(dvar," ~ I(",mvar,"^2)")))
   FORMULAS.NAMES <- c("Linear","Squared")
   if(!is.null(model)) {
     FORMULAS <- c(FORMULAS, model)
@@ -71,11 +91,11 @@ trendSC <- function(data, offset = -1,model = NULL) {
   for(f in 1:length(FORMULAS)) {
     VAR <- paste0(FORMULAS.NAMES[f],".ALL")
     data.phase <- data
-    data.phase$mt <- data.phase$mt - min(data.phase$mt, na.rm = TRUE) + 1 + offset
+    data.phase[,mvar] <- data.phase[,mvar] - min(data.phase[,mvar], na.rm = TRUE) + 1 + offset
     ma[which(rows == VAR), 1:3] <- .SCbeta(lm(FORMULAS[[f]], data = data.phase))
     for(p in 1: length(design)) {
       data.phase <- data[phases$start[p]:phases$stop[p],]
-      data.phase$mt <- data.phase$mt - min(data.phase$mt, na.rm = TRUE) + 1 + offset
+      data.phase[,mvar] <- data.phase[,mvar] - min(data.phase[,mvar], na.rm = TRUE) + 1 + offset
       VAR <- paste0(FORMULAS.NAMES[f],".", design[p])
       ma[which(rows == VAR), 1:3] <- .SCbeta(lm(FORMULAS[[f]], data = data.phase))
     }

@@ -4,20 +4,26 @@
 \alias{rankSC}
 \title{Rank-transformation of single-case data files}
 \usage{
-rankSC(data)
+rankSC(data, var = NULL, grand = TRUE, ...)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
 this format.}
+
+\item{var}{A charcter or character with the names of the variables to be ranked.}
+
+\item{grand}{If TRUE, ranks will be calculated across all cases. If FALSE ranks are calculated within each case.}
+
+\item{...}{Additional paramters passed to the \code{\link{rank}} function.}
 }
 \value{
-An \code{scdf} object where the values of the \code{values} variable(s) are replaced with ranks.
+An \code{scdf} object where the values of the variable(s) are replaced with ranks.
 }
 \description{
 Rank-transformation of single-case data files
 }
 \examples{
-Huber2014_rank <- rankSC(Huber2014)
+Huber2014_rank <- rankSC(Huber2014, var = "values")
 plot(Huber2014_rank, style = "grid2")
 }
 \author{

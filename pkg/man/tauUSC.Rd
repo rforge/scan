@@ -4,11 +4,15 @@
 \alias{tauUSC}
 \title{Tau-U for single-case data}
 \usage{
-tauUSC(data, ties.method = "omit", method = "complete",
-  phases = c("A", "B"))
+tauUSC(data, dvar = NULL, pvar = NULL, ties.method = "omit",
+  method = "complete", phases = c("A", "B"))
 }
 \arguments{
 \item{data}{A single-case data frame.}
+
+\item{dvar}{Character string with the name of the independend variable.}
+
+\item{pvar}{Character string with the name of the phase variable.}
 
 \item{ties.method}{Defines how to handle ties. \code{"omit"} (default) excludes all
 ties from the calculation. \code{"positive"} counts all ties as positive

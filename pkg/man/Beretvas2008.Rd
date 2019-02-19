@@ -20,6 +20,7 @@
 \alias{exampleABC_50}
 \alias{exampleABAB}
 \alias{exampleA1B1A2B2}
+\alias{exampleA1B1A2B2_zvt}
 \alias{exampleAB_50}
 \alias{exampleAB_50.l2}
 \alias{exampleABC_150}

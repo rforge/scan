@@ -4,11 +4,18 @@
 \alias{outlierSC}
 \title{Handling outliers in single-case data}
 \usage{
-outlierSC(data, criteria = c("MAD", "3.5"))
+outlierSC(data, dvar = NULL, pvar = NULL, mvar = NULL,
+  criteria = c("MAD", "3.5"))
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{makeSCDF}} to learn
 about this format.}
+
+\item{dvar}{Character string with the name of the independend variable.}
+
+\item{pvar}{Character string with the name of the phase variable.}
+
+\item{mvar}{Character string with the name of the measurement time variable.}
 
 \item{criteria}{Specifies the criteria for outlier identification. Set
 \code{criteria = c("SD", 2)} to define two standard deviations as limit.
@@ -38,13 +45,13 @@ Identifies and drops outliers within a single-case data frame (scdf).
 
 ## Identify outliers using 1.5 standard deviations as criterion
 susanne <- rSC(level = 1.0)
-res <- outlierSC(susanne, criteria = c("SD", 1.5))
-plotSC(susanne, marks = list(positions = res$dropped.mt))
+res.outlier <- outlierSC(susanne, criteria = c("SD", 1.5))
+plotSC(susanne, marks = res.outlier)
 
 ## Identify outliers in the original data from Grosche (2011) using Cook's Distance
 ## greater than 4/n as criterion
-res <- outlierSC(Grosche2011, criteria = c("Cook", "4/n"))
-plotSC(Grosche2011, marks = list(positions = res$dropped.mt))
+res.outlier <- outlierSC(Grosche2011, criteria = c("Cook", "4/n"))
+plotSC(Grosche2011, marks = res.outlier)
 
 }
 \seealso{

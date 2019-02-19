@@ -4,10 +4,16 @@
 \alias{describeSC}
 \title{Descriptive statistics for single-case data}
 \usage{
-describeSC(data)
+describeSC(data, dvar = NULL, pvar = NULL, mvar = NULL)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
+
+\item{dvar}{Character string with the name of the independend variable.}
+
+\item{pvar}{Character string with the name of the phase variable.}
+
+\item{mvar}{Character string with the name of the measurement time variable.}
 }
 \value{
 A data frame of descriptive statistics (for each single-case), i.e.:

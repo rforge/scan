@@ -12,8 +12,6 @@
 #' column with corresponding case names.
 #' @param id Variable name of the Level 2 data frame that contains the case
 #' names.
-#' @param model If set, calculates interaction terms (see 'method' argument in
-#' plm function).
 #' @param ... Additional arguments provided to the internally used merge function.
 #' @param check Indicating whether the scdf is checked.
 #' @return Returns one data frame with data of all single-cases structured by
@@ -33,7 +31,7 @@
 #' Leidig2018_long <- longSCDF(Leidig2018, l2 = Leidig2018_l2)
 #' names(Leidig2018_long)
 #' summary(Leidig2018_long)
-longSCDF <- function(data, l2 = NULL, id = "case", model = NULL, check = FALSE, ...) {
+longSCDF <- function(data, l2 = NULL, id = "case", check = FALSE, ...) {
   if(check)
     dat <- .SCprepareData(data) 
   else 
@@ -43,15 +41,6 @@ longSCDF <- function(data, l2 = NULL, id = "case", model = NULL, check = FALSE, 
   if (is.null(label))
     label <- as.character(1:length(dat))
   outdat <- vector()
-  
-  
-  if(!is.null(model)) {
-    for(case in 1:length(dat)) {
-      data.inter <- .plm.dummy(dat[[case]], model = model)
-      dat[[case]]$mt <- data.inter$mt
-      dat[[case]] <- cbind(dat[[case]],data.inter[,-1])
-    }
-  }
   
   
   for (case in 1:length(dat)) {

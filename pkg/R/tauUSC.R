@@ -60,6 +60,8 @@
 #' 
 #' 
 #' @param data A single-case data frame.
+#' @param dvar Character string with the name of the independend variable.
+#' @param pvar Character string with the name of the phase variable.
 #' @param ties.method Defines how to handle ties. \code{"omit"} (default) excludes all
 #' ties from the calculation. \code{"positive"} counts all ties as positive
 #' comparisons, while \code{"negative"} counts them as negative comparisons.
@@ -90,9 +92,20 @@
 #' ## Request tau-U for all single-cases fom the Grosche2011 data
 #' tauUSC(Grosche2011)
 #' 
-tauUSC <- function (data, ties.method = "omit", method = "complete", phases = c("A","B")) {
-  data <- .SCprepareData(data)
-  data <- .keepphasesSC(data, phases = phases)$data
+tauUSC <- function (data, dvar = NULL, pvar = NULL, ties.method = "omit", method = "complete", phases = c("A","B")) {
+
+  if(!is.null(dvar)) 
+    attr(data, .opt$dv) <- dvar
+  else
+    dvar <- attr(data, .opt$dv)
+  
+  if(!is.null(pvar))
+    attr(data, .opt$phase) <- pvar
+  else
+    pvar <- attr(data, .opt$phase)
+  
+  data <- .SCprepareData(data, change.var.values = FALSE, change.var.phase = FALSE)
+  data <- .keepphasesSC(data, phases = phases,pvar = pvar)$data
   
   N <- length(data)
   ret <- list(
@@ -108,8 +121,8 @@ tauUSC <- function (data, ties.method = "omit", method = "complete", phases = c(
     out <- matrix(NA,length(ROWS),length(COLS), dimnames= list(ROWS,COLS))
     out <- as.data.frame(out)
     
-    A <- data[[i]][data[[i]]$phase == "A","values"]
-    B <- data[[i]][data[[i]]$phase == "B","values"]  
+    A <- data[[i]][data[[i]][, pvar] == "A", dvar]
+    B <- data[[i]][data[[i]][, pvar] == "B", dvar]  
     AB <- c(A,B)
     nA <- length(A)
     nB <- length(B)

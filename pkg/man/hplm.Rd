@@ -4,14 +4,21 @@
 \alias{hplm}
 \title{Hierarchical piecewise linear model / piecewise regression}
 \usage{
-hplm(data, model = "B&L-B", method = "ML", control = list(opt =
-  "optim"), random.slopes = FALSE, lr.test = FALSE, ICC = TRUE,
-  trend = TRUE, level = TRUE, slope = TRUE, fixed = NULL,
-  random = NULL, update.fixed = NULL, data.l2 = NULL, ...)
+hplm(data, dvar = NULL, pvar = NULL, mvar = NULL, model = "B&L-B",
+  method = "ML", control = list(opt = "optim"),
+  random.slopes = FALSE, lr.test = FALSE, ICC = TRUE, trend = TRUE,
+  level = TRUE, slope = TRUE, fixed = NULL, random = NULL,
+  update.fixed = NULL, data.l2 = NULL, ...)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
 this format.}
+
+\item{dvar}{Character string with the name of the independend variable.}
+
+\item{pvar}{Character string with the name of the phase variable.}
+
+\item{mvar}{Character string with the name of the measurement time variable.}
 
 \item{model}{Model used for calculating the slope parameter (see Huitema &
 McKean, 2000). Default is \code{model = "B&L-B"}. Possible values are:

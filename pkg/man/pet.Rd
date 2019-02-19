@@ -4,11 +4,18 @@
 \alias{pet}
 \title{Percent exceeding the trend}
 \usage{
-pet(data, ci = 0.95, decreasing = FALSE, phases = c("A", "B"))
+pet(data, dvar = NULL, pvar = NULL, mvar = NULL, ci = 0.95,
+  decreasing = FALSE, phases = c("A", "B"))
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
 this format.}
+
+\item{dvar}{Character string with the name of the independend variable.}
+
+\item{pvar}{Character string with the name of the phase variable.}
+
+\item{mvar}{Character string with the name of the measurement time variable.}
 
 \item{ci}{Width of the confidence interval. Default is \code{ci = .95}.}
 

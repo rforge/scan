@@ -4,10 +4,17 @@
 \alias{autocorrSC}
 \title{Autocorrelation for single-case data}
 \usage{
-autocorrSC(data, lag.max = 3, ...)
+autocorrSC(data, dvar = NULL, pvar = NULL, mvar = NULL,
+  lag.max = 3, ...)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
+
+\item{dvar}{Character string with the name of the independend variable.}
+
+\item{pvar}{Character string with the name of the phase variable.}
+
+\item{mvar}{Character string with the name of the measurement time variable.}
 
 \item{lag.max}{The lag up to which autocorrelations will be computed.
 Default is \code{lag.max = 3}.}

@@ -5,12 +5,19 @@
 \alias{plot.scdf}
 \title{Plot single-case data}
 \usage{
-plotSC(data, ylim = NULL, xlim = NULL, lines = NULL, marks = NULL,
-  phase.names = NULL, xlab = NULL, ylab = NULL, main = "",
-  case.names = NULL, style = "default", ...)
+plotSC(data, dvar = NULL, pvar = NULL, mvar = NULL, ylim = NULL,
+  xlim = NULL, lines = NULL, marks = NULL, phase.names = NULL,
+  xlab = NULL, ylab = NULL, main = "", case.names = NULL,
+  style = "default", ...)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
+
+\item{dvar}{Character string with the name of the independend variable.}
+
+\item{pvar}{Character string with the name of the phase variable.}
+
+\item{mvar}{Character string with the name of the measurement time variable.}
 
 \item{ylim}{Lower and upper limits of the y-axis (e.g., \code{ylim = c(0,
 20)} sets the y-axis to a scale from 0 to 20). With multiple single-cases

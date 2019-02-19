@@ -4,11 +4,16 @@
 \alias{nap}
 \title{Nonoverlap of all Pairs}
 \usage{
-nap(data, decreasing = FALSE, phases = c("A", "B"))
+nap(data, dvar = NULL, pvar = NULL, decreasing = FALSE,
+  phases = c(1, 2))
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
 this format.}
+
+\item{dvar}{Character string with the name of the independend variable.}
+
+\item{pvar}{Character string with the name of the phase variable.}
 
 \item{decreasing}{If you expect data to be lower in the B phase, set
 \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.}

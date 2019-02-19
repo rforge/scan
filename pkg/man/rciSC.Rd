@@ -5,12 +5,16 @@
 \alias{rCi}
 \title{Reliable change index}
 \usage{
-rciSC(data, rel = 0.8, ci = 0.95, graph = FALSE, phases = c("A",
-  "B"))
+rciSC(data, dvar = NULL, pvar = NULL, rel = 0.8, ci = 0.95,
+  graph = FALSE, phases = c("A", "B"))
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
 this format.}
+
+\item{dvar}{Character string with the name of the independend variable.}
+
+\item{pvar}{Character string with the name of the phase variable.}
 
 \item{rel}{Reliability of the measure, used to compute the standard error.
 Default is \code{rel = 0.8}.}

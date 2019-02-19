@@ -6,6 +6,9 @@
 #' 
 #' @param data A single-case data frame. See \code{\link{scdf}} to learn about
 #' this format.
+#' @param dvar Character string with the name of the independend variable.
+#' @param pvar Character string with the name of the phase variable.
+#' @param mvar Character string with the name of the measurement time variable.
 #' @param decreasing If you expect data to be lower in the B phase, set
 #' \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.
 #' @param phases A vector of two characters or numbers indicating the two
@@ -33,14 +36,28 @@
 #' overl <- overlapSC(Waddell2011)
 #' write.csv(overl$overlap, file = "overlap_indices.csv")
 #' 
-overlapSC <- function(data, decreasing = FALSE, phases = c("A","B")) {
-  data.list <- .SCprepareData(data)
-  ATTRIBUTES <- attributes(data.list)
-  keep <- .keepphasesSC(data.list, phases = phases)
-
-  data.list <- keep$data
+overlapSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, decreasing = FALSE, phases = c("A","B")) {
   
-  design <- rle(as.character(data.list[[1]]$phase))$values
+  if(!is.null(dvar)) 
+    attr(data, .opt$dv) <- dvar
+  else
+    dvar <- attr(data, .opt$dv)
+  
+  if(!is.null(pvar))
+    attr(data, .opt$phase) <- pvar
+  else
+    pvar <- attr(data, .opt$phase)
+  
+  if(!is.null(mvar))
+    attr(data, .opt$mt) <- mvar
+  else
+    mvar <- attr(data, .opt$mt)
+  
+  data.list <- .SCprepareData(data, change.var.values = FALSE, change.var.phase = FALSE,change.var.mt = FALSE)
+  keep <- .keepphasesSC(data.list, phases = phases, pvar = pvar)
+  data.list <- keep$data
+  ATTRIBUTES <- attributes(data.list)
+  design <- rle(as.character(data.list[[1]][, pvar]))$values
   N <- length(data.list)
 
   case.names <- names(data.list)
@@ -51,7 +68,7 @@ overlapSC <- function(data, decreasing = FALSE, phases = c("A","B")) {
   rownames(d.f) <- c(case.names)
 
   for(i in 1:N) {
-    data <- data.list[[i]]
+    data <- data.list[i]
     d.f$PND[i] <- pnd(data, decreasing = decreasing)$PND
     d.f$PEM[i] <- pem(data, decreasing = decreasing, binom.test = FALSE, chi.test = FALSE)$PEM
     d.f$PET[i] <- pet(data, decreasing = decreasing)$PET
@@ -61,13 +78,14 @@ overlapSC <- function(data, decreasing = FALSE, phases = c("A","B")) {
     #d.f$TAU_U[i] <- tauUSC(data)$Overall_tau_u[2]
     d.f$TAU_U[i] <- tauUSC(data)$table[[1]]["A vs. B + Trend B - Trend A","Tau"]
     
-    A <- data$values[data$phase == "A"]
-    B <- data$values[data$phase == "B"]
+    data <- data[[1]]
+    A <- data[data[, pvar] == "A", dvar]
+    B <- data[data[, pvar] == "B", dvar]
     d.f$Diff_mean[i] <- mean(B, na.rm = TRUE) - mean(A, na.rm = TRUE)
     d.f$SMD[i] <- (mean(B, na.rm = TRUE) - mean(A, na.rm = TRUE)) / sd(A, na.rm = TRUE)
     
-    A.MT <- data$mt[data$phase == "A"]
-    B.MT <- data$mt[data$phase == "B"]
+    A.MT <- data[data[, pvar] == "A", mvar]
+    B.MT <- data[data[, pvar] == "B", mvar]
     d.f$Diff_trend[i] <- coef(lm(B~I(B.MT-B.MT[1]+1)))[2] - coef(lm(A~I(A.MT-A.MT[1]+1)))[2]
     
   }
@@ -75,9 +93,9 @@ overlapSC <- function(data, decreasing = FALSE, phases = c("A","B")) {
 
   out <- list(overlap = d.f, phases.A = keep$phases.A, phases.B = keep$phases.B, design = keep$design[[1]]$values)
   class(out) <- c("sc","overlap")
-  attr(out, "var.phase") <- ATTRIBUTES$var.phase
-  attr(out, "var.mt") <- ATTRIBUTES$var.mt
-  attr(out, "var.values") <- ATTRIBUTES$var.values
+  attr(out, .opt$phase) <- ATTRIBUTES[[.opt$phase]]
+  attr(out, .opt$mt)    <- ATTRIBUTES[[.opt$mt]]
+  attr(out, .opt$dv)    <- ATTRIBUTES[[.opt$dv]]
   
   out
 }

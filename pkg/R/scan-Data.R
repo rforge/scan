@@ -23,6 +23,7 @@
 #' exampleABC_50
 #' exampleABAB 
 #' exampleA1B1A2B2 
+#' exampleA1B1A2B2_zvt
 #' exampleAB_50 
 #' exampleAB_50.l2 
 #' exampleABC_150

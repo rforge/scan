@@ -4,12 +4,15 @@
 \alias{scaleSC}
 \title{Scaling values of an scdf file}
 \usage{
-scaleSC(data, center = TRUE, scale = FALSE, m = 0, sd = 1,
-  grand = TRUE, var = "values")
+scaleSC(data, var = NULL, center = TRUE, scale = FALSE, m = 0,
+  sd = 1, grand = TRUE)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
 this format.}
+
+\item{var}{A character string or a vector of character strings with variable
+names that should be scaled.}
 
 \item{center}{If set TRUE, data are mean centered.}
 
@@ -21,9 +24,6 @@ this format.}
 
 \item{grand}{If set TRUE, scaling is based on the mean and standarddeviation
 of all measurements across all single-cases within the scdf.}
-
-\item{var}{A character string or a vector of character strings with variable
-names that are scaled. The default is "values".}
 }
 \value{
 An scdf with the scaled values.
@@ -36,7 +36,7 @@ scaling across all cases included in an scdf.
 \examples{
 
 ## Standardize a multiple case scdf and compute an hplm
-ex_sc <- scaleSC(exampleAB_50, center = TRUE, scale = TRUE)
+ex_sc <- scaleSC(exampleAB_50, var = "values", center = TRUE, scale = TRUE)
 hplm(ex_sc)
 }
 \author{

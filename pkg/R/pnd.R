@@ -7,6 +7,8 @@
 #' 
 #' @param data A single-case data frame. See \code{\link{scdf}} to learn about
 #' this format.
+#' @param dvar Character string with the name of the independend variable.
+#' @param pvar Character string with the name of the phase variable.
 #' @param decreasing If you expect data to be lower in the B phase, set
 #' \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.
 #' @param phases A vector of two characters or numbers indicating the two
@@ -24,22 +26,35 @@
 #' ## Calculate the PND for multiple single-case data
 #' pnd(GruenkeWilbert2014)
 #' 
-pnd <- function(data, decreasing = FALSE, phases = c("A","B")) {
-  
-  data <- .SCprepareData(data)
-  data <- .keepphasesSC(data, phases = phases)$data
+pnd <- function(data, dvar = NULL, pvar = NULL, decreasing = FALSE, phases = c("A","B")) {
 
+  if(!is.null(dvar)) 
+    attr(data, .opt$dv) <- dvar
+  else
+    dvar <- attr(data, .opt$dv)
+  
+  if(!is.null(pvar))
+    attr(data, .opt$phase) <- pvar
+  else
+    pvar <- attr(data, .opt$phase)
+  
+  data <- .SCprepareData(data, na.rm = TRUE, change.var.values = FALSE, change.var.phase = FALSE)
+  data <- .keepphasesSC(data, phases = phases, pvar = pvar)$data
+  
   PND <- c()
+  n.B <- c()
+  
   for(i in 1:length(data)) {
-    A <- data[[i]][,"values"][data[[i]][,"phase"] == "A"]
-    B <- data[[i]][,"values"][data[[i]][,"phase"] == "B"]
+    A <- data[[i]][, dvar][data[[i]][, pvar] == "A"]
+    B <- data[[i]][, dvar][data[[i]][, pvar] == "B"]
+    n.B[i] <- length(B)
     if (!decreasing)
-      PND[i] <- sum(B > max(A, na.rm = TRUE), na.rm = TRUE) / length(B) * 100
+      PND[i] <- sum(B > max(A, na.rm = TRUE), na.rm = TRUE) /  n.B[i] * 100
     if (decreasing)
-      PND[i] <- sum(B < min(A, na.rm = TRUE), na.rm = TRUE) / length(B) * 100
+      PND[i] <- sum(B < min(A, na.rm = TRUE), na.rm = TRUE) /  n.B[i] * 100
   }
   
-  out <- list(PND = PND)
+  out <- list(PND = PND, case.names = names(data), n.B = n.B)
   class(out) <- c("sc","PND")
   out
 }

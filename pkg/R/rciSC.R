@@ -8,6 +8,8 @@
 #' @aliases rciSC rCi
 #' @param data A single-case data frame. See \code{\link{scdf}} to learn about
 #' this format.
+#' @param dvar Character string with the name of the independend variable.
+#' @param pvar Character string with the name of the phase variable.
 #' @param rel Reliability of the measure, used to compute the standard error.
 #' Default is \code{rel = 0.8}.
 #' @param ci Width of confidence interval as a decimal. Default is \code{ci =
@@ -51,15 +53,26 @@
 #' ## Report the RCIs of the first case from the byHeart data and include a graph
 #' rciSC(byHeart2011[1], graph = TRUE)
 #' 
-rciSC <- function(data, rel = 0.80, ci = 0.95, graph = FALSE, phases = c("A","B")) {
-  data <- .SCprepareData(data)
-  data <- .keepphasesSC(data, phases = phases)$data
+rciSC <- function(data, dvar = NULL, pvar = NULL, rel = 0.80, ci = 0.95, graph = FALSE, phases = c("A","B")) {
+  if(!is.null(dvar)) 
+    attr(data, .opt$dv) <- dvar
+  else
+    dvar <- attr(data, .opt$dv)
+  
+  if(!is.null(pvar))
+    attr(data, .opt$phase) <- pvar
+  else
+    pvar <- attr(data, .opt$phase)
+  
+  data <- .SCprepareData(data, na.rm = TRUE, change.var.values = FALSE, change.var.phase = FALSE)
+  data <- .keepphasesSC(data, phases = phases,pvar = pvar)$data
   
   N <- length(data)
   if(N > 1)
     stop("Multiple single-cases are given. Calculations can only be applied to one single-case data set.\n")
-  A <- lapply(data, function(x) x[,"values"][x[,"phase"] == "A"])
-  B <- lapply(data, function(x) x[,"values"][x[,"phase"] == "B"])
+
+  A <- lapply(data, function(x) x[,dvar][x[,pvar] == "A"])
+  B <- lapply(data, function(x) x[,dvar][x[,pvar] == "B"])
   A <- unlist(A)
   B <- unlist(B)
   sA <- sd(A, na.rm = TRUE)

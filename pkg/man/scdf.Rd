@@ -11,8 +11,8 @@
 \title{Single case data frame}
 \usage{
 scdf(values = NULL, B.start = NULL, mt = NULL, phase = NULL,
-  phase.design = NULL, name = NULL, var.values = "values",
-  var.phase = "phase", var.mt = "mt", ...)
+  phase.design = NULL, name = NULL, dvar = "values",
+  var.values = NULL, pvar = "phase", mvar = "mt", ...)
 }
 \arguments{
 \item{values}{A vector containing measurement values of the target variable.}
@@ -30,11 +30,13 @@ E.g., \code{phase.length = c(A1 = 10, B1 = 10, A2 = 10, B2 = 10)}.}
 
 \item{name}{A name for the case.}
 
-\item{var.values}{A character string with the name of the dependend variable.}
+\item{dvar}{A character string with the name of the independent variable.}
 
-\item{var.phase}{A character string with the name of the phase variable.}
+\item{var.values}{Deprecated. Please use dvar paramter instead}
 
-\item{var.mt}{A character string with the name of the measurement-time variable.}
+\item{pvar}{A character string with the name of the phase variable.}
+
+\item{mvar}{A character string with the name of the measurement-time variable.}
 
 \item{...}{Additional variables. E.g., \code{teacher = c(0,1,0,1,0,0,1),
 lesson = c(1,3,4,5,2,3)}.}
@@ -65,15 +67,16 @@ plot(klaas)
 
 ## Unfortunately in a similar SCDR there were no data collected on days 3 and 9. Use NA to
 ## pass them to the package.
-emmi <- scdf(c(5, 7, NA, 5, 7, 12, 16, 18, NA, 14, 19), B.start = 6, name = "Emmi")
+emmi <- scdf(c(5, 7, NA, 5, 7, 12, 16, 18, NA, 14, 19), 
+             phase.design = c(A = 5, B = 6), name = "Emmi")
 describeSC(emmi)
 
 ## In a MBD over three persons, data were again collected eleven days in a row. Intervention
 ## starting points differ between subjects as they were randomly assigned. The three SCDFs
 ## are then combined in a list for further conjoined analyses.
 charlotte <- scdf(c(5, 7, 10, 5, 12, 7, 10, 18, 15, 14, 19), B.start = 6)
-theresa <- scdf(c(3, 4, 3, 5, 7, 4, 7, 9, 8, 10, 12),B.start = 5)
-antonia <- scdf(c(9, 8, 8, 7, 5, 7, 6, 14, 15, 12, 16), B.start = 7)
+theresa   <- scdf(c(3, 4, 3, 5, 7, 4, 7, 9, 8, 10, 12),      B.start = 5)
+antonia   <- scdf(c(9, 8, 8, 7, 5, 7, 6, 14, 15, 12, 16),    B.start = 7)
 mbd <- c(charlotte, theresa, antonia)
 names(mbd) <- c("Charlotte", "Theresa", "Antonia")
 overlapSC(mbd)
@@ -87,7 +90,11 @@ summary(frida)
 plot(frida)
 describeSC(frida)
 
-
+## example with two independent variables and four phases
+jim  <- scdf(zvt = c(47, 58, 76, 63, 71, 59, 64, 69, 72, 77, 76, 73), 
+              d2 = c(131, 134, 141, 141, 140, 140, 138, 140, 141, 140, 138, 140), 
+             phase.design = c(A1=3, B1=3, A2=3, B2=3), dvar = "zvt")
+overlapSC(jim, phases = list(c("A1","A2"),c("B1","B2")))
 }
 \seealso{
 \code{\link{longSCDF}}, \code{\link{readSC}}

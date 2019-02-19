@@ -5,6 +5,9 @@
 #' 
 #' 
 #' @param data A single-case data frame. See \code{\link{scdf}} to learn about this format.
+#' @param dvar Character string with the name of the independend variable.
+#' @param pvar Character string with the name of the phase variable.
+#' @param mvar Character string with the name of the measurement time variable.
 #' @param lag.max The lag up to which autocorrelations will be computed.
 #' Default is \code{lag.max = 3}.
 #' @param ... Further arguments passed to the \code{\link{acf}} function
@@ -22,8 +25,24 @@
 #' @concept Autocorrelation
 #' @concept Seiral correlation
 
-autocorrSC <- function(data, lag.max = 3, ...) {
-  data <- .SCprepareData(data)
+autocorrSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, lag.max = 3, ...) {
+  
+  if(!is.null(dvar)) 
+    attr(data, .opt$dv) <- dvar
+  else
+    dvar <- attr(data, .opt$dv)
+  
+  if(!is.null(pvar))
+    attr(data, .opt$phase) <- pvar
+  else
+    pvar <- attr(data, .opt$phase)
+  
+  if(!is.null(mvar))
+    attr(data, .opt$mt) <- mvar
+  else
+    mvar <- attr(data, .opt$mt)
+  
+  data <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
   
   N <- length(data)
   case.names <- names(data)
@@ -31,7 +50,7 @@ autocorrSC <- function(data, lag.max = 3, ...) {
     case.names <- paste("Case",1:N, sep = "")
   VAR <- paste0("lag_",1:lag.max)
   
-  design <- rle(as.character(data[[1]]$phase))$values
+  design <- rle(as.character(data[[1]][,pvar]))$values
   
   while(any(duplicated(design))) {
     design[anyDuplicated(design)] <- paste0(design[anyDuplicated(design)],".phase",anyDuplicated(design))
@@ -43,22 +62,22 @@ autocorrSC <- function(data, lag.max = 3, ...) {
   
   
   for(case in 1:N) {
-    phases <- .phasestructure(data[[case]])
+    phases <- .phasestructure(data[[case]], pvar = pvar)
     
     for(phase in 1:length(design)) {
-      y <- data[[case]]$values[phases$start[phase]:phases$stop[phase]]
+      y <- data[[case]][phases$start[phase]:phases$stop[phase],dvar]
       if(length(y) - 1 < lag.max) lag <- length(y) - 1 else lag <- lag.max
       
       ac[(case - 1) * (length(design) + 1) + phase, VAR[1:lag]] <- acf(y, lag.max = lag, plot = FALSE, ...)$acf[-1]
     }
-    y <- data[[case]]$values
+    y <- data[[case]][,dvar]
     if(length(y) - 1 < lag.max) lag <- length(y) - 1 else lag <- lag.max
     
     ac[(case - 1) * (length(design) + 1) + (length(design) + 1), VAR[1:lag]] <- acf(y, lag.max = lag, plot = FALSE, ...)$acf[-1]
     
   }
  
-  out <- list(autocorr = ac)
+  out <- list(autocorr = ac, dvar = dvar)
   class(out) <- c("sc","autocorr")
   out
 }

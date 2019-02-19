@@ -4,12 +4,17 @@
 \alias{pem}
 \title{Percent exceeding the median}
 \usage{
-pem(data, decreasing = FALSE, binom.test = TRUE, chi.test = FALSE,
-  FUN = median, phases = c("A", "B"), ...)
+pem(data, dvar = NULL, pvar = NULL, decreasing = FALSE,
+  binom.test = TRUE, chi.test = FALSE, FUN = median,
+  phases = c("A", "B"), ...)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
 this format.}
+
+\item{dvar}{Character string with the name of the independend variable.}
+
+\item{pvar}{Character string with the name of the phase variable.}
 
 \item{decreasing}{If you expect data to be lower in the B phase, set
 \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.}

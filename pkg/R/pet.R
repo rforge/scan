@@ -9,6 +9,9 @@
 #' 
 #' @param data A single-case data frame. See \code{\link{scdf}} to learn about
 #' this format.
+#' @param dvar Character string with the name of the independend variable.
+#' @param pvar Character string with the name of the phase variable.
+#' @param mvar Character string with the name of the measurement time variable.
 #' @param decreasing If you expect data to be lower in the B phase, set
 #' \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.
 #' @param ci Width of the confidence interval. Default is \code{ci = .95}.
@@ -33,10 +36,25 @@
 #' dat <- rSC(n = 5, slope = 0.2)
 #' pet(dat, ci = .99)
 #' 
-pet <- function(data, ci = 0.95, decreasing = FALSE, phases = c("A","B")) {
+pet <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, ci = 0.95, decreasing = FALSE, phases = c("A","B")) {
   
-  data <- .SCprepareData(data)
-  data <- .keepphasesSC(data, phases = phases)$data
+  if(!is.null(dvar)) 
+    attr(data, .opt$dv) <- dvar
+  else
+    dvar <- attr(data, .opt$dv)
+  
+  if(!is.null(pvar))
+    attr(data, .opt$phase) <- pvar
+  else
+    pvar <- attr(data, .opt$phase)
+  
+  if(!is.null(mvar))
+    attr(data, .opt$mt) <- mvar
+  else
+    mvar <- attr(data, .opt$mt)
+  
+  data <- .SCprepareData(data, na.rm = TRUE, change.var.values = FALSE, change.var.phase = FALSE,change.var.mt = FALSE)
+  data <- .keepphasesSC(data, phases = phases, pvar = pvar)$data
   
   N <- length(data)
   
@@ -47,18 +65,19 @@ pet <- function(data, ci = 0.95, decreasing = FALSE, phases = c("A","B")) {
   p      <- rep(NA, N)
   
   for(i in 1:N) {
-    model <- lm(values~mt, data = data[[i]][data[[i]][,"phase"] == "A",], na.action = na.omit)
-    B <- data[[i]][data[[i]][,"phase"] == "B",]
+    formula <- as.formula(paste0(dvar,"~",mvar))
+    model <- lm(formula, data = data[[i]][data[[i]][,pvar] == "A",], na.action = na.omit)
+    B <- data[[i]][data[[i]][,pvar] == "B",]
     res <- predict(model, B, se.fit = TRUE)
     nB <- nrow(B)
     if(!decreasing) {
-      pet.ci[i] <- mean(B$values > (res$fit + res$se.fit * se.factor), na.rm = TRUE)*100
-      pet[i]    <- mean(B$values > res$fit, na.rm = TRUE)*100
-      p[i]      <- binom.test(sum(B$values > res$fit, na.rm = TRUE), nB, alternative = "greater")$p.value
+      pet.ci[i] <- mean(B[,dvar] > (res$fit + res$se.fit * se.factor), na.rm = TRUE)*100
+      pet[i]    <- mean(B[,dvar] > res$fit, na.rm = TRUE)*100
+      p[i]      <- binom.test(sum(B[,dvar] > res$fit, na.rm = TRUE), nB, alternative = "greater")$p.value
     } else {
-      pet.ci[i] <- mean(B$values < (res$fit - res$se.fit * se.factor), na.rm = TRUE)*100
-      pet[i]    <- mean(B$values < res$fit, na.rm = TRUE)*100
-      p[i]      <- binom.test(sum(B$values < res$fit, na.rm = TRUE), nB, alternative = "greater")$p.value
+      pet.ci[i] <- mean(B[,dvar] < (res$fit - res$se.fit * se.factor), na.rm = TRUE)*100
+      pet[i]    <- mean(B[,dvar] < res$fit, na.rm = TRUE)*100
+      p[i]      <- binom.test(sum(B[,dvar] < res$fit, na.rm = TRUE), nB, alternative = "greater")$p.value
     }
   }
   if(is.null(names(data)))

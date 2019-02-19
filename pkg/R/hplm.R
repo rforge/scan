@@ -5,6 +5,9 @@
 #' 
 #' @param data A single-case data frame. See \code{\link{scdf}} to learn about
 #' this format.
+#' @param dvar Character string with the name of the independend variable.
+#' @param pvar Character string with the name of the phase variable.
+#' @param mvar Character string with the name of the measurement time variable.
 #' @param model Model used for calculating the slope parameter (see Huitema &
 #' McKean, 2000). Default is \code{model = "B&L-B"}. Possible values are:
 #' \code{"B&L-B"}, \code{"H-M"}, \code{"Mohr#1"}, \code{"Mohr#2"}, \code{"JW"}, \code{"JW2"}, and
@@ -53,9 +56,24 @@
 #'      update.fixed = .~. + gender + migration + ITRF_TOTAL*phaseB, 
 #'      slope = FALSE, random.slopes = TRUE, lr.test = TRUE)
 
-hplm <- function(data, model = "B&L-B", method = "ML", control = list(opt = "optim"), random.slopes = FALSE, lr.test = FALSE, ICC = TRUE, trend = TRUE, level = TRUE, slope = TRUE, fixed = NULL, random = NULL, update.fixed = NULL, data.l2 = NULL, ...) {
+hplm <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, model = "B&L-B", method = "ML", control = list(opt = "optim"), random.slopes = FALSE, lr.test = FALSE, ICC = TRUE, trend = TRUE, level = TRUE, slope = TRUE, fixed = NULL, random = NULL, update.fixed = NULL, data.l2 = NULL, ...) {
+
+  if(!is.null(dvar)) 
+    attr(data, .opt$dv) <- dvar
+  else
+    dvar <- attr(data, .opt$dv)
   
-  dat <- .SCprepareData(data)
+  if(!is.null(pvar))
+    attr(data, .opt$phase) <- pvar
+  else
+    pvar <- attr(data, .opt$phase)
+  
+  if(!is.null(mvar))
+    attr(data, .opt$mt) <- mvar
+  else
+    mvar <- attr(data, .opt$mt)
+  
+  dat <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
   
   ATTRIBUTES <- attributes(dat)
   
@@ -72,15 +90,15 @@ hplm <- function(data, model = "B&L-B", method = "ML", control = list(opt = "opt
     random <- as.formula("~1|case")
   
   for(case in 1: N) {
-    dat_dummy <- .plm.dummy(dat[[case]], model = model)
-    dat[[case]]$mt <- dat_dummy$mt
+    dat_dummy <- .plm.dummy(dat[[case]], model = model, dvar = dvar, pvar = pvar, mvar = mvar)
+    dat[[case]][,mvar] <- dat_dummy$mt
     dat[[case]] <- cbind(dat[[case]],dat_dummy[,-1])
     n_Var <- (ncol(dat_dummy) - 1) / 2
     VAR_INTER <- names(dat_dummy)[(ncol(dat_dummy)-n_Var+1):ncol(dat_dummy)]
     VAR_PHASE <- names(dat_dummy)[2:(n_Var+1)]
   }
   
-  dat <- longSCDF(dat, l2 = data.l2, check = FALSE)
+  dat <- longSCDF(dat, l2 = data.l2)
 
   if(is.null(fixed)) {
     INTER <- ""
@@ -95,8 +113,8 @@ hplm <- function(data, model = "B&L-B", method = "ML", control = list(opt = "opt
       PHASE <- paste0("+ ", PHASE)
     }
     if(trend)
-      MT <- "+ mt "
-    fixed <- as.formula(paste0("values ~ 1",MT, PHASE, INTER))
+      MT <- paste0("+ ",mvar," ")
+    fixed <- formula(paste0(dvar, " ~ 1",MT, PHASE, INTER))
   } 
   
   if(!is.null(update.fixed))
@@ -115,8 +133,8 @@ hplm <- function(data, model = "B&L-B", method = "ML", control = list(opt = "opt
       PHASE <- paste0("+ ", PHASE)
     }
     if(trend)
-      MT <- "+ mt "
-    random <- as.formula(paste0("~ 1",MT, PHASE, INTER,"|case"))
+      MT <- paste0("+ ",mvar," ")
+    random <- formula(paste0("~ 1",MT, PHASE, INTER,"|case"))
     
   }
   
@@ -160,23 +178,24 @@ hplm <- function(data, model = "B&L-B", method = "ML", control = list(opt = "opt
   
 
   if(ICC) {
-    out$model.0 <- lme(values ~ 1, random =~1|case, data = dat, method = method, na.action=na.omit, control = control)
+    .formula.null <<- as.formula(paste0(dvar," ~ 1"))
+    out$model.0 <- lme(.formula.null, random =~1|case, data = dat, method = method, na.action=na.omit, control = control)
     VC <- as.numeric(VarCorr(out$model.0))
     out$ICC$value <- VC[1]/(VC[1]+VC[2])	
-    out$model.without <- gls(values ~ 1, data = dat, method = method, na.action=na.omit, control = control)
+    out$model.without <- gls(.formula.null, data = dat, method = method, na.action=na.omit, control = control)
     dif <- anova(out$model.0, out$model.without)
     out$ICC$L <- dif$L.Ratio[2]
     out$ICC$p <- dif$"p-value"[2]
+    rm(".formula.null", envir = globalenv())
   } 
   
   out$model$fixed  <- fixed
   out$model$random <- random
   
-  
   class(out) <- c("sc","hplm")
-  attr(out, "var.phase") <- ATTRIBUTES$var.phase
-  attr(out, "var.mt") <- ATTRIBUTES$var.mt
-  attr(out, "var.values") <- ATTRIBUTES$var.values
+  attr(out, .opt$phase) <- pvar
+  attr(out, .opt$mt)    <- mvar
+  attr(out, .opt$dv)    <- dvar
   
   #hack (problems with anovo.lme function)
   if(lr.test)
