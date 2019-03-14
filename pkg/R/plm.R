@@ -72,25 +72,26 @@
 #' ## and now drop the trend estimation as well
 #' plm(dat, slope = FALSE, trend = FALSE, model = "JW")
 #' 
-plm <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE, level = TRUE, slope = TRUE,formula = NULL, update = NULL, na.action = na.omit, ...) {
+#' @export
+plm <- function(data, dvar, pvar, mvar, AR = 0, model = "B&L-B", family = "gaussian", trend = TRUE, level = TRUE, slope = TRUE,formula = NULL, update = NULL, na.action = na.omit, ...) {
 
   if (AR > 0 && !family == "gaussian")
     stop("Autoregression models could only be applied if distribution familiy = 'gaussian'.\n")
   
-  if(!is.null(dvar)) 
+  if(missing(dvar)) 
+    dvar <- attr(data, .opt$dv) 
+  else 
     attr(data, .opt$dv) <- dvar
-  else
-    dvar <- attr(data, .opt$dv)
   
-  if(!is.null(pvar))
-    attr(data, .opt$phase) <- pvar
-  else
+  if(missing(pvar))
     pvar <- attr(data, .opt$phase)
-  
-  if(!is.null(mvar))
-    attr(data, .opt$mt) <- mvar
   else
+    attr(data, .opt$phase) <- pvar
+  
+  if(missing(mvar))
     mvar <- attr(data, .opt$mt)
+  else
+    attr(data, .opt$mt) <- mvar
   
   data <- .SCprepareData(data, na.rm = TRUE,change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
   

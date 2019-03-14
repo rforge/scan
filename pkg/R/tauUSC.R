@@ -92,6 +92,7 @@
 #' ## Request tau-U for all single-cases fom the Grosche2011 data
 #' tauUSC(Grosche2011)
 #' 
+#' @export
 tauUSC <- function (data, dvar = NULL, pvar = NULL, ties.method = "omit", method = "complete", phases = c("A","B")) {
 
   if(!is.null(dvar)) 

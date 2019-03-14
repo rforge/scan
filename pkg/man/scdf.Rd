@@ -3,16 +3,13 @@
 \name{scdf}
 \alias{scdf}
 \alias{scdf-class}
-\alias{summary.scdf}
 \alias{as.scdf}
-\alias{c.scdf}
 \alias{checkSCDF}
 \alias{makeSCDF}
 \title{Single case data frame}
 \usage{
-scdf(values = NULL, B.start = NULL, mt = NULL, phase = NULL,
-  phase.design = NULL, name = NULL, dvar = "values",
-  var.values = NULL, pvar = "phase", mvar = "mt", ...)
+scdf(values, B.start, mt, phase, phase.design, name, dvar = "values",
+  pvar = "phase", mvar = "mt", ...)
 }
 \arguments{
 \item{values}{A vector containing measurement values of the target variable.}
@@ -31,8 +28,6 @@ E.g., \code{phase.length = c(A1 = 10, B1 = 10, A2 = 10, B2 = 10)}.}
 \item{name}{A name for the case.}
 
 \item{dvar}{A character string with the name of the independent variable.}
-
-\item{var.values}{Deprecated. Please use dvar paramter instead}
 
 \item{pvar}{A character string with the name of the phase variable.}
 
@@ -57,6 +52,10 @@ each case. Each of these dataframes has to contain columns with the names
 if not provided is set to \code{1:nrow} by all \code{scan} functions.
 Methods for the \code{sdf} class are \code{print}, \code{summary}, and
 \code{plot}.
+
+If the dependent variable is a named vector then the names are extracted
+to create a phase design (e.g., values = c(A = 2,3,5,4,3, B = 6,5,4,3) will create 
+an AB phase design with five and four measuresments).
 }
 \examples{
 
@@ -64,6 +63,13 @@ Methods for the \code{sdf} class are \code{print}, \code{summary}, and
 ## started after the fifth measurement, so the first B phase measurement was 6 (B.start = 6).
 klaas <- scdf(c(5, 7, 8, 5, 7, 12, 16, 18, 15, 14, 19), B.start = 6, name = "Klaas")
 plot(klaas)
+
+#Alternative coding 1:
+klaas <- scdf(c(A = 5, 7, 8, 5, 7, B = 12, 16, 18, 15, 14, 19), name = "Klaas")
+
+#Alternative coding 2:
+klaas <- scdf(c(5, 7, 8, 5, 7, 12, 16, 18, 15, 14, 19), 
+              phase.design = c(A = 5, B = 6), name = "Klaas")
 
 ## Unfortunately in a similar SCDR there were no data collected on days 3 and 9. Use NA to
 ## pass them to the package.
@@ -95,6 +101,7 @@ jim  <- scdf(zvt = c(47, 58, 76, 63, 71, 59, 64, 69, 72, 77, 76, 73),
               d2 = c(131, 134, 141, 141, 140, 140, 138, 140, 141, 140, 138, 140), 
              phase.design = c(A1=3, B1=3, A2=3, B2=3), dvar = "zvt")
 overlapSC(jim, phases = list(c("A1","A2"),c("B1","B2")))
+
 }
 \seealso{
 \code{\link{longSCDF}}, \code{\link{readSC}}

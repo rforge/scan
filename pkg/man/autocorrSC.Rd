@@ -4,8 +4,7 @@
 \alias{autocorrSC}
 \title{Autocorrelation for single-case data}
 \usage{
-autocorrSC(data, dvar = NULL, pvar = NULL, mvar = NULL,
-  lag.max = 3, ...)
+autocorrSC(data, dvar, pvar, mvar, lag.max = 3, ...)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}

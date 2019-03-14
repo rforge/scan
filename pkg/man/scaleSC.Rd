@@ -38,6 +38,7 @@ scaling across all cases included in an scdf.
 ## Standardize a multiple case scdf and compute an hplm
 ex_sc <- scaleSC(exampleAB_50, var = "values", center = TRUE, scale = TRUE)
 hplm(ex_sc)
+
 }
 \author{
 Juergen Wilbert

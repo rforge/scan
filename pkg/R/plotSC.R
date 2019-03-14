@@ -91,27 +91,31 @@
 #'        cex = 1.4),annotations = list(label = "values","col" = "red", cex = 0.75,
 #'        offset = 1, round = 0))
 #' 
+#' @export
+plot.scdf <- function(...) {
+  plotSC(...)
+}
 
-plotSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL,ylim = NULL, xlim = NULL, lines = NULL, marks = NULL, phase.names = NULL, xlab = NULL, ylab = NULL, main = "", case.names = NULL, style = "default", ...) {
+#' @rdname plot.scdf
+#' @export
+plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NULL, marks = NULL, phase.names = NULL, xlab = NULL, ylab = NULL, main = "", case.names = NULL, style = "default", ...) {
   
   dots <- list(...)
   op <- par(no.readonly = TRUE)
   on.exit(par(op))
   
-  if(!is.null(dvar)) 
-    attr(data, .opt$dv) <- dvar
-  else
+  if(missing(dvar))
     dvar <- attr(data, .opt$dv)
-  
-  if(!is.null(pvar))
-    attr(data, .opt$phase) <- pvar
   else
+    attr(data, .opt$dv) <- dvar
+  if (missing(pvar))
     pvar <- attr(data, .opt$phase)
-  
-  if(!is.null(mvar))
-    attr(data, .opt$mt) <- mvar
   else
+    attr(data, .opt$phase) <- pvar
+  if (missing(mvar))
     mvar <- attr(data, .opt$mt)
+  else
+    attr(data, .opt$mt) <- mvar
   
   data.list <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
   N <- length(data.list)
@@ -129,15 +133,15 @@ plotSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL,ylim = NULL, xlim
     style <- c(style, style.plotSC(ref.style))
     style <- style[unique(names(style))]
   }
-
+  
   if(is.character(style))
     style <- style.plotSC(style)
- 
+  
   #for pre style backwards compatibility
   sty.names <- c("fill","fill.bg","frame","grid","lwd","pch","text.ABlag","type")
   if(any(names(dots) %in% sty.names))
     stop("Using style parameters like 'fill' directly as arguments is deprectated. Please use the 'stlye' argument to provide these parameters. E.g., style = list(fill = 'blue', pch = 19)")
-
+  
   annotations <- style$annotations
   
   if(is.na(style$frame))
@@ -172,7 +176,7 @@ plotSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL,ylim = NULL, xlim
     xlab <- mvar
   if(is.null(ylab))
     ylab <- dvar
-
+  
   if(is.null(xlab))
     xlab <- "Measurement time"
   if(is.null(ylab))
@@ -180,7 +184,7 @@ plotSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL,ylim = NULL, xlim
   
   if(xlab == "mt")
     xlab <- "Measurement time"
-
+  
   
   if(class(lines) != "list")
     lines <- lapply(lines,function(x) x)
@@ -196,27 +200,27 @@ plotSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL,ylim = NULL, xlim
     names(lines) <- tmp
   }
   
-
+  
   values.tmp <- unlist(lapply(data.list, function(x) x[,dvar]))
   mt.tmp     <- unlist(lapply(data.list, function(x) x[,mvar]))
-
+  
   if (is.null(ylim))
     ylim <- c(min(values.tmp, na.rm = TRUE), max(values.tmp, na.rm = TRUE))
   if (is.null(xlim))
     xlim <- c(min(mt.tmp, na.rm = TRUE), max(mt.tmp, na.rm = TRUE))
- 
+  
   #par(cex = 1)
   #par(mex = 1)
   par(mgp = c(2,1,0))
   for(case in 1:N) {
     data <- data.list[[case]]
     data <- data[!is.na(data[,dvar]),] #maybe use the complete function later
-
+    
     design <- rle(as.character(data[,pvar]))
     design$start <- c(1,cumsum(design$lengths)+1)[1:length(design$lengths)]
     design$stop <- cumsum(design$lengths)
     class(design) <- "list"
-
+    
     y.lim <- ylim
     if(is.na(ylim[2]))
       y.lim[2] <- max(data[,dvar])
@@ -244,14 +248,14 @@ plotSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL,ylim = NULL, xlim
     }
     
     if(!is.na(style$grid))
-       grid(NULL, NULL, col = style$grid)
+      grid(NULL, NULL, col = style$grid)
     
     if(!is.na(style$frame))
       rect(usr[1],usr[3],usr[2],usr[4], col = NA, border = style$frame)
     
     if(is.na(style$frame) && !is.na(style$fill.bg))
       rect(usr[1],usr[3],usr[2],usr[4], col = NA, border = style$fill.bg)
-
+    
     if(is.na(style$frame) && is.na(style$fill.bg))
       rect(usr[1],usr[3],usr[2],usr[4], col = NA, border = par("bg"))
     
@@ -264,7 +268,7 @@ plotSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL,ylim = NULL, xlim
           polygon(c(x[i], x[i+1], x[i+1], x[i]),c(y.lim[1],y.lim[1], y[i+1],y[i]), col=style$fill, border = NA)
       }
     }
-
+    
     for(i in 1:length(design$values)) {
       x <- data[design$start[i]:design$stop[i],mvar]
       y <- data[design$start[i]:design$stop[i],dvar]
@@ -274,7 +278,7 @@ plotSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL,ylim = NULL, xlim
         lines(x, y, type = "p", pch = style$pch, lwd = style$lwd, col = style$col.dots,...)
       
     }
-
+    
     if(case == 1)
       title(main)
     
@@ -339,7 +343,7 @@ plotSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL,ylim = NULL, xlim
       #  } else {
       #  }
       #}
-
+      
       text(data[,mvar],data[,dvar], label = annotations.label, col = annotations.col, pos = annotations.pos, offset = annotations.offset, cex = annotations.cex, ...)
     }
     
@@ -391,7 +395,7 @@ plotSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL,ylim = NULL, xlim
           y <- data[design$start[i]:design$stop[i],dvar]
           lines(c(min(x), max(x)), c(mean(y, trim = lines.par, na.rm = TRUE), mean(y, trim = lines.par, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)
         }
-       }
+      }
       if (any(names(lines) == "trendA")) {
         x <- data[design$start[1]:design$stop[1],mvar]
         y <- data[design$start[1]:design$stop[1],dvar]
@@ -406,7 +410,7 @@ plotSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL,ylim = NULL, xlim
         reg <- lowess(data[,dvar]~data[,mvar], f = lines.par)
         lines(reg, lty = lty.line, col = col.line, lwd = lwd.line)
       }
-  
+      
       if (any(names(lines) == "pnd") || any(names(lines) == "maxA")) {
         x <- data[design$start[1]:design$stop[1],mvar]
         y <- data[design$start[1]:design$stop[1],dvar]
@@ -469,7 +473,7 @@ plotSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL,ylim = NULL, xlim
         y <- .SCmovingAverage(data[,dvar],lines.par, median)
         lines(data[,mvar], y, lty = lty.line, col = col.line, lwd = lwd.line)
       }
-    
+      
     }#### END: Adding help-lines
     
     ### Adding phase names
@@ -486,13 +490,13 @@ plotSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL,ylim = NULL, xlim
         abline(v = data[design$stop[i]+1,mvar] - 0.5, lty = 2,lwd = style$lwd, col = style$col.seperators)
       }
     }
-      
+    
     if(!is.null(style$text.ABlag)) {
       for(i in 1:(length(design$values) - 1)) {
         tex <- paste(unlist(strsplit(style$text.ABlag[i], "")), collapse ="\n")
         text(data[design$stop[i]+1,mvar] - 0.5, (y.lim[2]-y.lim[1])/2 + y.lim[1], labels = tex, cex = 0.8, ...)
       }
-         
+      
     }
     
     ### Adding case name
@@ -500,11 +504,4 @@ plotSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL,ylim = NULL, xlim
       mtext(case.names[case], side = 3, line = -1, adj = 0, at = 1, cex = style$cex.text, ...)	
   }
   
-
-  
 }
-
-plot.scdf <- function(...) {
-  plotSC(...)
-}
-

@@ -27,22 +27,21 @@
 #' study <- describeSC(Waddell2011)
 #' write.csv(study$descriptives, file = "descriptives.csv")
 #' 
-describeSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL) {
+#' @export
+describeSC <- function(data, dvar, pvar, mvar) {
   
-  if(!is.null(dvar)) 
-    attr(data, .opt$dv) <- dvar
-  else
+  if(missing(dvar))
     dvar <- attr(data, .opt$dv)
-  
-  if(!is.null(pvar))
-    attr(data, .opt$phase) <- pvar
   else
+    attr(data, .opt$dv) <- dvar
+  if (missing(pvar))
     pvar <- attr(data, .opt$phase)
-  
-  if(!is.null(mvar))
-    attr(data, .opt$mt) <- mvar
   else
+    attr(data, .opt$phase) <- pvar
+  if (missing(mvar))
     mvar <- attr(data, .opt$mt)
+  else
+    attr(data, .opt$mt) <- mvar
   
   data.list <- .SCprepareData(data,change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
   
@@ -51,12 +50,12 @@ describeSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL) {
 
   design <- rle(as.character(data.list[[1]][,pvar]))$values
 
-  while(any(duplicated(design))) {
-    design[anyDuplicated(design)] <- paste0(design[anyDuplicated(design)],".phase",anyDuplicated(design))
+  while (any(duplicated(design))) {
+    design[anyDuplicated(design)] <-
+      paste0(design[anyDuplicated(design)], ".phase", anyDuplicated(design))
   }
   
   VAR <- c("n","mis","m","md","sd","mad","min","max","trend")
-  
   VAR2 <- paste0(rep(VAR, each = length(design)),".",design)
   
   d.f <- as.data.frame(matrix(nrow = N, ncol = length(VAR2)))
@@ -68,8 +67,8 @@ describeSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL) {
     for(i in 1:length(design)) {
       phases <- .phasestructure(data, pvar = pvar)
  
-      x <- data[phases$start[i]:phases$stop[i],mvar]
-      y <- data[phases$start[i]:phases$stop[i],dvar]
+      x <- data[phases$start[i]:phases$stop[i], mvar]
+      y <- data[phases$start[i]:phases$stop[i], dvar]
       phase <- design[i]
 
       d.f[case, paste0("n.",phase)]     <- length(y)
@@ -84,8 +83,10 @@ describeSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL) {
     }
   }
   
-  out <- list(descriptives = d.f, design = design, N = N)
-  class(out) <- c("sc","describe")
+  out <- list(descriptives = d.f,
+              design = design,
+              N = N)
+  class(out) <- c("sc", "describe")
   attr(out, "var.phase")  <- pvar
   attr(out, "var.mt")     <- mvar
   attr(out, "var.values") <- dvar

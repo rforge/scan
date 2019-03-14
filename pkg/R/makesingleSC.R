@@ -25,7 +25,7 @@
 #' 
 #' ##Function deprecated
 #' ## please do not use it!
-#' 
+#' @export
 makesingleSC <- function(data, scale = FALSE, type = "add") {
   warning("This function is deprecated. Please don't use it anymore.\n")
   data <- .SCprepareData(data)

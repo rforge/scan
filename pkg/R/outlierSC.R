@@ -42,6 +42,7 @@
 #' res.outlier <- outlierSC(Grosche2011, criteria = c("Cook", "4/n"))
 #' plotSC(Grosche2011, marks = res.outlier)
 #' 
+#' @export
 outlierSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, criteria = c("MAD", "3.5")){
   
   if(!any(criteria[1] %in% c("MAD","Cook","SD","CI")))

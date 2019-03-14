@@ -27,13 +27,13 @@ print.scdf <- function(x, cases = 3, rows = 15, cols = "all", row.names = FALSE,
   if(N > 1)
     cat("#A single-case data frame with",N,"cases\n\n")
   
-  if(cols[1] == "main")
-    cols = c(attr(x, "var.phase"), attr(x, "var.values"), attr(x, "var.mt"))
+  if(identical(cols,"main"))
+    cols = c(attr(x, .opt$dv), attr(x, .opt$phase), attr(x, .opt$mt))
 
   for(i in 1:N) {
     MAXCOLS <- ncol(x[[i]])
     COLS <- cols
-    if(cols[1] == "all")
+    if(identical(cols, "all"))
       COLS <- 1:MAXCOLS
     x[[i]] <- x[[i]][, COLS]
   }

@@ -3,7 +3,7 @@
 #' This function restructures and exports single-case data into a .csv-file.
 #' 
 #' 
-#' @param dat A single-case data frame or a list of single-case data frames.
+#' @param data A single-case data frame or a list of single-case data frames.
 #' See \code{\link{makeSCDF}} to learn about this format.
 #' @param filename A character string defining the output file name (e.g.
 #' \code{"SC_data.csv"}.
@@ -25,12 +25,21 @@
 #' ## Write multiple cases to a .csv-file with semicolon as field and comma as decimal separator
 #' writeSC(Grosche2011, "MBDdata_Grosche.csv", sep = ";", dec = ",")
 #' 
-writeSC <- function(dat, filename = NULL, sep = ",", dec = ".", ...) {
+#' ## writeSc and readSC
+#' filename <- file.path(tempdir(),"test.csv")
+#' writeSC(exampleA1B1A2B2_zvt, filename)
+#' dat <- readSC(filename, cvar = "case", pvar = "part", dvar = "zvt", mvar = "day")
+#' res1 <- describeSC(exampleA1B1A2B2_zvt)$descriptives
+#' res2 <- describeSC(dat)$descriptives
+#' identical(res1,res2)
+#' 
+#' @export
+writeSC <- function(data, filename = NULL, sep = ",", dec = ".", ...) {
   if(is.null(filename)) {
     filename <- file.choose()
     cat("Write to file", filename,"\n\n")
   }
   
-  write.table(longSCDF(dat), file = filename, sep = sep, row.names = FALSE, dec = dec, ...)
+  utils::write.table(longSCDF(data), file = filename, sep = sep, row.names = FALSE, dec = dec, ...)
   
 }

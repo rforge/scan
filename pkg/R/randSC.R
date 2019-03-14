@@ -90,6 +90,7 @@
 #' ## Compute a randomization test on the Grosche2011 data using complete permutation
 #' randSC(Grosche2011, statistic = "Median B-A", complete = TRUE, limit = 4)
 #' 
+#' @export
 randSC <- function (data, dvar = NULL, pvar = NULL, statistic = "Mean B-A", number = 500, complete = FALSE,limit = 5, startpoints = NA, exclude.equal = FALSE, graph = FALSE, output = "c", phases = c("A","B")) {
   
   if(!is.null(dvar)) 

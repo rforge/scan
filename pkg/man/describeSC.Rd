@@ -4,7 +4,7 @@
 \alias{describeSC}
 \title{Descriptive statistics for single-case data}
 \usage{
-describeSC(data, dvar = NULL, pvar = NULL, mvar = NULL)
+describeSC(data, dvar, pvar, mvar)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}

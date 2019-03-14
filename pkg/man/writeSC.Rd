@@ -33,6 +33,14 @@ writeSC(jessica, "SCdata_Jessica.csv")
 ## Write multiple cases to a .csv-file with semicolon as field and comma as decimal separator
 writeSC(Grosche2011, "MBDdata_Grosche.csv", sep = ";", dec = ",")
 
+## writeSc and readSC
+filename <- file.path(tempdir(),"test.csv")
+writeSC(exampleA1B1A2B2_zvt, filename)
+dat <- readSC(filename, cvar = "case", pvar = "part", dvar = "zvt", mvar = "day")
+res1 <- describeSC(exampleA1B1A2B2_zvt)$descriptives
+res2 <- describeSC(dat)$descriptives
+identical(res1,res2)
+
 }
 \seealso{
 \code{\link{write.table}}, \code{\link{readSC}},

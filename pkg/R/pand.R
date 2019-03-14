@@ -67,6 +67,7 @@
 #' cubs <- scdf(c(20,22,24,17,21,13,10,9,20,9,18), B.start = 5)
 #' pand(cubs, decreasing = TRUE)
 #' 
+#' @export
 pand <- function(data, dvar = NULL, pvar = NULL, decreasing = FALSE, correction = TRUE, phases = c("A","B")) {
   
   if(!is.null(dvar)) 

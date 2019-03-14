@@ -33,7 +33,6 @@ start with the next MT after the end of phase A. }
 
 ##Function deprecated
 ## please do not use it!
-
 }
 \seealso{
 \code{\link{scdf}}, \code{\link{longSCDF}},

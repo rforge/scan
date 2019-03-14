@@ -41,6 +41,7 @@ Grosche2011_long
 Leidig2018_long <- longSCDF(Leidig2018, l2 = Leidig2018_l2)
 names(Leidig2018_long)
 summary(Leidig2018_long)
+
 }
 \seealso{
 \code{\link{scdf}}

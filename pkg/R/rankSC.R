@@ -12,6 +12,8 @@
 #' @examples
 #' Huber2014_rank <- rankSC(Huber2014, var = "values")
 #' plot(Huber2014_rank, style = "grid2")
+#' 
+#' @export
 
 rankSC <- function(data, var = NULL, grand = TRUE, ...) {
   

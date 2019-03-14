@@ -1,8 +1,14 @@
+#' Print method for return objects of scan
+#'
+#' @param x Object 
+#' @param ... -
+#' @export
 
-print.sc <- function(x, lag.max = 3, ...) {
+print.sc <- function(x, ...) {
   value <- class(x)[2]
   note <- FALSE
-  
+
+  ##### mpr #####
   if(value == "mpr") {
     
     cat("Multivariate piecewise linear model\n\n")
@@ -25,6 +31,7 @@ print.sc <- function(x, lag.max = 3, ...) {
     print(res)
   }
     
+  ##### autocorr #####
   if(value == "autocorr") {
     cat("Autocorrelations\n\n")
     x <- x$autocorr
@@ -32,17 +39,17 @@ print.sc <- function(x, lag.max = 3, ...) {
     print(x)
   }
   
-  
+  ##### overlap #####
   if(value == "overlap") {
     cat("Overlap Indices\n\n")
     cat("Design: ", x$design, "\n")
-    cat("Comparing phase", unlist(x$phases.A),"to",unlist(x$phases.B),"\n\n")
-
+    cat(.stringPhasesSC(x$phases.A, x$phases.B),"\n\n")
+    
     print(round(t(x$overlap),2),...)
     note = TRUE
   }
 
-  
+  ##### TAU-U #####
   if(value == "TAU-U") {	
     cat("Tau-U\n")
     cat("Method: ",x$method,"\n\n")
@@ -68,12 +75,14 @@ print.sc <- function(x, lag.max = 3, ...) {
     print(out)
   }
   
+  ##### power #####
   if(value == "power") {	
     cat("Test-Power in percent:\n")
     ma <- matrix(unlist(x[1:16])*100,byrow = FALSE, ncol = 2, dimnames = list(c("tauU: A vs. B - Trend A",paste0("Rand-Test: ",x$rand.test.stat[1]),  "PLM.Norm: Level", "PLM.Norm: Slope", "PLM.Poisson: Level", "PLM.Poisson: Slope", "HPLM: Level", "HPLM: Slope"), c("Power", "Alpha-error")))
     print(ma)
   }
   
+  ##### PET #####
   if(value == "PET") {	
     cat("Percent Exceeding the Trend\n\n")
     cat("N cases = ", x$N,"\n")
@@ -95,6 +104,7 @@ print.sc <- function(x, lag.max = 3, ...) {
     
   }	
   
+  ##### NAP #####
   if(value == "NAP") {
     cat("Nonoverlap of All Pairs\n\n")
     print(x$nap, row.names = FALSE, digits = 2)
@@ -102,6 +112,7 @@ print.sc <- function(x, lag.max = 3, ...) {
     #cat("NAP rescaled = ", x$NAP.rescaled, "%\n")
   }
   
+  ##### PEM #####
   if(value == "PEM") {
     cat("Percent Exceeding the Median\n\n")
     ma <- cbind(PEM = x$PEM, x$test)
@@ -115,6 +126,7 @@ print.sc <- function(x, lag.max = 3, ...) {
     }
   }
   
+  ##### PND #####
   if(value == "PND") {
     cat("Percent Non-Overlapping Data\n\n")
     out <- data.frame(Case = x$case.names, PND = paste0(round(x$PND,2),"%"), "Total" = x$n.B, "Exceeds" = round(x$PND/100*x$n.B))
@@ -122,6 +134,7 @@ print.sc <- function(x, lag.max = 3, ...) {
     cat("\nMean  :", round(mean(x$PND, na.rm = TRUE),2),"%\n")
   }	
   
+  ##### trend #####
   if(value == "trend") {
     x$trend <- round(x$trend,3)
     cat("Trend for each phase\n\n")
@@ -132,7 +145,7 @@ print.sc <- function(x, lag.max = 3, ...) {
     cat("Note. Measurement-times of phase B start at", 1 + x$offset, "\n")
   }
   
-  
+  ##### rci #####
   if(value == "rci") {
     #cat("!!! Caution! This function is under development and not yet ready for use!!!\n\n")
     cat("Reliable Change Index\n\n")
@@ -153,11 +166,14 @@ print.sc <- function(x, lag.max = 3, ...) {
     cat("\n")
   }
   
+  ##### rand #####
   if(value == "rand") {
     cat("Randomization Test\n\n")
     if (x$N > 1)
       cat("Test for", x$N, "cases.\n\n")
-    cat("Comparing phase", unlist(x$phases.A),"to",unlist(x$phases.B),"\n")
+
+    cat(.stringPhasesSC(x$phases.A, x$phases.B),"\n")
+    
     cat("Statistic: ",x$statistic,"\n\n")
     if(is.na(x$startpoints[1])) {
       cat("Minimal length of each phase: ", x$limit, "\n")
@@ -195,6 +211,7 @@ print.sc <- function(x, lag.max = 3, ...) {
     cat(sprintf("z = %0.4f, p = %0.4f (single sided)\n", x$Z, x$p.Z.single))
   }
   
+  ##### hplm #####
   if(value == "hplm") {
     
     cat("Hierarchical Piecewise Linear Regression\n\n")
@@ -263,11 +280,9 @@ print.sc <- function(x, lag.max = 3, ...) {
     }
     
     print(md, na.print = "-")
-    
-    #note <- TRUE
-    invisible(out)
   }
   
+  ##### pr #####
   if(value == "pr"){
     cat("Piecewise Regression Analysis\n\n")
     cat("Dummy model: ", x$model,"\n\n")
@@ -324,15 +339,15 @@ print.sc <- function(x, lag.max = 3, ...) {
     print(res)
     cat("\n")
     cat("Autocorrelations of the residuals\n")
+    lag.max = 3
     print(data.frame(lag = 1:lag.max,r = round(acf(residuals(x$full.model), lag.max = lag.max,plot = FALSE)$acf[2:(1+lag.max)],2)), row.names = FALSE)
     cat("\n")
     cat("Formula: ")
     print(x$formula,showEnv = FALSE)
     cat("\n")
-    
-    #note <- TRUE
   }
   
+  ##### PAND #####
   if(value == "PAND") {
     cat("Percentage of all non-overlapping data\n\n")
     cat("PAND = ", round(x$PAND,1), "%\n")
@@ -376,6 +391,7 @@ print.sc <- function(x, lag.max = 3, ...) {
     cat(out,"\n")
   }
   
+  ##### describe #####
   if(value == "describe") {
     cat("Describe Single-Case Data\n\n")
     cat("Design: ", x$design, "\n\n")
@@ -390,6 +406,7 @@ print.sc <- function(x, lag.max = 3, ...) {
     note = TRUE
   }	
   
+  ##### outlier #####
   if(value == "outlier") {
     cat("Outlier Analysis for Single-Case Data\n\n")
     
@@ -417,6 +434,7 @@ print.sc <- function(x, lag.max = 3, ...) {
     cat("\n")
   }
   
+  ##### Additonal notes #####
   if(note) {
     if(attr(x, .opt$dv) != "values" || attr(x, .opt$phase) != "phase" || attr(x, .opt$mt) != "mt")
       cat("\nNote. The following variables were used in this analysis:\n      '", 
@@ -425,6 +443,4 @@ print.sc <- function(x, lag.max = 3, ...) {
           attr(x, .opt$mt),"' as measurement time.\n", sep = "")
     
   }
-  
-  
 }

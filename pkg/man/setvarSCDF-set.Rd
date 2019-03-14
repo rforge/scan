@@ -3,7 +3,7 @@
 \name{setvarSCDF<-}
 \alias{setvarSCDF<-}
 \alias{setvarSCDF}
-\title{Set the variables of an scdf}
+\title{Deprecated function: Set the variables of an scdf}
 \usage{
 setvarSCDF(x, var = "values") <- value
 }
@@ -25,4 +25,5 @@ variable). With this function you can change these attributes of an scdf.
 setvarSCDF(exampleAB_add) <- "depression"
 describeSC(exampleAB_add)
 setvarSCDF(exampleAB_add) <- "wellbeing"
+
 }

@@ -51,6 +51,8 @@
 #' newstyle$col.dots <- ""
 #' newstyle$annotations <- list(cex = 0.6, col = "grey10", offset = 0.4)
 #' plot(exampleABC, style = newstyle)
+#' 
+#' @export
 
 style.plotSC <- function(style = "default", ...) {
   new <- list(...)

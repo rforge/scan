@@ -5,7 +5,7 @@
 #' 
 #' @param data A single-case data frame. See \code{\link{scdf}} to learn about
 #' this format.
-#' @param dvar Character string with the name of the independend variable.
+#' @param dvar Character string with the name of the dependent variable.
 #' @param pvar Character string with the name of the phase variable.
 #' @param mvar Character string with the name of the measurement time variable.
 #' @param model Model used for calculating the slope parameter (see Huitema &
@@ -55,23 +55,25 @@
 #' hplm(Leidig2018, data.l2 = Leidig2018_l2, 
 #'      update.fixed = .~. + gender + migration + ITRF_TOTAL*phaseB, 
 #'      slope = FALSE, random.slopes = TRUE, lr.test = TRUE)
+#'      
+#' @export
 
-hplm <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, model = "B&L-B", method = "ML", control = list(opt = "optim"), random.slopes = FALSE, lr.test = FALSE, ICC = TRUE, trend = TRUE, level = TRUE, slope = TRUE, fixed = NULL, random = NULL, update.fixed = NULL, data.l2 = NULL, ...) {
+hplm <- function(data, dvar, pvar, mvar, model = "B&L-B", method = "ML", control = list(opt = "optim"), random.slopes = FALSE, lr.test = FALSE, ICC = TRUE, trend = TRUE, level = TRUE, slope = TRUE, fixed = NULL, random = NULL, update.fixed = NULL, data.l2 = NULL, ...) {
 
-  if(!is.null(dvar)) 
+  if(missing(dvar)) 
+    dvar <- attr(data, .opt$dv) 
+  else 
     attr(data, .opt$dv) <- dvar
-  else
-    dvar <- attr(data, .opt$dv)
-  
-  if(!is.null(pvar))
-    attr(data, .opt$phase) <- pvar
-  else
+
+  if(missing(pvar))
     pvar <- attr(data, .opt$phase)
-  
-  if(!is.null(mvar))
-    attr(data, .opt$mt) <- mvar
   else
+    attr(data, .opt$phase) <- pvar
+  
+  if(missing(mvar))
     mvar <- attr(data, .opt$mt)
+  else
+    attr(data, .opt$mt) <- mvar
   
   dat <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
   
@@ -141,13 +143,8 @@ hplm <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, model = "B&L-B", m
   
   out$formula <- list(fixed = fixed, random = random)
   
-  #hack: problems with anova.lme function. .fixed.hplm is set global and deleted at the end of this function when lr.test = TRUE
-  .fixed.hplm <- fixed
-  if(lr.test)
-    .fixed.hplm <<- .fixed.hplm
-  
-  out$hplm <- lme(fixed = .fixed.hplm, random = random, data = dat, na.action=na.omit, method = method, control=control, keep.data = FALSE, ...)
-
+  out$hplm <- lme(fixed = fixed, random = random, data = dat, na.action=na.omit, method = method, control=control, keep.data = FALSE, ...)
+  out$hplm$call$fixed <- fixed
   if(lr.test) {
     
     PREDIC_RAND    <- unlist(strsplit(as.character(random[2]), "\\|"))[1]
@@ -165,7 +162,8 @@ hplm <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, model = "B&L-B", m
     out$random.ir$restricted <- list()
     
     for(i in 1:length(random.ir)) {
-      out$random.ir$restricted[[i]] <- lme(fixed = .fixed.hplm, random = random.ir[i], data = dat, na.action=na.omit, method = method, control=control, keep.data = FALSE, ...)
+      out$random.ir$restricted[[i]] <- lme(fixed = fixed, random = random.ir[i], data = dat, na.action=na.omit, method = method, control=control, keep.data = FALSE, ...)
+      out$random.ir$restricted[[i]]$call$fixed <- fixed
     }
     out$LR.test <- list()
     
@@ -178,15 +176,16 @@ hplm <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, model = "B&L-B", m
   
 
   if(ICC) {
-    .formula.null <<- as.formula(paste0(dvar," ~ 1"))
+    .formula.null <- as.formula(paste0(dvar," ~ 1"))
     out$model.0 <- lme(.formula.null, random =~1|case, data = dat, method = method, na.action=na.omit, control = control)
+    out$model.0$call$fixed <- .formula.null
     VC <- as.numeric(VarCorr(out$model.0))
     out$ICC$value <- VC[1]/(VC[1]+VC[2])	
     out$model.without <- gls(.formula.null, data = dat, method = method, na.action=na.omit, control = control)
+    out$model.without$call$model <- .formula.null
     dif <- anova(out$model.0, out$model.without)
     out$ICC$L <- dif$L.Ratio[2]
     out$ICC$p <- dif$"p-value"[2]
-    rm(".formula.null", envir = globalenv())
   } 
   
   out$model$fixed  <- fixed
@@ -196,10 +195,6 @@ hplm <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, model = "B&L-B", m
   attr(out, .opt$phase) <- pvar
   attr(out, .opt$mt)    <- mvar
   attr(out, .opt$dv)    <- dvar
-  
-  #hack (problems with anovo.lme function)
-  if(lr.test)
-    rm(".fixed.hplm", envir = globalenv())
   
   out
 }

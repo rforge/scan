@@ -20,6 +20,7 @@
 #' names(study) <- c("Original","Selected")
 #' plot(study)
 #' 
+#' @export
 truncateSC <- function (data, truncate = list(A = c(0,0), B = c(0,0))){
   data <- .SCprepareData(data)
   N = length(data)

@@ -31,6 +31,8 @@
 #' Leidig2018_long <- longSCDF(Leidig2018, l2 = Leidig2018_l2)
 #' names(Leidig2018_long)
 #' summary(Leidig2018_long)
+#' 
+#' @export
 longSCDF <- function(data, l2 = NULL, id = "case", check = FALSE, ...) {
   if(check)
     dat <- .SCprepareData(data) 

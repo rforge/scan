@@ -26,6 +26,7 @@
 #' ## Calculate the PND for multiple single-case data
 #' pnd(GruenkeWilbert2014)
 #' 
+#' @export
 pnd <- function(data, dvar = NULL, pvar = NULL, decreasing = FALSE, phases = c("A","B")) {
 
   if(!is.null(dvar)) 

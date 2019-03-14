@@ -58,6 +58,7 @@ newstyle$text.ABlag <- c("START","END")
 newstyle$col.dots <- ""
 newstyle$annotations <- list(cex = 0.6, col = "grey10", offset = 0.4)
 plot(exampleABC, style = newstyle)
+
 }
 \seealso{
 \code{\link{plot.scdf}}

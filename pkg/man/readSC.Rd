@@ -15,7 +15,8 @@ readSC(filename = NULL, data = NULL, sep = ",", dec = ".",
 \code{"SC_Anita.csv"}. If filename is left empty a dialog box for choosing
 will be opened.}
 
-\item{data}{A data frame. As an alternative to \code{filname} a dataframe could be directly provided.}
+\item{data}{A data frame. As an alternative to \code{filname} a dataframe could be 
+directly provided.}
 
 \item{sep}{The field separator string. Values within rows have to be
 separated by this string. Default is \code{sep = ","}.}
@@ -34,7 +35,8 @@ character. Default is \code{dec = "."}}
 
 \item{mvar}{Sets the variable name of the "mt" variable. Deafults to \code{"mt"}.}
 
-\item{phase.names}{A character vector with phase names. Deafults to the phase names provided in the phase variable.}
+\item{phase.names}{A character vector with phase names. Deafults to the phase names provided 
+in the phase variable.}
 
 \item{type}{Format of the file to be imported. Either "csv" or "excel" is
 possible.}
@@ -57,6 +59,14 @@ Use the \code{readSC} function to import single-case data from structured
 
 ## Read SC-data from a .csv-file with semicolon as field and comma as decimal separator
 # study2 <- readSC("study2.csv", sep = ";", dec = ",")
+
+## writeSc and readSC
+filename <- file.path(tempdir(),"test.csv")
+writeSC(exampleA1B1A2B2_zvt, filename)
+dat <- readSC(filename, cvar = "case", pvar = "part", dvar = "zvt", mvar = "day")
+res1 <- describeSC(exampleA1B1A2B2_zvt)$descriptives
+res2 <- describeSC(dat)$descriptives
+identical(res1,res2)
 
 }
 \seealso{

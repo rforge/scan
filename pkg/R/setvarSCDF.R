@@ -1,4 +1,4 @@
-#' Set the variables of an scdf 
+#' Deprecated function: Set the variables of an scdf 
 #' 
 #' By default scan uses the variable names 'values'
 #' as the dependend variable, 'phase' as indicator of a phase, and 'mt' as the
@@ -15,6 +15,8 @@
 #' setvarSCDF(exampleAB_add) <- "depression"
 #' describeSC(exampleAB_add)
 #' setvarSCDF(exampleAB_add) <- "wellbeing"
+#' 
+#' @export
 "setvarSCDF<-" <- function(x, var = "values", value) {
   warning("This function is deprcated. Please set variables within functions (or change scdf with the attr function)")
   VALID <- c("dv","values","phase","mt")

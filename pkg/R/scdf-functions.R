@@ -1,14 +1,19 @@
-methods::setOldClass(c("scdf", "list"))
-
+#' Concatenate single-case data frames
+#'
+#' @param ... scdf objects
+#'
+#' @return A scdf
+#' @export
 c.scdf <- function(...) {
+  scdfs <- list(...)
   ATTRIBUTES <- attributes(..1)
   
-  LEN <- length(list(...))
+  LEN <- length(scdfs)
   NAMES <- c()
   for(i in 1:LEN)
     NAMES <- c(NAMES, names(...elt(i)))
 
-  data <- unlist(list(...), recursive = FALSE)
+  data <- unlist(scdfs, recursive = FALSE)
 
   attributes(data) <- .defaultAttributesSCDF()
 
@@ -19,9 +24,19 @@ c.scdf <- function(...) {
   if(!is.null(ATTRIBUTES$var.mt))
     attr(data, .opt$mt) <- ATTRIBUTES[[.opt$mt]]
   names(data) <- NAMES
+  if(!is.null(names(scdfs)))
+    names(data)[which(names(scdfs) != "")] <- names(scdfs)[which(names(scdfs) != "")]
   return(data)
 }
 
+#' Select a scdf
+#'
+#' @param x A scdf object
+#' @param i A case name from x 
+#'
+#' @return A scdf
+#' @rdname Subsetting
+#' @export
 `$.scdf`<- function(x, i) {
   if (is.character(i) && !(i %in% names(x))) {
     warning("Unknown case: '", i, "'.")
@@ -34,6 +49,8 @@ c.scdf <- function(...) {
   out
 }
 
+##' @rdname Subsetting
+##' @export
 `[.scdf`<- function(x, i) {
   ATTRIBUTES <- attributes(x)
   
@@ -44,47 +61,6 @@ c.scdf <- function(...) {
   out
 }
 
-summary.scdf <- function(object, var.names = TRUE, ...) {
-  #object <- .SCprepareData(object)
-  if(length(object)>1)
-     cat("#A single-case data frame with", length(object),"cases\n\n")
-  else
-    cat("#A single-case data frame with one case\n\n")
-  
-  designs <- lapply(object, function(x) paste0(rle(as.character(x[,attr(object,.opt$phase)]))$values,collapse = " "))
-  rows <- lapply(object, nrow)
-  out <- data.frame(Measurements = unlist(rows), Design = unlist(designs))
-  if(!is.null(names(object)))
-    row.names(out) <- names(object)
-
-  print(out)
-  cat("\n", sep = "")
-  if(var.names) {
-    cat("Variable names:\n")
-    name.tmp <- names(object[[1]])
-    n.tmp <- which(name.tmp == attr(object,.opt$dv))
-    name.tmp[n.tmp] <- paste0(name.tmp[n.tmp], " <dependend variable>")
-    n.tmp <- which(name.tmp == attr(object,.opt$phase))
-    name.tmp[n.tmp] <- paste0(name.tmp[n.tmp], " <phase variable>")
-    n.tmp <- which(name.tmp == attr(object,.opt$mt))
-    name.tmp[n.tmp] <- paste0(name.tmp[n.tmp], " <measurement-time variable>")
-    cat(name.tmp,sep = "\n")
-    #cat(paste0("iv: ",attr(object,.opt$dv)),"\n")
-    #cat(paste0("phase:  ",attr(object,.opt$phase)),"\n")
-    #cat(paste0("mt:     ",attr(object,.opt$mt)),"\n")
-    cat("\n")
-  }
-  
-  if(!is.null(attr(object,"info"))) {
-    cat("\nNote: ",attr(object,"info"))
-    
-  }
-  if(!is.null(attr(object,"author"))) {
-    cat("\nAuthor of data: ",attr(object,"author"),"\n")
-    
-  }
-  
-}
 
 as.scdf <- function(object) {
   

@@ -44,6 +44,7 @@
 #' names(study) <- c("original", "missing", "interpolated")
 #' plot(study, marks = list(positions = replace.positions), style = "grid2")
 #' 
+#' @export
 fillmissingSC <- function(data, dvar = NULL, mvar = NULL, interpolation = "linear", na.rm = TRUE) {
 
   if(!is.null(dvar)) 

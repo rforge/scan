@@ -36,22 +36,23 @@
 #' overl <- overlapSC(Waddell2011)
 #' write.csv(overl$overlap, file = "overlap_indices.csv")
 #' 
-overlapSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, decreasing = FALSE, phases = c("A","B")) {
+#' @export
+overlapSC <- function(data, dvar, pvar, mvar, decreasing = FALSE, phases = c("A","B")) {
   
-  if(!is.null(dvar)) 
+  if(missing(dvar)) 
+    dvar <- attr(data, .opt$dv) 
+  else 
     attr(data, .opt$dv) <- dvar
-  else
-    dvar <- attr(data, .opt$dv)
   
-  if(!is.null(pvar))
-    attr(data, .opt$phase) <- pvar
-  else
+  if(missing(pvar))
     pvar <- attr(data, .opt$phase)
-  
-  if(!is.null(mvar))
-    attr(data, .opt$mt) <- mvar
   else
+    attr(data, .opt$phase) <- pvar
+  
+  if(missing(mvar))
     mvar <- attr(data, .opt$mt)
+  else
+    attr(data, .opt$mt) <- mvar
   
   data.list <- .SCprepareData(data, change.var.values = FALSE, change.var.phase = FALSE,change.var.mt = FALSE)
   keep <- .keepphasesSC(data.list, phases = phases, pvar = pvar)

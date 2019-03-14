@@ -40,22 +40,21 @@
 #' ben <- rSC(design)
 #' trendSC(ben, offset = 0, model = c("Cubic" = values ~ I(mt^3), "Log Time" = values ~ log(mt)))
 #' 
-trendSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, offset = -1,model = NULL) {
+#' @export
+trendSC <- function(data, dvar, pvar, mvar, offset = -1,model = NULL) {
 
-  if(!is.null(dvar)) 
-    attr(data, .opt$dv) <- dvar
-  else
+  if(missing(dvar))
     dvar <- attr(data, .opt$dv)
-  
-  if(!is.null(pvar))
-    attr(data, .opt$phase) <- pvar
   else
+    attr(data, .opt$dv) <- dvar
+  if (missing(pvar))
     pvar <- attr(data, .opt$phase)
-  
-  if(!is.null(mvar))
-    attr(data, .opt$mt) <- mvar
   else
+    attr(data, .opt$phase) <- pvar
+  if (missing(mvar))
     mvar <- attr(data, .opt$mt)
+  else
+    attr(data, .opt$mt) <- mvar
   
   data <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
 
@@ -102,7 +101,7 @@ trendSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, offset = -1,mod
     
   }
   
-  out <- list(trend = ma, offset = offset)
+  out <- list(trend = ma, offset = offset, formulas = FORMULAS.NAMES, design = design)
   class(out) <- c("sc","trend")
   out
 }

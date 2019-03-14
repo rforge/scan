@@ -120,8 +120,7 @@ of multiple single-cases, use a vector of starting values (e.g.
 the vector, values will be repeated.}
 }
 \value{
-A single-case data frame or a list of single-case data frames. See
-  \code{\link{scdf}} to learn about this format.
+A single-case data frame. See \code{\link{scdf}} to learn about this format.
 }
 \description{
 The \code{rSC} function generates random single-case data frames
@@ -142,6 +141,7 @@ design <- design.rSC(n = 3, B.start = c(6,10,14), MT = c(12,20,22), m = 10,
                     distribution = "poisson", level = -5, missing.p = 0.1)
 dat <- rSC(design, seed = 1234)
 pand(dat, decreasing = TRUE, correction = FALSE)
+
 }
 \author{
 Juergen Wibert

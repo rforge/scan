@@ -91,6 +91,7 @@
 #'              B.start = round(runif(300,5,12)), test.parameter = "level", 
 #'              level = 1.4, rtt = 0.8, n = 10, startpoints = 5:12)
 #' 
+#' @export
 power.testSC <- function(data = NULL, parameters = NULL,stat = c("rand.test","plm"), 
                          test.parameter = c("level", "slope"), rand.test.stat = c("Mean B-A","B"), 
                          cases = NULL, rtt = NULL, level = NULL, slope = NULL, MT = NULL, 

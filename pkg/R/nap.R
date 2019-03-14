@@ -38,6 +38,7 @@
 #' ## Request NAP for all cases fom the Grosche2011 data
 #' nap(Grosche2011)
 #' 
+#' @export
 
 nap <- function(data, dvar = NULL, pvar = NULL, decreasing = FALSE, phases = c(1,2)) {
 

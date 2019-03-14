@@ -53,6 +53,7 @@
 #' ## Report the RCIs of the first case from the byHeart data and include a graph
 #' rciSC(byHeart2011[1], graph = TRUE)
 #' 
+#' @export
 rciSC <- function(data, dvar = NULL, pvar = NULL, rel = 0.80, ci = 0.95, graph = FALSE, phases = c("A","B")) {
   if(!is.null(dvar)) 
     attr(data, .opt$dv) <- dvar

@@ -22,6 +22,8 @@
 #' ## Standardize a multiple case scdf and compute an hplm
 #' ex_sc <- scaleSC(exampleAB_50, var = "values", center = TRUE, scale = TRUE)
 #' hplm(ex_sc)
+#' 
+#' @export
 
 scaleSC <- function(data, var = NULL, center = TRUE, scale = FALSE, m = 0, sd = 1, grand = TRUE) {
   

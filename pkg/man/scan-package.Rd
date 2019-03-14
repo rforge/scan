@@ -4,17 +4,12 @@
 \name{scan-package}
 \alias{scan-package}
 \alias{scan}
-\alias{print.sc}
 \title{Single-Case Data Analyses}
 \description{
 A package to analyze single-case data.
 }
 \details{
 Most procedures also support multiple-baseline designs.
-
-\tabular{ll}{ Package: \tab scan\cr Type: \tab Package\cr Version: \tab
-0.3.53\cr Date: \tab 2019-02-12\cr License: \tab GPL (version 2 or newer)\cr
-}
 }
 \author{
 Juergen Wilbert [aut, cre]

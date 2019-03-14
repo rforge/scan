@@ -40,6 +40,7 @@
 #' dat <- rSC(5, level = 0.5)
 #' pem(dat, chi.test = TRUE)
 #' 
+#' @export
 pem <- function(data, dvar = NULL, pvar = NULL, decreasing = FALSE, binom.test = TRUE, chi.test = FALSE, FUN = median, phases = c("A","B"), ...) {
 
   if(!is.null(dvar)) 

@@ -32,6 +32,7 @@
 #' names(study) <- c("Original","Moving Median","Moving Mean", "Local Regression")
 #' plot(study)
 #' 
+#' @export
 smoothSC <- function(data, FUN = "movingMedian", intensity = NULL){
   data <- .SCprepareData(data)
   ATTRIBUTES <- attributes(data)

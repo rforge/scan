@@ -4,8 +4,8 @@
 \alias{overlapSC}
 \title{Overlap indices for single-case data}
 \usage{
-overlapSC(data, dvar = NULL, pvar = NULL, mvar = NULL,
-  decreasing = FALSE, phases = c("A", "B"))
+overlapSC(data, dvar, pvar, mvar, decreasing = FALSE, phases = c("A",
+  "B"))
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about

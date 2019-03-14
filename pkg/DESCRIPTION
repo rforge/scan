@@ -1,8 +1,8 @@
 Package: scan
 Type: Package
 Title: Single-Case Data Analyses for Single and Multiple Baseline Designs
-Version: 0.3.53
-Date: 2019-02-12
+Version: 0.3.58
+Date: 2019-03-14
 Author: Juergen Wilbert [aut, cre], Timo Lueke [aut]
 Maintainer: Juergen Wilbert <jwilbert@uni-potsdam.de>
 Imports: 
@@ -10,11 +10,14 @@ Imports:
   nlme, 
   utils, 
   methods, 
-  graphics, 
-  MASS
+  graphics,
+  car,
+  MASS,
+  knitr,
+  kableExtra,
+  htmlTable,
+  readxl
 Suggests:
-  readxl,
-  car
 Depends: R (>= 1.8.0)
 Description: A collection of procedures for analysing single-case data. Some procedures support multiple-baseline designs.
 License: GPL

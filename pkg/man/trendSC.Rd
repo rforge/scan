@@ -4,8 +4,7 @@
 \alias{trendSC}
 \title{Trend analysis for single-cases data}
 \usage{
-trendSC(data, dvar = NULL, pvar = NULL, mvar = NULL, offset = -1,
-  model = NULL)
+trendSC(data, dvar, pvar, mvar, offset = -1, model = NULL)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn

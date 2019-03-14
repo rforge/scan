@@ -36,6 +36,7 @@
 #' dat <- rSC(n = 5, slope = 0.2)
 #' pet(dat, ci = .99)
 #' 
+#' @export
 pet <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, ci = 0.95, decreasing = FALSE, phases = c("A","B")) {
   
   if(!is.null(dvar)) 
