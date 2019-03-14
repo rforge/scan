@@ -11,7 +11,7 @@ outlierSC(data, dvar = NULL, pvar = NULL, mvar = NULL,
 \item{data}{A single-case data frame. See \code{\link{makeSCDF}} to learn
 about this format.}
 
-\item{dvar}{Character string with the name of the independend variable.}
+\item{dvar}{Character string with the name of the dependent variable.}
 
 \item{pvar}{Character string with the name of the phase variable.}
 

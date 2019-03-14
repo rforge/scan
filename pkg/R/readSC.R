@@ -106,7 +106,8 @@ readSC <- function(filename = NULL, data = NULL, sep = ",", dec = ".", sort.labe
   return(dat)
 }
 
-
+#' @rdname readSC
+#' @export
 readSC.excel <- function(...) {
   readSC(..., type = "excel")
   

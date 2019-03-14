@@ -9,7 +9,7 @@
 #' @aliases randSC rand.test
 #' @param data A single-case data frame or a list of single-case data frames.
 #' See \code{\link{scdf}} to learn about this format.
-#' @param dvar Character string with the name of the independend variable.
+#' @param dvar Character string with the name of the dependent variable.
 #' @param pvar Character string with the name of the phase variable.
 #' @param statistic Defines the statistic on which the comparison of phases A
 #' and B is based on. Default setting is \code{statistic = "Mean B-A"}). The

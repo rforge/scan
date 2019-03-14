@@ -23,7 +23,7 @@ summary.scdf <- function(object, ...) {
     cat("Variable names:\n")
     name.tmp <- names(object[[1]])
     n.tmp <- which(name.tmp == attr(object,.opt$dv))
-    name.tmp[n.tmp] <- paste0(name.tmp[n.tmp], " <dependend variable>")
+    name.tmp[n.tmp] <- paste0(name.tmp[n.tmp], " <dependent variable>")
     n.tmp <- which(name.tmp == attr(object,.opt$phase))
     name.tmp[n.tmp] <- paste0(name.tmp[n.tmp], " <phase variable>")
     n.tmp <- which(name.tmp == attr(object,.opt$mt))

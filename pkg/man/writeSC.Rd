@@ -4,10 +4,10 @@
 \alias{writeSC}
 \title{Export data into a .csv-file}
 \usage{
-writeSC(dat, filename = NULL, sep = ",", dec = ".", ...)
+writeSC(data, filename = NULL, sep = ",", dec = ".", ...)
 }
 \arguments{
-\item{dat}{A single-case data frame or a list of single-case data frames.
+\item{data}{A single-case data frame or a list of single-case data frames.
 See \code{\link{makeSCDF}} to learn about this format.}
 
 \item{filename}{A character string defining the output file name (e.g.

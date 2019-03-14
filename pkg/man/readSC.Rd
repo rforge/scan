@@ -9,6 +9,8 @@ readSC(filename = NULL, data = NULL, sep = ",", dec = ".",
   sort.labels = FALSE, cvar = "case", pvar = "phase",
   dvar = "values", mvar = "mt", phase.names = NULL, type = "csv",
   ...)
+
+readSC.excel(...)
 }
 \arguments{
 \item{filename}{A character string defining the file to be imported (e.g.

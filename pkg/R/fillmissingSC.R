@@ -10,7 +10,7 @@
 #' 
 #' @param data A single-case data frame or a list of single-case data frames.
 #' See \code{\link{scdf}} to learn about this format.
-#' @param dvar Character string with the name of the independend variable.
+#' @param dvar Character string with the name of the dependent variable.
 #' @param mvar Character string with the name of the measurement time variable.
 #' @param interpolation Alternative options not yet included. Default is
 #' \code{interpolation = "linear"}.

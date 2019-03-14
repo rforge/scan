@@ -6,7 +6,7 @@
 #' 
 #' @param data A single-case data frame.
 #' See \code{\link{scdf}} to learn about this format.
-#' @param dvar Character string with the name of the independend variable.
+#' @param dvar Character string with the name of the dependent variable.
 #' @param pvar Character string with the name of the phase variable.
 #' @param mvar Character string with the name of the measurement time variable.
 #' @param AR Maximal lag of autoregression. Modeled based on the

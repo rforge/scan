@@ -12,7 +12,7 @@ rciSC(data, dvar = NULL, pvar = NULL, rel = 0.8, ci = 0.95,
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
 this format.}
 
-\item{dvar}{Character string with the name of the independend variable.}
+\item{dvar}{Character string with the name of the dependent variable.}
 
 \item{pvar}{Character string with the name of the phase variable.}
 

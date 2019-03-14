@@ -11,7 +11,7 @@ fillmissingSC(data, dvar = NULL, mvar = NULL,
 \item{data}{A single-case data frame or a list of single-case data frames.
 See \code{\link{scdf}} to learn about this format.}
 
-\item{dvar}{Character string with the name of the independend variable.}
+\item{dvar}{Character string with the name of the dependent variable.}
 
 \item{mvar}{Character string with the name of the measurement time variable.}
 
