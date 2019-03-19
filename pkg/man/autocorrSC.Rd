@@ -9,11 +9,11 @@ autocorrSC(data, dvar, pvar, mvar, lag.max = 3, ...)
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
-\item{dvar}{Character string with the name of the independend variable.}
+\item{dvar}{Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.}
 
-\item{pvar}{Character string with the name of the phase variable.}
+\item{pvar}{Character string with the name of the phase variable. Defaults to the attributes in the scdf file.}
 
-\item{mvar}{Character string with the name of the measurement time variable.}
+\item{mvar}{Character string with the name of the measurement time variable. Defaults to the attributes in the scdf file.}
 
 \item{lag.max}{The lag up to which autocorrelations will be computed.
 Default is \code{lag.max = 3}.}
@@ -30,8 +30,6 @@ The autocorrSC function calculates autocorrelations within each phase and
 across all phases.
 }
 \examples{
-
- 
 ## Compute autocorrelations for a list of four single-cases with max.lag = 2
 autocorrSC(Huber2014, lag.max = 2)
 

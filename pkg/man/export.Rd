@@ -4,30 +4,26 @@
 \alias{export}
 \title{Export scan output to csv Files}
 \usage{
-export(object, filename = NULL, sep = ",", dec = ".",
-  type = "html", caption = "", flip = FALSE, kable.style = list(),
-  cols, ...)
+export(object, filename = NULL, kable_styling_options = list(),
+  kable_options = list(), cols, flip = FALSE, note = TRUE, ...)
 }
 \arguments{
 \item{object}{An scdf}
 
 \item{filename}{Character string with the filename.}
 
-\item{sep}{Sign for data seperator.}
+\item{kable_styling_options}{list with arguments passed to the kable_styling function.}
 
-\item{dec}{Sign for decimal seperator.}
+\item{kable_options}{list with arguments passed to the kable function.}
 
-\item{type}{...}
+\item{cols}{Defines which columns are included when an scdf is exported. It is either a vector 
+with variable names or the string "Main" will select the central variables.}
 
-\item{caption}{...}
+\item{flip}{If TRUE, some objects are displayed with rows and columns flipped.}
 
-\item{flip}{...}
+\item{note}{If TRUE additional information are printed below the table.}
 
-\item{kable.style}{= list with arguments passed to the kable_styling function,}
-
-\item{cols}{...}
-
-\item{...}{Further Arguments passed to the kable function.}
+\item{...}{Further Arguments passed to internal functions.}
 }
 \value{
 Returns a specif formated html.

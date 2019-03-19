@@ -4,11 +4,18 @@
 \alias{estimateSC}
 \title{Estimate single-case design}
 \usage{
-estimateSC(data, s = NULL, rtt = NULL, model = "B&L-B", ...)
+estimateSC(data, dvar, pvar, mvar, s = NULL, rtt = NULL,
+  model = "JW", ...)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
 this format.}
+
+\item{dvar}{Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.}
+
+\item{pvar}{Character string with the name of the phase variable. Defaults to the attributes in the scdf file.}
+
+\item{mvar}{Character string with the name of the measurement time variable. Defaults to the attributes in the scdf file.}
 
 \item{s}{The standard deviation depcting the between case variance of the overall performance. If more than two single-cases are included in the scdf, the variance is estimated if s is set to NULL.}
 

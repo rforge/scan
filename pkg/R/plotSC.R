@@ -6,7 +6,7 @@
 #' 
 #' @aliases plotSC plot.scdf
 #' @param data A single-case data frame. See \code{\link{scdf}} to learn about this format.
-#' @param dvar Character string with the name of the independend variable.
+#' @param dvar Character string with the name of the dependent variable.
 #' @param pvar Character string with the name of the phase variable.
 #' @param mvar Character string with the name of the measurement time variable.
 #' @param ylim Lower and upper limits of the y-axis (e.g., \code{ylim = c(0,
@@ -104,27 +104,15 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
   op <- par(no.readonly = TRUE)
   on.exit(par(op))
   
-  if(missing(dvar))
-    dvar <- attr(data, .opt$dv)
-  else
-    attr(data, .opt$dv) <- dvar
-  if (missing(pvar))
-    pvar <- attr(data, .opt$phase)
-  else
-    attr(data, .opt$phase) <- pvar
-  if (missing(mvar))
-    mvar <- attr(data, .opt$mt)
-  else
-    attr(data, .opt$mt) <- mvar
+  if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
+  if (missing(pvar)) pvar <- attr(data, .opt$phase) else attr(data, .opt$phase) <- pvar
+  if (missing(mvar)) mvar <- attr(data, .opt$mt) else attr(data, .opt$mt) <- mvar
   
   data.list <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
   N <- length(data.list)
   if(N > 1) par(mfrow = c(N, 1))
   
-  if(!is.null(case.names))
-    names(data.list) <- case.names
-  
-  ### define style
+# define style ------------------------------------------------------------
   
   if(is.list(style)) {
     ref.style <- "default"
@@ -147,23 +135,20 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
   if(is.na(style$frame))
     style$bty <- "n"
   
-  par("bg"  = style$col.bg)
-  par("col" = style$col)
-  par("family" = style$font)
-  par("cex" = style$cex)
-  par("cex.lab" = style$cex.lab)
+  par("bg"       = style$col.bg)
+  par("col"      = style$col)
+  par("family"   = style$font)
+  par("cex"      = style$cex)
+  par("cex.lab"  = style$cex.lab)
   par("cex.axis" = style$cex.axis)
-  par("las" = style$las)
-  par("bty" = style$bty)
-  par("col.lab" = style$col.text)
+  par("las"      = style$las)
+  par("bty"      = style$bty)
+  par("col.lab"  = style$col.text)
   par("col.axis" = style$col.text)
   
-  if(style$frame %in% "")
-    style$frame <- NA
-  if(style$grid %in% "")
-    style$grid  <- NA
-  if(style$fill.bg %in% "")
-    style$fill.bg  <- NA
+  if(style$frame %in% "") style$frame <- NA
+  if(style$grid %in% "") style$grid  <- NA
+  if(style$fill.bg %in% "") style$fill.bg  <- NA
   
   ### END: define style
   
@@ -171,27 +156,23 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
   if(identical(class(marks), c("sc","outlier")))
     marks <- list(positions = marks$dropped.mt)
   
+  # name cases
+  if(!is.null(case.names)) names(data.list) <- case.names
   case.names <- names(data.list)
-  if(is.null(xlab))
-    xlab <- mvar
-  if(is.null(ylab))
-    ylab <- dvar
   
-  if(is.null(xlab))
-    xlab <- "Measurement time"
-  if(is.null(ylab))
-    ylab <- "Score"
+  # set x ans y axis labels
+  if(is.null(xlab)) xlab <- mvar
+  if(is.null(ylab)) ylab <- dvar
+  if(is.null(xlab)) xlab <- "Measurement time"
+  if(is.null(ylab)) ylab <- "Score"
+  if(xlab == "mt") xlab <- "Measurement time"
   
-  if(xlab == "mt")
-    xlab <- "Measurement time"
-  
-  
+  # prepare lines definitions
   if(class(lines) != "list")
-    lines <- lapply(lines,function(x) x)
-  
+    lines <- lapply(lines, function(x) x)
   
   if(!is.null(names(lines))) {
-    id <- which(names(lines)=="")
+    id <- which(names(lines) == "")
     names(lines)[id] <- lines[id]
     lines[id] <- NA
   } else {
@@ -200,7 +181,7 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
     names(lines) <- tmp
   }
   
-  
+  # set xlim and ylim
   values.tmp <- unlist(lapply(data.list, function(x) x[,dvar]))
   mt.tmp     <- unlist(lapply(data.list, function(x) x[,mvar]))
   
@@ -209,44 +190,43 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
   if (is.null(xlim))
     xlim <- c(min(mt.tmp, na.rm = TRUE), max(mt.tmp, na.rm = TRUE))
   
-  #par(cex = 1)
-  #par(mex = 1)
+  
+# Plotting cases ----------------------------------------------------------
+
   par(mgp = c(2,1,0))
+  
   for(case in 1:N) {
     data <- data.list[[case]]
-    data <- data[!is.na(data[,dvar]),] #maybe use the complete function later
+    data <- data[!is.na(data[, dvar]), ] #maybe use the complete function later
     
-    design <- rle(as.character(data[,pvar]))
-    design$start <- c(1,cumsum(design$lengths)+1)[1:length(design$lengths)]
-    design$stop <- cumsum(design$lengths)
-    class(design) <- "list"
+    design <- .phasestructure(data, pvar)
     
+    # plot ylim
     y.lim <- ylim
-    if(is.na(ylim[2]))
-      y.lim[2] <- max(data[,dvar])
-    if(is.na(ylim[1]))
-      y.lim[1] <- min(data[,dvar])
+    if(is.na(ylim[2])) y.lim[2] <- max(data[,dvar])
+    if(is.na(ylim[1])) y.lim[1] <- min(data[,dvar])
     
+    # last plot
     if (case == N) {
       par(mai = style$mai)
       plot(data[,mvar], data[,dvar], xlab = xlab, type = "n", xlim = xlim, ylim = y.lim, ylab = ylab, xaxp = c(xlim[1],xlim[2],xlim[2] - xlim[1]),...)#, col.lab = col.text, col.axis = col.text, ...)
     }
     else {
+      # first plot
       if (case == 1)
         par(mai = c(0.2, 0.82, 0.6, 0.42))
+      # middle plot
       else  
         par(mai = c(0.4, 0.82, 0.4, 0.42))
       plot(data[,mvar], data[,dvar], xaxt = "n", xlab = "", type = "n", xlim = xlim, ylim = y.lim, ylab = ylab, ...)# col.lab = col.text, col.axis = col.text, ...)
     }
     usr <- par("usr")
-    #axis(1, col.ticks = col, xaxp = c(xlim[1],xlim[2],xlim[2] - xlim[1]), cex.axis = cex.axis)
-    #axis(2, col.ticks = col, cex.axis = cex.axis)
-    #mtext(ylab, side = 2, las = 1, line = 2, at = usr[4], cex = style$cex.lab, col = style$col.text)
+
+    # plot styling
     
-    if(!is.na(style$fill.bg)) {
-      rect(usr[1],usr[3],usr[2],usr[4], col = style$fill.bg, border = NA)#, border = par("fg"))
-    }
-    
+    if(!is.na(style$fill.bg))
+      rect(usr[1], usr[3], usr[2], usr[4], col = style$fill.bg, border = NA)#, border = par("fg"))
+
     if(!is.na(style$grid))
       grid(NULL, NULL, col = style$grid)
     
@@ -259,30 +239,33 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
     if(is.na(style$frame) && is.na(style$fill.bg))
       rect(usr[1],usr[3],usr[2],usr[4], col = NA, border = par("bg"))
     
+    # fill array below lines
     if(style$fill != "") {
       for(i in 1:length(design$values)) {
-        x <- data[design$start[i]:design$stop[i],mvar]
-        y <- data[design$start[i]:design$stop[i],dvar]
-        
-        for(i in 1:length(x))
-          polygon(c(x[i], x[i+1], x[i+1], x[i]),c(y.lim[1],y.lim[1], y[i+1],y[i]), col=style$fill, border = NA)
+        x <- data[design$start[i]:design$stop[i], mvar]
+        y <- data[design$start[i]:design$stop[i], dvar]
+        for(i in 1:length(x)) {
+          x_values <- c(x[i], x[i+1], x[i+1], x[i])
+          y_values <- c(y.lim[1], y.lim[1], y[i+1], y[i])
+          polygon(x_values, y_values, col = style$fill, border = NA)      
+        }
       }
     }
     
+    # draw lines
     for(i in 1:length(design$values)) {
-      x <- data[design$start[i]:design$stop[i],mvar]
-      y <- data[design$start[i]:design$stop[i],dvar]
+      x <- data[design$start[i]:design$stop[i], mvar]
+      y <- data[design$start[i]:design$stop[i], dvar]
       if(style$col.lines != "")
         lines(x, y, type = "l", pch = style$pch, lwd = style$lwd, col = style$col.lines,...)
       if(style$col.dots != "")
         lines(x, y, type = "p", pch = style$pch, lwd = style$lwd, col = style$col.dots,...)
-      
     }
     
-    if(case == 1)
-      title(main)
-    
-    
+    if(case == 1) title(main)
+
+    # marks -------------------------------------------------------------------
+
     if(!is.null(marks)) {
       marks.cex <- 1
       marks.col <- "red"
@@ -311,6 +294,8 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
       marks.y <- data[data[,mvar] %in% mks,dvar]
       points(x = marks.x, y = marks.y, pch = marks.pch, cex = marks.cex, col = marks.col)
     }
+
+    # annotations -------------------------------------------------------------
     
     if(!is.null(annotations)) {
       annotations.cex <- 1
@@ -347,9 +332,10 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
       text(data[,mvar],data[,dvar], label = annotations.label, col = annotations.col, pos = annotations.pos, offset = annotations.offset, cex = annotations.cex, ...)
     }
     
-    if(!is.null(lines)) { #### START: Adding help-lines
-      
-      
+
+    # lines -------------------------------------------------------------------
+    
+    if(!is.null(lines)) {
       #label <- ""
       #labelxy <- c(0,0)
       lty.line <- "dashed"
@@ -476,15 +462,15 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
       
     }#### END: Adding help-lines
     
-    ### Adding phase names
+
+    # phase names -------------------------------------------------------------
     if (is.null(phase.names))
       phase.names <- design$values
     for(i in 1:length(design$values)) {
       mtext(phase.names[i], side = 3, at = (data[design$stop[i],mvar] - data[design$start[i],mvar]) / 2 + data[design$start[i],mvar], cex = style$cex.text, ...)
     }
     
-    
-    ### Adding vertical line between phases
+    # line between phases -----------------------------------------------------
     if(is.null(style$text.ABlag)) {
       for(i in 1:(length(design$values) - 1)) {
         abline(v = data[design$stop[i]+1,mvar] - 0.5, lty = 2,lwd = style$lwd, col = style$col.seperators)
@@ -498,8 +484,8 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
       }
       
     }
-    
-    ### Adding case name
+
+    # Adding case name --------------------------------------------------------
     if (length(case.names) ==  N)
       mtext(case.names[case], side = 3, line = -1, adj = 0, at = 1, cex = style$cex.text, ...)	
   }

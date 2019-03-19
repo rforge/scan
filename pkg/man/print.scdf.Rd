@@ -4,24 +4,36 @@
 \alias{print.scdf}
 \title{Print an scdf}
 \usage{
-\method{print}{scdf}(x, cases = 3, rows = 15, cols = "all",
-  row.names = FALSE, long = FALSE, ...)
+\method{print}{scdf}(x, cases = getOption("scan.print.cases"),
+  rows = getOption("scan.print.rows"),
+  cols = getOption("scan.print.cols"),
+  long = getOption("scan.print.long"),
+  digits = getOption("scan.print.digits"), ...)
 }
 \arguments{
 \item{x}{An scdf object}
 
-\item{cases}{Number of cases to be printed.}
+\item{cases}{Number of cases to be printed. "fit" fits the number to the current screen width.}
 
 \item{rows}{Number of rows to be printed.}
 
-\item{cols}{Columns to be printed.}
-
-\item{row.names}{Logical. If TRUE row names are printed.}
+\item{cols}{Columns to be printed. "Main" only prints the dependent, measurement-time and phase variable.}
 
 \item{long}{Logical. If TRUE cases are printed in one by a time.}
+
+\item{digits}{Number of digits.}
 
 \item{...}{Further arguments passed to the print function.}
 }
 \description{
 Print an scdf
+}
+\details{
+Print options for scdf objects could be set globally:
+option(scan.print.cases = "all"), 
+option(scan.print.rows = 10), 
+option(scan.print.cols = "main"),
+option(scan.print.long = TRUE),
+option(scan.print.digits = 0),
+option(scan.print.scdf.name = FALSE)
 }

@@ -4,9 +4,15 @@
 	packageStartupMessage(out)
 }	
 
-.onLoad <- function(lib, pkg, ...) {}
-
-#defaultAttributesSCDF <- function(...) {.defaultAttributesSCDF(...)}  
+.onLoad <- function(lib, pkg, ...) {
+  # global options ----------------------------------------------------------
+  options("scan.print.cases"  = "fit")
+  options("scan.print.rows"   = 15)
+  options("scan.print.cols"   = "all")
+  options("scan.print.digits" = 1)
+  options("scan.print.long"   = FALSE)
+  options("scan.print.scdf.name" = TRUE)
+}
 
 .male.names <- c("Jacob", "Mason", "Ethan", "Noah", "William", "Liam", "Jayden", "Michael", "Alexander", "Aiden", "Daniel", "Matthew", "Elijah", "James", "Anthony", "Benjamin", "Joshua", "Andrew", "David", "Joseph", "Logan", "Jackson", "Christopher", "Gabriel", "Samuel", "Ryan", "Lucas", "John", "Nathan", "Isaac", "Dylan", "Caleb", "Christian", "Landon", "Jonathan", "Carter", "Luke", "Owen", "Brayden", "Gavin", "Wyatt", "Isaiah", "Henry", "Eli", "Hunter", "Jack", "Evan", "Jordan", "Nicholas", "Tyler", "Aaron", "Jeremiah", 
                  "Julian", "Cameron", "Levi", "Brandon", "Angel", "Austin", "Connor", "Adrian", "Robert", "Charles", "Thomas", "Sebastian", "Colton", "Jaxon", "Kevin", "Zachary", "Ayden", "Dominic", "Blake", "Jose", "Oliver", "Justin", "Bentley", "Jason", "Chase", "Ian", "Josiah", "Parker", "Xavier", "Adam", "Cooper", "Nathaniel", "Grayson", "Jace", "Carson", "Nolan", "Tristan", "Luis", "Brody", "Juan", "Hudson", "Bryson", "Carlos", "Easton", "Damian", "Alex", "Kayden", "Ryder", "Jesus", "Cole", "Micah", "Vincent", "Max", "Jaxson", "Eric", "Asher", "Hayden", "Diego", "Miles", "Steven", "Ivan", "Elias", "Aidan", "Maxwell", "Bryce", "Antonio", "Giovanni", "Timothy", "Bryan", "Santiago", "Colin", "Richard", "Braxton", "Kaleb", "Kyle", "Kaden", "Preston", "Miguel", "Jonah", "Lincoln", "Riley", "Leo", "Victor", "Brady", "Jeremy", "Mateo", "Brian", "Jaden", "Ashton", "Patrick", "Declan", "Sean", "Joel", "Gael", "Sawyer", "Alejandro", "Marcus", "Leonardo", "Jesse", "Caden", "Jake", "Kaiden", "Wesley", "Camden", "Edward", "Brantley", "Roman", "Axel", "Silas", "Jude", "Grant", "Cayden", "Emmanuel", "George", "Maddox", "Malachi", "Bradley", "Alan", "Weston", "Gage", "Devin", "Greyson", "Kenneth", "Mark", "Oscar", "Tanner", "Rylan", "Nicolas", "Harrison", "Derek", "Peyton", "Ezra", "Tucker", "Emmett", "Avery", "Cody", "Calvin", "Andres", "Jorge", "Abel", "Paul", "Abraham", "Kai", "Collin", "Theodore", "Ezekiel", "Omar", "Jayce", "Conner", "Bennett", "Trevor", "Eduardo", "Peter", "Maximus", "Jaiden", "Jameson", "Seth", "Kingston", "Javier", "Travis", "Garrett", "Everett", "Graham", "Xander", "Cristian", "Damien", "Ryker", "Griffin", "Corbin", "Myles", "Luca", "Zane", "Francisco", "Ricardo", "Alexis", "Stephen", "Zayden", "Iker", "Drake", "Lukas", "Charlie", "Spencer", "Zion", "Erick", "Josue", "Jeffrey", "Trenton", "Chance", "Paxton", "Elliot", "Fernando", "Keegan", "Landen", "Manuel", "Amir", "Shane", "Raymond", "Zander", "Andre", "Israel", "Mario", "Cesar", "Simon", "King", "Jaylen", "Johnathan", "Troy", "Dean", "Clayton", "Dominick", "Tyson", "Jasper", "Martin", "Kyler", "Hector", 
@@ -26,7 +32,6 @@
                    "Kaya", "Sonia", "Alaya", "Heather", "Nathaly", "Shannon", "Ariah", "Avah", "Giada", "Lilith", "Samiyah", "Sharon", "Coraline", "Eileen", "Julianne", "Milania", "Chana", "Regan", "Krystal", "Rihanna", "Sidney", "Hadassah", "Macey", "Mina", "Paulina", "Rayne", "Kaitlin", "Maritza", "Susan", "Raina", "Hana", "Keyla", "Temperance", "Aimee", "Alisson", "Charlize", "Kendal", "Lara", "Roselyn", "Alannah", "Alma", "Dixie", "Larissa", "Patience", "Taraji", "Sky", "Zaria", "Aleigha", "Alyvia", "Aviana", "Bryleigh", "Elliot", "Jenny", "Luz", "Ali", "Alisha", "Ayana", "Campbell", "Karis", "Lilyanna", "Azaria", "Blair", "Micah", "Moriah", "Myra", "Lilia", "Aliza", "Giovanna", "Karissa", "Saniya", "Emory", "Estella", "Juniper", "Kairi", "Kenna", "Meghan", "Abrielle", "Elissa", "Rachael", "Emmaline", "Jolene", "Joyce", "Britney", "Carlie", "Haylie", "Judith", "Renee", "Saanvi", "Yesenia", "Barbara", "Dallas", "Jaqueline", "Karma", "America", "Sariyah", "Azalea", "Everly", "Ingrid", "Lillyana", "Emmalynn", "Marianna", "Brisa", "Kaelynn", "Leona", "Libby", "Deanna", "Mattie", "Miya", "Kai", "Annalee", "Nahla", "Dorothy", "Kaylyn", "Rayna", "Araceli", "Cambria", "Evalyn", "Haleigh", "Thalia", "Jakayla", "Maliah", "Saige", "Avianna", "Charity", "Kaylen", "Raylee", "Tamia", "Aubrielle", "Bayleigh", "Carley", "Kailynn", "Katrina", "Belen", "Karlie", "Natalya", "Alaysia", "Celine", "Milana", "Monroe", "Estelle", "Meadow", "Audrianna", "Cristina", "Harlee", "Jazzlyn", "Scarlette", "Zahra", "Akira", "Ann", "Collins", "Kendyl", "Anabel", "Azariah", "Carissa", "Milena", "Tia", "Alisa", "Bree", "Carleigh", "Cheyanne", "Sarahi", "Laurel", "Kylah", "Tinley", "Kora", "Marisa", "Esme", "Sloan", "Cailyn", "Gisselle", "Kasey", "Kyndal", "Marlene", "Riya", "Annabell", "Aubriana", "Izabelle", "Kirsten", "Aya", "Dalilah", "Devyn", "Geraldine", "Analia", "Hayleigh", "Landry", "Sofie", "Tess", "Ashtyn", "Jessa", "Katalina")	
 
 .names <- c(.male.names, .female.names)
-
 .names <- .names[which(!duplicated(.names))]
 
 .opt <- list(
@@ -36,19 +41,18 @@
   female.names = .female.names,
   male.names = .male.names,
   names = .names,
-  function_debugging_warning = "This function is in an experimental state and only implemented for testing und debugging purposes.\n",
+  function_debugging_warning  = "This function is in an experimental state and only implemented for testing und debugging purposes.\n",
   function_deprecated_warning = "This function is deprecated. It will be droppoed without any further notice in a future update of scan.\n"
-  
 )
 
 .defaultAttributesSCDF <- function(attri = NULL) {
   out <- list()
-  if(!is.null(attri))
+  if (!is.null(attri))
     out <- attri
   out$class <- c("scdf","list")
   out[.opt$phase] <- "phase"
-  out[.opt$dv] <- "values"
-  out[.opt$mt] <- "mt"
+  out[.opt$dv]    <- "values"
+  out[.opt$mt]    <- "mt"
   out
 }  
 
@@ -66,123 +70,113 @@
 	ac
 }
 
-.SClm <- function(x = NULL,y) {
-	if(is.null(x))
+.SClm <- function(x = NULL, y) {
+	if (is.null(x))
 		x <- 1:length(y)
 	mx <- mean(x)
 	my <- mean(y)
-	ss.xy <- sum( (x-mx)*(y-my) )
-	ss.xx <- sum( (x-mx)^2 )
-	b <- ss.xy/ss.xx
+	ss.xy <- sum( (x - mx) * (y - my) )
+	ss.xx <- sum( (x - mx)^2 )
+	b <- ss.xy / ss.xx
 	b
 }
 
 .SCbeta <- function(model) {
 	  b <- model$coefficients[-1]
-    sx <- apply(model$model[-1],2,sd)
-    sy <- apply(model$model[1],2,sd)
-    return(c(model$coefficients,b * sx/sy))
+    sx <- apply(model$model[-1], 2, sd)
+    sy <- apply(model$model[1], 2, sd)
+    c(model$coefficients, b * sx / sy)
 }
 
-.phasestructure <- function(data,pvar) {
-  phases <- rle(as.character(data[,pvar]))
-  phases$start <- c(1, cumsum(phases$lengths) + 1)[1 : length(phases$lengths)]
-  phases$stop <- cumsum(phases$lengths)
+.phasestructure <- function(data, pvar) {
+  phases <- rle(as.character(data[, pvar]))
+  phases$start <- c(1, cumsum(phases$lengths) + 1)[1:length(phases$lengths)]
+  phases$stop  <- cumsum(phases$lengths)
   class(phases) <- "list"
-  return(phases)
+  phases
 }
 
 .SCprepareData <- function(data, na.rm = FALSE, change.var.phase = TRUE, change.var.values = TRUE, change.var.mt = TRUE) {
   
-  if(is.data.frame(data)) {
+  if (is.data.frame(data)) {
     data <- list(data)
     attributes(data) <- .defaultAttributesSCDF()
   }
-  if(!is.list(data))
+  
+  if (!is.list(data)) {
     stop("Wrong data format. Data must be a data frame or a list of data frames.")
+  }
   
-  if(is.null(attr(data, .opt$phase)))
-    attr(data,.opt$phase) <- "phase"
-  if(is.null(attr(data, .opt$mt)))
-    attr(data,.opt$mt)    <- "mt"
-  if(is.null(attr(data, .opt$dv)))
-    attr(data,.opt$dv)    <- "values"
+  if (is.null(attr(data, .opt$phase))) attr(data, .opt$phase) <- "phase"
+  if (is.null(attr(data, .opt$mt))) attr(data, .opt$mt) <- "mt"
+  if (is.null(attr(data, .opt$dv))) attr(data, .opt$dv) <- "values"
   
-  pvar       <- attr(data,.opt$phase)
+  pvar       <- attr(data, .opt$phase)
   var.mt     <- attr(data, .opt$mt)
   var.values <- attr(data, .opt$dv)
 
-  
-  if(is.null(names(data)))
-    names(data) <- paste0("Case",1:length(data))
-  
+  names(data) <- .case.names(names(data), length(data))
+
   for(case in 1:length(data)) {
     VARS <- names(data[[case]])
-    if(!(var.values %in% VARS))
-      stop("No variable for values with the name ",var.values, " in the scdf.")
-    if(!(pvar %in% VARS))
-      stop("No variable for phase with the name ",pvar,  " in the scdf.")
-    if(!(var.mt %in% VARS))
-      stop("No variable for mt with the name ",var.mt,     " in the scdf.")
-   
-    if(na.rm)
-      data[[case]] <- data[[case]][!is.na(data[[case]][, var.values]),]
-    if(!is.factor(data[[case]][, pvar]))
-      data[[case]][, pvar] <- as.factor(data[[case]][, pvar])
+    if (!(var.values %in% VARS)){
+      stop("No variable for values with the name ", var.values, " in the scdf.")
+    }
+    if (!(pvar %in% VARS)) {
+      stop("No variable for phase with the name ", pvar, " in the scdf.")
+    }
+    if (!(var.mt %in% VARS)) {
+      stop("No variable for mt with the name ",var.mt, " in the scdf.")
+    }
+    if (na.rm) data[[case]] <- data[[case]][!is.na(data[[case]][, var.values]), ]
+    if (!is.factor(data[[case]][, pvar])) data[[case]][, pvar] <- as.factor(data[[case]][, pvar])
     
-    
-    if(change.var.values && var.values != "values") {
-      if("values" %in% VARS) {
+    if (change.var.values && var.values != "values") {
+      if ("values" %in% VARS) {
         warning("Original values variable was renamed to values_renamed for this analysis.")
-        names(data[[case]])[match("values",VARS)] <- "values_renamed"
+        names(data[[case]])[match("values", VARS)] <- "values_renamed"
       }
       names(data[[case]])[match(var.values, VARS)] <- "values"
     }
     
-    if(change.var.mt && !(var.mt %in% VARS)) {
+    if (change.var.mt && !(var.mt %in% VARS)) {
       data[[case]][,var.mt] <- 1:nrow(data[[case]])
     }
     
-    if(change.var.mt && var.mt != "mt") {
-      if("mt" %in% VARS) {
+    if (change.var.mt && var.mt != "mt") {
+      if ("mt" %in% VARS) {
         warning("Original mt variable was renamed to mt_renamed for this analysis.")
-        names(data[[case]])[match("mt",VARS)] <- "mt_renamed"
+        names(data[[case]])[match("mt", VARS)] <- "mt_renamed"
       }
       names(data[[case]])[match(var.mt, VARS)] <- "mt"
     }
     
-    if(change.var.phase && pvar != "phase") {
-      if("phase" %in% VARS) {
+    if (change.var.phase && pvar != "phase") {
+      if ("phase" %in% VARS) {
         warning("Original phase variable was renamed to phase_renamed for this analysis.")
-        names(data[[case]])[match("phase",VARS)] <- "phase_renamed"
+        names(data[[case]])[match("phase", VARS)] <- "phase_renamed"
       }
       names(data[[case]])[match(pvar, VARS)] <- "phase"
     }
-    if(is.na(names(data)[case]))
+    if (is.na(names(data)[case]))
       names(data)[case] <- paste0("Case ", case)
   }
-  
-  
-  
   return(data)
 }
 
-#keepphasesSC <- function(...) {.keepphasesSC(...)}
-
-.keepphasesSC <- function(data, phases = c(1,2), set.phases = TRUE, pvar = "phase") {
+.keepphasesSC <- function(data, phases = c(1, 2), set.phases = TRUE, pvar = "phase") {
   
-  if(is.data.frame(data))
-    data <- list(data)
-  
+  if (is.data.frame(data)) data <- list(data)
   ATTRIBUTES <- attributes(data)
   
   res <- lapply(data, function(x) rle(as.character(x[,pvar]))$values)
-  if(!all(unlist(lapply(res[-1], function(x) identical(x,res[[1]])))))
+  if (!all(unlist(lapply(res[-1], function(x) identical(x,res[[1]])))))
     warning("Single-cases do have differing desings.")
   
   if (class(phases) %in% c("character","numeric","integer")) {
-    if(!length(phases) == 2) 
+    if (!length(phases) == 2) {
       stop("Phases argument not set correctly. Please provide a vector with two charcters or two numbers. E.g., phases = c(1,3).")
+    }    
     phases.A <- phases[1]
     phases.B <- phases[2]
   }
@@ -193,19 +187,19 @@
   }
   
   phases.total <- c(phases.A, phases.B)
-  design <- rle(as.character(data[[1]][,pvar]))
+  design <- rle(as.character(data[[1]][, pvar]))
   
-  if(class(phases.total) == "character") {
+  if (class(phases.total) == "character") {
     tmp <- sapply(phases.total, function(x) sum(x == design$values)>1)
-    if(any(tmp))
+    if (any(tmp))
       stop(paste0("Phase names ", paste0(names(tmp[tmp]))," occure several times. Please give number of phases instead of characters."))
     
     tmp <- sapply(phases.total, function(x) any(x == design$values))
-    if(!all(tmp))
+    if (!all(tmp))
       stop(paste0("Phase names ",  names(tmp[!tmp]) ," do not occure in the data. Please give different phase names."))
   }
   
-  if(class(phases.total) == "character") {
+  if (class(phases.total) == "character") {
     phases.A <- which(design$values %in% phases.A)
     phases.B <- which(design$values %in% phases.B)
   }
@@ -224,7 +218,7 @@
     
     data[[case]][,pvar] <- as.character(data[[case]][,pvar])
     
-    if(set.phases) {
+    if (set.phases) {
       data[[case]][A ,pvar] <- "A"
       data[[case]][B ,pvar] <- "B"
     }
@@ -239,16 +233,15 @@
 .stringPhasesSC <- function(A,B) {
   nomerS = "phase "
   nomerP = "phases "
-  
   APART <- 
-    if(length(A) == 1)
+    if (length(A) == 1)
       paste0(nomerS, A, collapse = "")
   else 
     paste0( c(nomerP, A[1], paste0(" + ",A[-1]) ), 
             collapse = "")
   
   BPART <- 
-    if(length(B) == 1)
+    if (length(B) == 1)
       paste0(nomerS, B, collapse = "")
   else 
     paste0( c(nomerP,B[1], paste0(" + ",B[-1])), 
@@ -256,8 +249,47 @@
   
   out <- paste0(c("Comparing ", APART, " against ", BPART), collapse ="")
   out
-  
 }
+
+.nice.p <- function(p, equal.sign = FALSE) {
+  out <- rep(NA, length(p))
+  for(i in 1:length(p)) {
+    if (isTRUE(p[i] >= 0.05)) {
+      out[i] <- substring(sprintf("%.2f", trunc(p[i] * 100) / 100), 2)
+      if (equal.sign) out[i] <- paste0("= ", out[i])
+    }
+    if (isTRUE(p[i] == 1))    out[i] <- "1.00"    
+    if (isTRUE(p[i] < 0.05))  out[i] <- "<.05"
+    if (isTRUE(p[i] < 0.01))  out[i] <- "<.01"
+    if (isTRUE(p[i] < 0.001)) out[i] <- "<.001"
+  }
+  out
+} 
+
+.plm.row.names <- function(rn, x) {
+  out <- rn
+  if(!is.na(match("mt", rn)))
+    out[match("mt", rn)] <- "Trend"
+  if(!is.na(match(attr(x, .opt$mt), rn)))
+    out[match(attr(x, .opt$mt), rn)] <- paste0("Trend ", attr(x, .opt$mt))
+  if(!is.na(match("(Intercept)", rn)))
+    out[match("(Intercept)", rn)] <- "Intercept"
+  
+  PHASE <- attr(x, .opt$phase)
+  out <- gsub(PHASE,paste0("Level ", PHASE," "), out)
+  out <- gsub("inter",paste0("Slope ", PHASE," "), out)
+}
+
+
+.case.names <- function(x, n) {
+  if (is.null(x)) x <- paste0("Case", 1:n)
+  nonames <- which(is.na(x))
+  x[nonames] <- paste0("Case", nonames)
+  x
+}
+
+
+
 
 
 

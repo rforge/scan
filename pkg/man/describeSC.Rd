@@ -9,11 +9,11 @@ describeSC(data, dvar, pvar, mvar)
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
-\item{dvar}{Character string with the name of the dependent variable.}
+\item{dvar}{Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.}
 
-\item{pvar}{Character string with the name of the phase variable.}
+\item{pvar}{Character string with the name of the phase variable. Defaults to the attributes in the scdf file.}
 
-\item{mvar}{Character string with the name of the measurement time variable.}
+\item{mvar}{Character string with the name of the measurement time variable. Defaults to the attributes in the scdf file.}
 }
 \value{
 A data frame of descriptive statistics (for each single-case), i.e.:
@@ -39,8 +39,7 @@ write.csv(study$descriptives, file = "descriptives.csv")
 
 }
 \seealso{
-\code{\link{overlapSC}}, \code{\link{plotSC}},
-\code{\link{writeSC}}
+\code{\link{overlapSC}}, \code{\link{plotSC}}
 }
 \author{
 Juergen Wilbert

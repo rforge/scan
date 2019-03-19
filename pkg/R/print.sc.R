@@ -35,8 +35,8 @@ print.sc <- function(x, ...) {
   if(value == "autocorr") {
     cat("Autocorrelations\n\n")
     x <- x$autocorr
-    x[,-c(1,2)] <- round(x[,-c(1,2)],2)
-    print(x)
+    x[, -c(1, 2)] <- round(x[, -c(1, 2)], 2)
+    print(x, row.names = FALSE)
   }
   
   ##### overlap #####
@@ -49,28 +49,32 @@ print.sc <- function(x, ...) {
     note = TRUE
   }
 
-  ##### TAU-U #####
+# TAU-U -------------------------------------------------------------------
+
   if(value == "TAU-U") {	
     cat("Tau-U\n")
     cat("Method: ",x$method,"\n\n")
     cat("Overall Tau-U: \n")
     print(x$Overall_tau_u)
     cat("\n")
-    out <- lapply(x$table,function(x)round(x,3))
+    out <- lapply(x$table, function(x) round(x, 3))
     arg <- list(...)
     complete <- FALSE
     if(any(names(arg) == "complete")) {
       complete <- arg$complete
     }
     if(complete == FALSE) {
-      VAR <- c("S","D","Tau","Tau.b","Z","p")
-      out <- lapply(x$table,function(x)round(x[c(-1,-2,-3,-4),VAR],3))
+      VAR <- c("S", "D", "Tau", "Tau.b", "Z", "p")
+      out <- lapply(x$table, function(x) round(x[-1:-4, VAR], 3))
     }
-    out <- lapply(out, function(x) {
-      names(x)[which(names(x) == "Tau")]   <- "\u03c4"
-      names(x)[which(names(x) == "Tau.b")] <- "\u03c4b"
-      x
-    })
+    out <- lapply(
+      out, 
+      function(x) {
+        names(x)[which(names(x) == "Tau")]   <- "\u03c4"
+        names(x)[which(names(x) == "Tau.b")] <- "\u03c4b"
+        x
+      }
+    )
     
     print(out)
   }
@@ -78,28 +82,40 @@ print.sc <- function(x, ...) {
   ##### power #####
   if(value == "power") {	
     cat("Test-Power in percent:\n")
-    ma <- matrix(unlist(x[1:16])*100,byrow = FALSE, ncol = 2, dimnames = list(c("tauU: A vs. B - Trend A",paste0("Rand-Test: ",x$rand.test.stat[1]),  "PLM.Norm: Level", "PLM.Norm: Slope", "PLM.Poisson: Level", "PLM.Poisson: Slope", "HPLM: Level", "HPLM: Slope"), c("Power", "Alpha-error")))
+    ma <- matrix(
+      unlist(x[1:16]) * 100, byrow = FALSE, ncol = 2, 
+      dimnames = list(
+        c("tauU: A vs. B - Trend A", 
+          paste0("Rand-Test: ",x$rand.test.stat[1]),  
+          "PLM.Norm: Level", 
+          "PLM.Norm: Slope", 
+          "PLM.Poisson: Level", 
+          "PLM.Poisson: Slope", 
+          "HPLM: Level", 
+          "HPLM: Slope"), 
+        c("Power", "Alpha-error")
+        ))
     print(ma)
   }
   
   ##### PET #####
   if(value == "PET") {	
     cat("Percent Exceeding the Trend\n\n")
-    cat("N cases = ", x$N,"\n")
+    cat("N cases = ", x$N, "\n")
     cat("\n")
     ma <- cbind(x$PET, x$p, x$PET.ci)
-    colnames(ma) <- c("PET","binom.p", "PET CI")
+    colnames(ma) <- c("PET", "binom.p", "PET CI")
     rownames(ma) <- x$case.names
-    print(round(ma,3))
+    print(round(ma, 3))
     cat("\n")
     
     if(x$decreasing) {
       cat("Assumed decreasing values in the B-phase.\n\n")
       cat("Binom.test: alternative hypothesis: true probability < 50%\n")
-      cat(sprintf("PET CI: Percent of values less than lower %d%% confidence threshold (smaller %.3f*se below predicted value)\n",x$ci,x$se.factor))
+      cat(sprintf("PET CI: Percent of values less than lower %d%% confidence threshold (smaller %.3f*se below predicted value)\n", x$ci,x$se.factor))
     } else {
       cat("Binom.test: alternative hypothesis: true probability > 50%\n")
-      cat(sprintf("PET CI: Percent of values greater than upper %d%% confidence threshold (greater %.3f*se above predicted value)\n",x$ci,x$se.factor))
+      cat(sprintf("PET CI: Percent of values greater than upper %d%% confidence threshold (greater %.3f*se above predicted value)\n", x$ci,x$se.factor))
     }
     
   }	
@@ -108,8 +124,6 @@ print.sc <- function(x, ...) {
   if(value == "NAP") {
     cat("Nonoverlap of All Pairs\n\n")
     print(x$nap, row.names = FALSE, digits = 2)
-    #cat("NAP = ", x$NAP, "%\n")
-    #cat("NAP rescaled = ", x$NAP.rescaled, "%\n")
   }
   
   ##### PEM #####
@@ -158,7 +172,7 @@ print.sc <- function(x, ...) {
     cat("\n")
     cat("Reliability = ", x$reliability, "\n")
     cat("\n")
-    cat(x$conf.percent*100,"% Confidence Intervals:\n")
+    cat(x$conf.percent * 100, "% Confidence Intervals:\n")
     print(x$conf)
     cat("\n")
     cat("Reliable Change Indices:\n")
@@ -166,7 +180,9 @@ print.sc <- function(x, ...) {
     cat("\n")
   }
   
-  ##### rand #####
+# rand --------------------------------------------------------------------
+
+  
   if(value == "rand") {
     cat("Randomization Test\n\n")
     if (x$N > 1)
@@ -189,7 +205,6 @@ print.sc <- function(x, ...) {
     } else 
       cat("\nDistribution based on a random sample of all", x$possible.combinations, "possible combinations.\n")
     
-    #cat("\nDistribution:\n")
     cat("n   = ", x$number,"\n")
     cat("M   = ", mean(x$distribution),"\n")
     cat("SD  = ", sd(x$distribution),"\n")
@@ -211,14 +226,13 @@ print.sc <- function(x, ...) {
     cat(sprintf("z = %0.4f, p = %0.4f (single sided)\n", x$Z, x$p.Z.single))
   }
   
-  ##### hplm #####
+# hplm --------------------------------------------------------------------
+  
   if(value == "hplm") {
-    
     cat("Hierarchical Piecewise Linear Regression\n\n")
-    
-    cat("Estimation method",x$model$estimation.method,"\n")
-    cat("Slope estimation method:",x$model$interaction.method,"\n")
-    cat(x$N,"Cases\n\n")
+    cat("Estimation method", x$model$estimation.method,"\n")
+    cat("Slope estimation method:", x$model$interaction.method,"\n")
+    cat(x$N, "Cases\n\n")
     
     out <- list()
     
@@ -230,18 +244,9 @@ print.sc <- function(x, ...) {
     md <- as.data.frame(summary(x$hplm)$tTable)
 
     colnames(md) <- c("B","SE","df","t","p")
-    rn <- rownames(md)
-    if(!is.na(match("mt",rn)))
-      rownames(md)[match("mt",rn)] <- "Trend"
-    if(!is.na(match(attr(x, .opt$mt),rn)))
-      rownames(md)[match(attr(x, .opt$mt),rn)] <- paste0("Trend ", attr(x, .opt$mt))
-    if(!is.na(match("(Intercept)",rn)))
-      rownames(md)[match("(Intercept)",rn)] <- "Intercept"
     
-    PHASE <- attr(x, .opt$phase)
-    rownames(md) <- gsub(PHASE,paste0("Level ", PHASE," "),rownames(md))
-    rownames(md) <- gsub("inter",paste0("Slope ", PHASE," "),rownames(md))
-    
+    row.names(md) <- .plm.row.names(row.names(md), x)
+
     md$B  <- round(md$B, 3)
     md$SE <- round(md$SE,3)
     md$t  <- round(md$t, 3)
@@ -256,17 +261,9 @@ print.sc <- function(x, ...) {
     SD <- round(as.numeric(VarCorr(x$hplm)[,"StdDev"]),3)
     md <- data.frame("EstimateSD" = SD)
     rownames(md) <- names(VarCorr(x$hplm)[,2])
-    rn <- rownames(md)
-    if(!is.na(match("mt",rn)))
-      rownames(md)[match("mt",rn)] <- "Trend"
-    if(!is.na(match(attr(x, .opt$mt),rn)))
-      rownames(md)[match(attr(x, .opt$mt),rn)] <- paste0("Trend ", attr(x, .opt$mt))
-    if(!is.na(match("(Intercept)",rn)))
-      rownames(md)[match("(Intercept)",rn)] <- "Intercept"
     
-    rownames(md) <- gsub(PHASE,paste0("Level ", PHASE," "),rownames(md))
-    rownames(md) <- gsub("inter",paste0("Slope ", PHASE," "),rownames(md))
-      
+    row.names(md) <- .plm.row.names(row.names(md), x)
+    
     if(x$model$lr.test) {
       if(is.null(x$LR.test[[1]]$L.Ratio)) {
         x$LR.test[[1]]$L.Ratio <- NA
@@ -282,7 +279,8 @@ print.sc <- function(x, ...) {
     print(md, na.print = "-")
   }
   
-  ##### pr #####
+# plm ---------------------------------------------------------------------
+
   if(value == "pr"){
     cat("Piecewise Regression Analysis\n\n")
     cat("Dummy model: ", x$model,"\n\n")
@@ -311,24 +309,13 @@ print.sc <- function(x, ...) {
     res <- as.data.frame(res)
     if(!is.null(x$r.squares))
        res$R2 <- c("",format(round(x$r.squares,4)))
-    rn <- rownames(res)
-    if(!is.na(match("mt",rn)))
-      rownames(res)[match("mt",rn)] <- "Trend"
-    if(!is.na(match(attr(x, .opt$mt),rn)))
-      rownames(res)[match(attr(x, .opt$mt),rn)] <- paste0("Trend ", attr(x, .opt$mt))
     
-    if(!is.na(match("(Intercept)",rn)))
-      rownames(res)[match("(Intercept)",rn)] <- "Intercept"
-    
-    PHASE <- attr(x, .opt$phase)
-    rownames(res) <- gsub(PHASE,paste0("Level ", PHASE," "),rownames(res))
-    rownames(res) <- gsub("inter",paste0("Slope ", PHASE," "),rownames(res))
- 
+    row.names(res) <- .plm.row.names(row.names(res), x)
+   
     if(!is.null(x$r.squares))
       colnames(res) <- c("B","2.5%","97.5%","SE", "t","p", "\u0394R\u00b2")		
     if(is.null(x$r.squares))
       colnames(res) <- c("B","2.5%","97.5%","SE", "t","p")		
-    
     
     if(x$family == "poisson" || x$family == "nbinomial") {
       OR <- exp(res[,1:3])
@@ -340,14 +327,17 @@ print.sc <- function(x, ...) {
     cat("\n")
     cat("Autocorrelations of the residuals\n")
     lag.max = 3
-    print(data.frame(lag = 1:lag.max,r = round(acf(residuals(x$full.model), lag.max = lag.max,plot = FALSE)$acf[2:(1+lag.max)],2)), row.names = FALSE)
+    cr <- acf(residuals(x$full.model), lag.max = lag.max,plot = FALSE)$acf[2:(1 + lag.max)]
+    cr <- round(cr, 2)
+    print(data.frame(lag = 1:lag.max, cr = cr), row.names = FALSE)
     cat("\n")
     cat("Formula: ")
-    print(x$formula,showEnv = FALSE)
+    print(x$formula, showEnv = FALSE)
     cat("\n")
   }
   
-  ##### PAND #####
+# PAND --------------------------------------------------------------------
+
   if(value == "PAND") {
     cat("Percentage of all non-overlapping data\n\n")
     cat("PAND = ", round(x$PAND,1), "%\n")
@@ -387,26 +377,31 @@ print.sc <- function(x, ...) {
     if(x$correction)
       cat("\nNote. Matrix is corrected for ties\n")
     cat("\nCorrelation based analysis:\n\n")
-    out <- sprintf("z = %.3f, p = %.3f, \u03c4 = %.3f",x$correlation$statistic, x$correlation$p.value, x$correlation$estimate)
-    cat(out,"\n")
+    out <- sprintf("z = %.3f, p = %.3f, \u03c4 = %.3f",
+                   x$correlation$statistic, 
+                   x$correlation$p.value, 
+                   x$correlation$estimate)
+    cat(out, "\n")
   }
-  
-  ##### describe #####
+
+# describe ----------------------------------------------------------------
+
   if(value == "describe") {
     cat("Describe Single-Case Data\n\n")
     cat("Design: ", x$design, "\n\n")
-    out <- as.data.frame(round(t(x$descriptives),2))
+    out <- as.data.frame(round(t(x$descriptives), 2))
    
     rownames(out) <- format(rownames(out), justify = "right")
     
     
-    print(out[1:(2*length(x$design)),,drop = FALSE], ...)
+    print(out[1:(2 * length(x$design)), , drop = FALSE], ...)
     cat("\n")
-    print(out[-(1:(2*length(x$design))),,drop = FALSE], ...)
+    print(out[-(1:(2 * length(x$design))), , drop = FALSE], ...)
     note = TRUE
   }	
   
-  ##### outlier #####
+# outlier -----------------------------------------------------------------
+  
   if(value == "outlier") {
     cat("Outlier Analysis for Single-Case Data\n\n")
     

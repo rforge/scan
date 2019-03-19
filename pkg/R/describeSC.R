@@ -5,15 +5,14 @@
 #' 
 #' 
 #' @param data A single-case data frame. See \code{\link{scdf}} to learn about this format.
-#' @param dvar Character string with the name of the dependent variable.
-#' @param pvar Character string with the name of the phase variable.
-#' @param mvar Character string with the name of the measurement time variable.
+#' @param dvar Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.
+#' @param pvar Character string with the name of the phase variable. Defaults to the attributes in the scdf file.
+#' @param mvar Character string with the name of the measurement time variable. Defaults to the attributes in the scdf file.
 #' @return A data frame of descriptive statistics (for each single-case), i.e.:
 #' number of observations, number of missing values, measures of central
 #' tendency, variation, and trend.
 #' @author Juergen Wilbert
-#' @seealso \code{\link{overlapSC}}, \code{\link{plotSC}},
-#' \code{\link{writeSC}}
+#' @seealso \code{\link{overlapSC}}, \code{\link{plotSC}}
 #' @examples
 #' 
 #' 
@@ -29,21 +28,13 @@
 #' 
 #' @export
 describeSC <- function(data, dvar, pvar, mvar) {
+ 
+  # set attributes to arguments else set to defaults of scdf
+  if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
+  if (missing(pvar)) pvar <- attr(data, .opt$phase) else attr(data, .opt$phase) <- pvar
+  if (missing(mvar)) mvar <- attr(data, .opt$mt) else attr(data, .opt$mt) <- mvar
   
-  if(missing(dvar))
-    dvar <- attr(data, .opt$dv)
-  else
-    attr(data, .opt$dv) <- dvar
-  if (missing(pvar))
-    pvar <- attr(data, .opt$phase)
-  else
-    attr(data, .opt$phase) <- pvar
-  if (missing(mvar))
-    mvar <- attr(data, .opt$mt)
-  else
-    attr(data, .opt$mt) <- mvar
-  
-  data.list <- .SCprepareData(data,change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
+  data.list <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
   
   N <- length(data.list)
   case.names <- names(data.list)
