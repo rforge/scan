@@ -4,17 +4,15 @@
 \alias{pem}
 \title{Percent exceeding the median}
 \usage{
-pem(data, dvar = NULL, pvar = NULL, decreasing = FALSE,
-  binom.test = TRUE, chi.test = FALSE, FUN = median,
-  phases = c("A", "B"), ...)
+pem(data, dvar, pvar, decreasing = FALSE, binom.test = TRUE,
+  chi.test = FALSE, FUN = median, phases = c(1, 2), ...)
 }
 \arguments{
-\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
-this format.}
+\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
-\item{dvar}{Character string with the name of the independend variable.}
+\item{dvar}{Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.}
 
-\item{pvar}{Character string with the name of the phase variable.}
+\item{pvar}{Character string with the name of the phase variable. Defaults to the attributes in the scdf file.}
 
 \item{decreasing}{If you expect data to be lower in the B phase, set
 \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.}
@@ -38,12 +36,8 @@ and 4 (as B). Default is \code{phases = c("A","B")}.}
 
 \item{\dots}{Additional arguments for the \code{FUN} parameter (e.g.
 \code{FUN = mean, trim = 0.1} will use the 10 percent trimmed arithmetic
-mean instead of the median for comparisons).}
-}
-\value{
-\item{PEM}{Percent exceeding the median.} \item{test}{A list of
-results from the binomial- and chi-square test.} \item{decreasing}{Logical
-argument from function call (see \code{Arguments} above).}
+mean instead of the median for comparisons). The function must take a vector
+of numeric values and the \code{na.rm} argument and return a numeric value.}
 }
 \description{
 The \code{pem} function returns the percentage of phase B data exceeding the
@@ -59,9 +53,11 @@ pem(dat, chi.test = TRUE)
 
 }
 \seealso{
-\code{\link{overlapSC}}, \code{\link{describeSC}},
-\code{\link{nap}}, \code{\link{pand}}, \code{\link{pet}}, \code{\link{pnd}}
+Other overlap functions: \code{\link{nap}},
+  \code{\link{overlapSC}}, \code{\link{pand}},
+  \code{\link{pet}}, \code{\link{tauUSC}}
 }
 \author{
 Juergen Wilbert
 }
+\concept{overlap functions}

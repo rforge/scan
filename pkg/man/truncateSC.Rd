@@ -29,10 +29,12 @@ plot(study)
 
 }
 \seealso{
-\code{\link{outlierSC}}, \code{\link{fillmissingSC}},
-\code{\link{scdf}}
+Other data manipulation functions: \code{\link{fillmissingSC}},
+  \code{\link{longSCDF}}, \code{\link{rankSC}},
+  \code{\link{scaleSC}}, \code{\link{smoothSC}}
 }
 \author{
 Juergen Wilbert
 }
+\concept{data manipulation functions}
 \keyword{manip}

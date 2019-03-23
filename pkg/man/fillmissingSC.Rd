@@ -4,16 +4,14 @@
 \alias{fillmissingSC}
 \title{Replacing missing measurement times in single-case data}
 \usage{
-fillmissingSC(data, dvar = NULL, mvar = NULL,
-  interpolation = "linear", na.rm = TRUE)
+fillmissingSC(data, dvar, mvar, interpolation = "linear", na.rm = TRUE)
 }
 \arguments{
-\item{data}{A single-case data frame or a list of single-case data frames.
-See \code{\link{scdf}} to learn about this format.}
+\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
-\item{dvar}{Character string with the name of the dependent variable.}
+\item{dvar}{Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.}
 
-\item{mvar}{Character string with the name of the measurement time variable.}
+\item{mvar}{Character string with the name of the measurement time variable. Defaults to the attributes in the scdf file.}
 
 \item{interpolation}{Alternative options not yet included. Default is
 \code{interpolation = "linear"}.}
@@ -59,10 +57,12 @@ plot(study, marks = list(positions = replace.positions), style = "grid2")
 
 }
 \seealso{
-\code{\link{outlierSC}}, \code{\link{truncateSC}},
-\code{\link{scdf}}, \code{\link{overlapSC}}, \code{\link{randSC}}
+Other data manipulation functions: \code{\link{longSCDF}},
+  \code{\link{rankSC}}, \code{\link{scaleSC}},
+  \code{\link{smoothSC}}, \code{\link{truncateSC}}
 }
 \author{
 Juergen Wilbert
 }
+\concept{data manipulation functions}
 \keyword{manip}

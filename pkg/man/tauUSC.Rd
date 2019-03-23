@@ -4,15 +4,15 @@
 \alias{tauUSC}
 \title{Tau-U for single-case data}
 \usage{
-tauUSC(data, dvar = NULL, pvar = NULL, ties.method = "omit",
-  method = "complete", phases = c("A", "B"))
+tauUSC(data, dvar, pvar, ties.method = "omit", method = "complete",
+  phases = c(1, 2))
 }
 \arguments{
-\item{data}{A single-case data frame.}
+\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
-\item{dvar}{Character string with the name of the independend variable.}
+\item{dvar}{Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.}
 
-\item{pvar}{Character string with the name of the phase variable.}
+\item{pvar}{Character string with the name of the phase variable. Defaults to the attributes in the scdf file.}
 
 \item{ties.method}{Defines how to handle ties. \code{"omit"} (default) excludes all
 ties from the calculation. \code{"positive"} counts all ties as positive
@@ -20,7 +20,7 @@ comparisons, while \code{"negative"} counts them as negative comparisons.}
 
 \item{method}{\code{"complete"} (default) or \code{"parker"}. Teh latter calculates the number of possible pairs as described in Parler et al. (2011) which might lead to tau-U values greater than 1.}
 
-\item{phases}{hases A vector of two characters or numbers indicating the two
+\item{phases}{A vector of two characters or numbers indicating the two
 phases that should be compared. E.g., \code{phases = c("A","C")} or
 \code{phases = c(2,4)} for comparing the second to the fourth phase. Phases
 could be combined by providing a list with two elements. E.g., \code{phases
@@ -55,6 +55,12 @@ Parker, R. I., Vannest, K. J., Davis, J. L., & Sauber, S. B.
 (2011). Combining Nonoverlap and Trend for Single-Case Research: Tau-U.
 \emph{Behavior Therapy, 42}, 284-299.
 }
+\seealso{
+Other overlap functions: \code{\link{nap}},
+  \code{\link{overlapSC}}, \code{\link{pand}},
+  \code{\link{pem}}, \code{\link{pet}}
+}
 \author{
 Juergen Wilbert
 }
+\concept{overlap functions}

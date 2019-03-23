@@ -3,31 +3,30 @@
 #' Identifies and drops outliers within a single-case data frame (scdf).
 #' 
 #' 
-#' @param data A single-case data frame. See \code{\link{makeSCDF}} to learn
-#' about this format.
-#' @param dvar Character string with the name of the dependent variable.
-#' @param pvar Character string with the name of the phase variable.
-#' @param mvar Character string with the name of the measurement time variable.
+#' @inheritParams .inheritParams
 #' @param criteria Specifies the criteria for outlier identification. Set
 #' \code{criteria = c("SD", 2)} to define two standard deviations as limit.
 #' This is also the default setting. To use the 99\% Confidence Interval use
 #' \code{criteria = c("CI", 0.99)}. Set \code{criteria = c("Cook", "4/n")} to
 #' define any data point with a Cook's Distance greater than 4/n as an outlier,
 #' based on the Piecewise Linear Regression Model.
-#' @return \item{data}{A data frame (for each single-case) without outliers.}
+#' @return 
+#' \item{data}{A single-case data frame with substituted outliers.}
 #' \item{dropped.n}{A list with the number of dropped data points for each
-#' single-case.} \item{dropped.mt}{A list with the measurement-times of dropped
+#' single-case.}
+#' \item{dropped.mt}{A list with the measurement-times of dropped
 #' data points for each single-case (values are based on the \code{mt} variable
-#' of each single-case data frame).} \item{sd.matrix}{A list with a matrix for
-#' each case with values for the upper and lower boundaries based on the
-#' standard deviation.} \item{ci.matrix}{A list with a matrix for each
-#' single-case with values for the upper and lower boundaries based on the
-#' confidence interval.} \item{cook}{A list of Cook's Distances for each
-#' measurement of each single-case.} \item{criteria}{Criteria used for outlier
-#' analysis.} \item{N}{Number of single-cases.} \item{case.names}{Case
-#' identifier.}
+#' of each single-case data frame).} 
+#' \item{sd.matrix}{A list with a matrix for each case with values for the 
+#' upper and lower boundaries based on the standard deviation.} 
+#' \item{ci.matrix}{A list with a matrix for each single-case with values 
+#' for the upper and lower boundaries based on the confidence interval.} 
+#' \item{cook}{A list of Cook's Distances for each measurement of each single-case.} 
+#' \item{criteria}{Criteria used for outlier analysis.} 
+#' \item{N}{Number of single-cases.} 
+#' \item{case.names}{Case identifier.}
 #' @author Juergen Wilbert
-#' @seealso \code{\link{describeSC}}, \code{\link{fillmissingSC}},
+#' @family data manipulation functions
 #' \code{\link{plotSC}}
 #' @keywords manip
 #' @examples
@@ -43,25 +42,16 @@
 #' plotSC(Grosche2011, marks = res.outlier)
 #' 
 #' @export
-outlierSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, criteria = c("MAD", "3.5")){
+outlierSC <- function(data, dvar, pvar, mvar, criteria = c("MAD", "3.5")) {
   
-  if(!any(criteria[1] %in% c("MAD","Cook","SD","CI")))
+  if(!any(criteria[1] %in% c("MAD", "Cook", "SD", "CI"))) {
     stop("Unknown criteria. Please check.")
+  }
   
-  if(!is.null(dvar)) 
-    attr(data, .opt$dv) <- dvar
-  else
-    dvar <- attr(data, .opt$dv)
-  
-  if(!is.null(pvar))
-    attr(data, .opt$phase) <- pvar
-  else
-    pvar <- attr(data, .opt$phase)
-  
-  if(!is.null(mvar))
-    attr(data, .opt$mt) <- mvar
-  else
-    mvar <- attr(data, .opt$mt)
+  # set attributes to arguments else set to defaults of scdf
+  if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
+  if (missing(pvar)) pvar <- attr(data, .opt$phase) else attr(data, .opt$phase) <- pvar
+  if (missing(mvar)) mvar <- attr(data, .opt$mt) else attr(data, .opt$mt) <- mvar
   
   data.list <- .SCprepareData(data, change.var.values = FALSE, change.var.phase = FALSE,change.var.mt = FALSE)
  
@@ -79,16 +69,18 @@ outlierSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, criteria = c(
   for(i in 1:N) {
     data <- data.list[[i]]
     
-    phases <- rle(as.character(data[,pvar]))$value
-    values <- lapply(phases, function(x) data[data[,pvar] == x, dvar])
-  
+    phases <- rle(as.character(data[, pvar]))$value
+    values <- lapply(phases, function(x) data[data[, pvar] == x, dvar])
+
+# CI ----------------------------------------------------------------------
+    
     if (identical(criteria[1], "CI")) {
       cut.off <- as.numeric(criteria[2])
       mat <- matrix(NA, length(values), ncol = 5)
       colnames(mat) <- c("phase","m","se","lower", "upper")
       rownames(mat) <- names(values)
       filter <- c()
-      fac <- qnorm((1-cut.off)/2, lower.tail = FALSE)
+      fac <- qnorm((1 - cut.off) / 2, lower.tail = FALSE)
       
       for(p in 1:length(values)) {
         x <- values[[p]]
@@ -96,16 +88,19 @@ outlierSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, criteria = c(
         mat[p,"se"] <- sd(x)/sqrt(length(x))
         mat[p,"lower"] <- mean(x) - fac * (sd(x)/sqrt(length(x)))
         mat[p,"upper"] <- mean(x) + fac * (sd(x)/sqrt(length(x)))
-        filter <- c(filter, (x < mat[p,"lower"]) | (x > mat[p,"upper"]))
+        filter <- c(filter, (x < mat[p, "lower"]) | (x > mat[p, "upper"]))
       }
       mat <- as.data.frame(mat)
       mat$phase <- phases
       ci.matrix[[i]] <- mat
     }
+
+# MAD ---------------------------------------------------------------------
+
     if (identical(criteria[1], "MAD")) {
       fac <- as.numeric(criteria[2])
       mat <- matrix(NA, length(values), ncol = 5)
-      colnames(mat) <- c("phase","md","mad","lower", "upper")
+      colnames(mat) <- c("phase", "md", "mad", "lower", "upper")
       filter <- c()
       for(p in 1:length(values)) {
         x <- values[[p]]
@@ -118,12 +113,14 @@ outlierSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, criteria = c(
       mat <- as.data.frame(mat)
       mat$phase <- phases
       mad.matrix[[i]] <- mat
-      
     }	
+
+# SD ----------------------------------------------------------------------
+
     if (identical(criteria[1], "SD")) {
       SD <- as.numeric(criteria[2])
       mat <- matrix(NA, length(values), ncol = 5)
-      colnames(mat) <- c("phase","m","sd","lower", "upper")
+      colnames(mat) <- c("phase", "m", "sd", "lower", "upper")
       filter <- c()
       for(p in 1:length(values)) {
         x <- values[[p]]
@@ -131,39 +128,33 @@ outlierSC <- function(data, dvar = NULL, pvar = NULL, mvar = NULL, criteria = c(
         mat[p,"sd"] <- sd(x)
         mat[p,"lower"] <- mean(x) - SD * sd(x)
         mat[p,"upper"] <- mean(x) + SD * sd(x)
-        filter <- c(filter, (x < mat[p,"lower"]) | (x > mat[p,"upper"]))
+        filter <- c(filter, (x < mat[p,"lower"]) | (x > mat[p, "upper"]))
       }
       mat <- as.data.frame(mat)
       mat$phase <- phases
       sd.matrix[[i]] <- mat
-      
     }		
+
+# Cook --------------------------------------------------------------------
+
     if (identical(criteria[1], "Cook")) {
       
-      if (criteria[2] == "4/n")
-        cut.off <- 4/nrow(data) #4/(length(A)+length(B))
-      else
+      if (criteria[2] == "4/n") 
+        cut.off <- 4/nrow(data)
+      else 
         cut.off <- as.numeric(criteria[2])
-      
-      #n1 <- length(A)
-      #MT <- data[,mvar]
-      #values <- data[,dvar]
-      #T <- MT[n1+1]
-      #D <- c(rep(0, length(A)), rep(1, length(B)))
-      #int <-  D * (MT - T)
-      #reg <- lm(values ~ 1 + MT + D + int)
-      
+
       reg <- plm(data.list[i], dvar = dvar, pvar = pvar, mvar = mvar)$full.model
       
       cd <- cooks.distance(reg)
       filter <- cd >= cut.off
-      cook[[i]] <- data.frame(Cook = round(cd,2), MT = data.list[[i]][,mvar])
+      cook[[i]] <- data.frame(Cook = round(cd, 2), MT = data.list[[i]][, mvar])
     }		
     
-    dropped.mts[[i]] <- data.list[[i]][filter,mvar]
+    dropped.mts[[i]] <- data.list[[i]][filter, mvar]
     dropped.n[[i]]   <- sum(filter)
     
-    data.list[[i]] <- data.list[[i]][!filter,]
+    data.list[[i]] <- data.list[[i]][!filter, ]
   }
   
   out$data <- data.list

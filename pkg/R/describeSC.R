@@ -4,10 +4,7 @@
 #' single-case data.
 #' 
 #' 
-#' @param data A single-case data frame. See \code{\link{scdf}} to learn about this format.
-#' @param dvar Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.
-#' @param pvar Character string with the name of the phase variable. Defaults to the attributes in the scdf file.
-#' @param mvar Character string with the name of the measurement time variable. Defaults to the attributes in the scdf file.
+#' @inheritParams .inheritParams
 #' @return A data frame of descriptive statistics (for each single-case), i.e.:
 #' number of observations, number of missing values, measures of central
 #' tendency, variation, and trend.

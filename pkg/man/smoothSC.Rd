@@ -43,7 +43,13 @@ names(study) <- c("Original","Moving Median","Moving Mean", "Local Regression")
 plot(study)
 
 }
+\seealso{
+Other data manipulation functions: \code{\link{fillmissingSC}},
+  \code{\link{longSCDF}}, \code{\link{rankSC}},
+  \code{\link{scaleSC}}, \code{\link{truncateSC}}
+}
 \author{
 Juergen Wilbert
 }
+\concept{data manipulation functions}
 \keyword{manip}

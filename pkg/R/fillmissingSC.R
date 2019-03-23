@@ -8,10 +8,7 @@
 #' single-case data and you want to calculate overlap indices
 #' (\code{\link{overlapSC}}) or a randomization test (\code{\link{randSC}}).
 #' 
-#' @param data A single-case data frame or a list of single-case data frames.
-#' See \code{\link{scdf}} to learn about this format.
-#' @param dvar Character string with the name of the dependent variable.
-#' @param mvar Character string with the name of the measurement time variable.
+#' @inheritParams .inheritParams
 #' @param interpolation Alternative options not yet included. Default is
 #' \code{interpolation = "linear"}.
 #' @param na.rm If set \code{TRUE}, \code{NA} values are also interpolated.
@@ -19,8 +16,7 @@
 #' @return A single-case data frame (SCDF) with missing data points
 #' interpolated.  See \code{\link{scdf}} to learn about the SCDF Format.
 #' @author Juergen Wilbert
-#' @seealso \code{\link{outlierSC}}, \code{\link{truncateSC}},
-#' \code{\link{scdf}}, \code{\link{overlapSC}}, \code{\link{randSC}}
+#' @family data manipulation functions
 #' @keywords manip
 #' @examples
 #' 
@@ -45,40 +41,39 @@
 #' plot(study, marks = list(positions = replace.positions), style = "grid2")
 #' 
 #' @export
-fillmissingSC <- function(data, dvar = NULL, mvar = NULL, interpolation = "linear", na.rm = TRUE) {
+fillmissingSC <- function(data, dvar, mvar, interpolation = "linear", na.rm = TRUE) {
 
-  if(!is.null(dvar)) 
-    attr(data, .opt$dv) <- dvar
-  else
-    dvar <- attr(data, .opt$dv)
+  # set attributes to arguments else set to defaults of scdf
+  if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
+  if (missing(mvar)) mvar <- attr(data, .opt$mt) else attr(data, .opt$mt) <- mvar
   
-  if(!is.null(mvar))
-    attr(data, .opt$mt) <- mvar
-  else
-    mvar <- attr(data, .opt$mt)
+  ATTRIBUTES <- attributes(data)
   
   data <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE)
-  ATTRIBUTES <- attributes(data)
+
   N <- length(data)
+  
   for(i in 1:N) {
     dat <- data[[i]]
-    if (na.rm)
-      dat <- dat[!is.na(dat[,dvar]),]
+    if (na.rm) dat <- dat[!is.na(dat[, dvar]), ]
     new.dat <- dat
-    for(j in 1 : (nrow(dat)-1)) {
-      if(dat[j+1,mvar] - dat[j,mvar] != 1){
-        if(interpolation == "linear")
-          step.size <- (dat$values[j+1] - dat[j,dvar]) / (dat[j+1,mvar] - dat[j,mvar])
-        for(k in (dat[j,mvar]+1) : (dat[j+1,mvar]-1)) {
+    for(j in 1 : (nrow(dat) - 1)) {
+      if (dat[j + 1, mvar] - dat[j, mvar] != 1){
+        
+        if (interpolation == "linear") {
+          step.size <- (dat[j + 1, dvar] - dat[j, dvar]) / 
+                       (dat[j + 1, mvar] - dat[j, mvar])
+        }
+        for(k in (dat[j, mvar] + 1) : (dat[j + 1, mvar] - 1)) {
           tmp <- dat[j, ]
-          tmp[,mvar] <- k
-          if(interpolation == "linear")
-            tmp[,dvar] <- dat[j,dvar] + step.size * (k - dat[j,mvar])
+          tmp[, mvar] <- k
+          if (interpolation == "linear")
+            tmp[, dvar] <- dat[j, dvar] + step.size * (k - dat[j, mvar])
           new.dat <- rbind(new.dat, linear = tmp) 
         }
       }
     }
-    data[[i]] <- new.dat[order(new.dat[,mvar]),]
+    data[[i]] <- new.dat[order(new.dat[, mvar]), ]
   }
   attributes(data) <- ATTRIBUTES
   data

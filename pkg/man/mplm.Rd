@@ -4,20 +4,23 @@
 \alias{mplm}
 \title{Multivariate Piecewise linear model / piecewise regression}
 \usage{
-mplm(data, dvar = c("values"), model = "B&L-B", trend = TRUE,
+mplm(data, dvar, mvar, pvar, model = "B&L-B", trend = TRUE,
   level = TRUE, slope = TRUE, formula = NULL, update = NULL,
   na.action = na.omit, ...)
 }
 \arguments{
-\item{data}{A single-case data frame.
-See \code{\link{scdf}} to learn about this format.}
+\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
-\item{dvar}{A string or vector of strings containing the names of the dependend variables.}
+\item{dvar}{Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.}
 
-\item{model}{Regression model used for computation (see Huitema & McKean,
-2000). Default is \code{model = "B&L-B"}. Possible values are:
-\code{"B&L-B"}, \code{"H-M"}, \code{"Mohr#1"}, \code{"Mohr#2"},
-\code{"Manly"}, \code{"JW"}, and , \code{"JW2"}.}
+\item{mvar}{Character string with the name of the measurement time variable. Defaults to the attributes in the scdf file.}
+
+\item{pvar}{Character string with the name of the phase variable. Defaults to the attributes in the scdf file.}
+
+\item{model}{Model used for calculating the slope parameter (see Huitema &
+McKean, 2000). Default is \code{model = "B&L-B"}. Possible values are:
+\code{"B&L-B"}, \code{"H-M"}, \code{"Mohr#1"}, \code{"Mohr#2"}, \code{"JW"}, \code{"JW2"}, and
+\code{"Manly"}.}
 
 \item{trend}{A logical indicating if a trend parameters is included in the model.}
 
@@ -42,6 +45,7 @@ for example to include further variables into the regression model.}
 \item{full.model}{Full regression model list}
 }
 \description{
+This function is in an experimental status.
 The \code{mplm} function computes a multivariate piecewise regression model.
 }
 \examples{
@@ -49,8 +53,10 @@ The \code{mplm} function computes a multivariate piecewise regression model.
 mplm(exampleAB_add, dvar = c("wellbeing","depression"))
 }
 \seealso{
-\code{\link{plm}}
+Other regression functions: \code{\link{hplm}},
+  \code{\link{plm}}
 }
 \author{
 Juergen Wilbert
 }
+\concept{regression functions}

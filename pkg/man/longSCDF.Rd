@@ -5,21 +5,19 @@
 \title{Creating a long format data frame from several single-case data frames
 (scdf).}
 \usage{
-longSCDF(data, l2 = NULL, id = "case", check = FALSE, ...)
+longSCDF(data, l2 = NULL, id = "case", check = FALSE)
 }
 \arguments{
-\item{data}{A single-case data frame (scdf).}
+\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
-\item{l2}{A dataframe providing additional variables at Level 2. The scdf
-has to have names for all cases and the Level 2 dataframe has to have a
+\item{l2}{A data frame providing additional variables at Level 2. The scdf
+has to have names for all cases and the Level 2 data frame has to have a
 column with corresponding case names.}
 
 \item{id}{Variable name of the Level 2 data frame that contains the case
 names.}
 
-\item{check}{Indicating whether the scdf is checked.}
-
-\item{...}{Additional arguments provided to the internally used merge function.}
+\item{check}{Indicating whether the scdf is checked fpr incongruity.}
 }
 \value{
 Returns one data frame with data of all single-cases structured by
@@ -44,10 +42,12 @@ summary(Leidig2018_long)
 
 }
 \seealso{
-\code{\link{scdf}}
-\code{\link{writeSC}}
+Other data manipulation functions: \code{\link{fillmissingSC}},
+  \code{\link{rankSC}}, \code{\link{scaleSC}},
+  \code{\link{smoothSC}}, \code{\link{truncateSC}}
 }
 \author{
 Juergen Wilbert
 }
+\concept{data manipulation functions}
 \keyword{manip}

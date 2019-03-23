@@ -4,16 +4,15 @@
 \alias{pand}
 \title{Percentage of all non-overlapping data}
 \usage{
-pand(data, dvar = NULL, pvar = NULL, decreasing = FALSE,
-  correction = TRUE, phases = c("A", "B"))
+pand(data, dvar, pvar, decreasing = FALSE, correction = TRUE,
+  phases = c("A", "B"))
 }
 \arguments{
-\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
-this format.}
+\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
-\item{dvar}{Character string with the name of the dependent variable.}
+\item{dvar}{Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.}
 
-\item{pvar}{Character string with the name of the phase variable.}
+\item{pvar}{Character string with the name of the phase variable. Defaults to the attributes in the scdf file.}
 
 \item{decreasing}{If you expect data to be lower in the B phase, set
 \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.}
@@ -57,7 +56,7 @@ but uses all data and is therefore not based on one single (probably
 unrepresentative) datapoint.  Furthermore, PAND allows the comparison of
 real and expected associations (Chi-square test) and estimation of the
 effect size Phi, which equals Pearsons r for dichotomous data.  Thus,
-phi-Square is the amount of explained variance.  The original procedure for
+phi-Square is the amount of explained variance. The original procedure for
 computing the PAND (Parker, Hagan-Burke, & Vannest, 2007) does not account
 for ambivalent datapoints (ties).  The newer \code{NAP} overcomes this
 problem and has better precision-power (Parker, Vannest, & Davis, 2014).
@@ -86,9 +85,11 @@ Parker, R. I., & Vannest, K. (2009). An Improved Effect Size for Single-Case
 Research: Nonoverlap of All Pairs. \emph{Behavior Therapy, 40}, 357-367.
 }
 \seealso{
-\code{\link{overlapSC}}, \code{\link{describeSC}},
-\code{\link{nap}}, \code{\link{pem}}, \code{\link{pet}}, \code{\link{pnd}}
+Other overlap functions: \code{\link{nap}},
+  \code{\link{overlapSC}}, \code{\link{pem}},
+  \code{\link{pet}}, \code{\link{tauUSC}}
 }
 \author{
 Juergen Wilbert
 }
+\concept{overlap functions}

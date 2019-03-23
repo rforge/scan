@@ -2,7 +2,7 @@
 % Please edit documentation in R/export.R
 \name{export}
 \alias{export}
-\title{Export scan output to csv Files}
+\title{Export scan objects to html or latex}
 \usage{
 export(object, filename = NULL, kable_styling_options = list(),
   kable_options = list(), cols, flip = FALSE, note = TRUE, ...)
@@ -10,14 +10,15 @@ export(object, filename = NULL, kable_styling_options = list(),
 \arguments{
 \item{object}{An scdf}
 
-\item{filename}{Character string with the filename.}
+\item{filename}{Character string with the filename. If a filename is provided
+the output will be written into this file.}
 
 \item{kable_styling_options}{list with arguments passed to the kable_styling function.}
 
 \item{kable_options}{list with arguments passed to the kable function.}
 
-\item{cols}{Defines which columns are included when an scdf is exported. It is either a vector 
-with variable names or the string "Main" will select the central variables.}
+\item{cols}{Defines which columns are included when a scdf is exported. It is either a vector 
+with variable names or the string "main" will select the central variables.}
 
 \item{flip}{If TRUE, some objects are displayed with rows and columns flipped.}
 
@@ -29,5 +30,7 @@ with variable names or the string "Main" will select the central variables.}
 Returns a specif formated html.
 }
 \description{
-Export scan output to csv Files
+This function is in an experimental status.
+Export creates html files of tables or displayes them directly in the viewer pane of rstudio.
+When applied in rmarkdown, tables can also be created for pdf/latex output.
 }

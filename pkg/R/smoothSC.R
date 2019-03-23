@@ -21,6 +21,7 @@
 #' points. See \code{\link{scdf}} to learn about the format of these data
 #' frames.
 #' @author Juergen Wilbert
+#' @family data manipulation functions
 #' @keywords manip
 #' @examples
 #' 

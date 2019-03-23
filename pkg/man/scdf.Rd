@@ -12,26 +12,26 @@ scdf(values, B.start, mt, phase, phase.design, name, dvar = "values",
   pvar = "phase", mvar = "mt", ...)
 }
 \arguments{
-\item{values}{A vector containing measurement values of the target variable.}
+\item{values}{A vector containing measurement values of the dependent variable.}
 
 \item{B.start}{The first measurement of phase B (simple coding if design is
 strictly AB).}
 
-\item{mt}{A vector defining measurement times. Default is \code{MT =
+\item{mt}{A vector defining measurement times. Default is \code{mt =
 (1,2,3,...,n)}.}
 
-\item{phase}{A vector defining phase assignment.}
+\item{phase}{A vector defining phase assignments.}
 
 \item{phase.design}{A vector defining the length and label of each phase.
 E.g., \code{phase.length = c(A1 = 10, B1 = 10, A2 = 10, B2 = 10)}.}
 
 \item{name}{A name for the case.}
 
-\item{dvar}{A character string with the name of the independent variable.}
+\item{dvar}{Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.}
 
-\item{pvar}{A character string with the name of the phase variable.}
+\item{pvar}{Character string with the name of the phase variable. Defaults to the attributes in the scdf file.}
 
-\item{mvar}{A character string with the name of the measurement-time variable.}
+\item{mvar}{Character string with the name of the measurement time variable. Defaults to the attributes in the scdf file.}
 
 \item{...}{Additional variables. E.g., \code{teacher = c(0,1,0,1,0,0,1),
 lesson = c(1,3,4,5,2,3)}.}
@@ -56,6 +56,17 @@ Methods for the \code{sdf} class are \code{print}, \code{summary}, and
 If the dependent variable is a named vector then the names are extracted
 to create a phase design (e.g., values = c(A = 2,3,5,4,3, B = 6,5,4,3) will create 
 an AB phase design with five and four measuresments).
+An scdf contains several attributes:
+ \code{dvar} The name of the dependent variable.
+ \code{phase} The name of the phase variable.
+ \code{mt} The name of the measurement time variable.
+ \code{author} Information on the author of the data.
+ \code{info} Further information on the data. E.g., a publication.
+ \code{dvar, phase, and mt} are the defaults most of the \code{scan} function
+ use. You can change the values of the attributes with the \code{attr} function 
+ (e.g., \code{attr(exampleAB_add, "dvar") <- "depression"} defines depression
+ as the dependent variable. Please notice that all \code{scan} functions 
+ have arguments to define \code{dvar, phase, and mt} for a given analysis.
 }
 \examples{
 
@@ -65,16 +76,19 @@ klaas <- scdf(c(5, 7, 8, 5, 7, 12, 16, 18, 15, 14, 19), B.start = 6, name = "Kla
 plot(klaas)
 
 #Alternative coding 1:
-klaas <- scdf(c(A = 5, 7, 8, 5, 7, B = 12, 16, 18, 15, 14, 19), name = "Klaas")
+klaas <- scdf(
+  c(A = 5, 7, 8, 5, 7, B = 12, 16, 18, 15, 14, 19), 
+  name = "Klaas"
+)
 
 #Alternative coding 2:
 klaas <- scdf(c(5, 7, 8, 5, 7, 12, 16, 18, 15, 14, 19), 
-              phase.design = c(A = 5, B = 6), name = "Klaas")
+  phase.design = c(A = 5, B = 6), name = "Klaas")
 
 ## Unfortunately in a similar SCDR there were no data collected on days 3 and 9. Use NA to
 ## pass them to the package.
 emmi <- scdf(c(5, 7, NA, 5, 7, 12, 16, 18, NA, 14, 19), 
-             phase.design = c(A = 5, B = 6), name = "Emmi")
+  phase.design = c(A = 5, B = 6), name = "Emmi")
 describeSC(emmi)
 
 ## In a MBD over three persons, data were again collected eleven days in a row. Intervention
@@ -91,22 +105,20 @@ overlapSC(mbd)
 ## only on schooldays. The sequence of measurements is passed to the package by using a
 ## vector of measurement times.
 frida <- scdf(c(3, 2, 4, 2, 2, 3, 5, 6, 8, 10, 8, 12, 14, 13, 12), B.start = 9,
-    mt = c(1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18))
+  mt = c(1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18))
 summary(frida)
 plot(frida)
 describeSC(frida)
 
 ## example with two independent variables and four phases
-jim  <- scdf(zvt = c(47, 58, 76, 63, 71, 59, 64, 69, 72, 77, 76, 73), 
-              d2 = c(131, 134, 141, 141, 140, 140, 138, 140, 141, 140, 138, 140), 
-             phase.design = c(A1=3, B1=3, A2=3, B2=3), dvar = "zvt")
-overlapSC(jim, phases = list(c("A1","A2"),c("B1","B2")))
+jim  <- scdf(
+  zvt = c(47, 58, 76, 63, 71, 59, 64, 69, 72, 77, 76, 73), 
+  d2 = c(131, 134, 141, 141, 140, 140, 138, 140, 141, 140, 138, 140), 
+  phase.design = c(A1=3, B1=3, A2=3, B2=3), dvar = "zvt")
+overlapSC(jim, phases = list(c("A1", "A2"), c("B1", "B2")))
 
-}
-\seealso{
-\code{\link{longSCDF}}, \code{\link{readSC}}
-\code{\link{writeSC}}
 }
 \author{
 Juergen Wilbert
 }
+\concept{data manipulation function}

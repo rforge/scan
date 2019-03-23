@@ -4,16 +4,14 @@
 \alias{nap}
 \title{Nonoverlap of all Pairs}
 \usage{
-nap(data, dvar = NULL, pvar = NULL, decreasing = FALSE,
-  phases = c(1, 2))
+nap(data, dvar, pvar, decreasing = FALSE, phases = c(1, 2))
 }
 \arguments{
-\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
-this format.}
+\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
-\item{dvar}{Character string with the name of the independend variable.}
+\item{dvar}{Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.}
 
-\item{pvar}{Character string with the name of the phase variable.}
+\item{pvar}{Character string with the name of the phase variable. Defaults to the attributes in the scdf file.}
 
 \item{decreasing}{If you expect data to be lower in the B phase, set
 \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.}
@@ -26,8 +24,8 @@ could be combined by providing a list with two elements. E.g., \code{phases
 and 4 (as B). Default is \code{phases = c("A","B")}.}
 }
 \value{
-\item{NAP}{Nonoverlap of all pairs.} \item{Rescaled NAP}{NAP
-rescaled to 0-100\%.}
+\item{nap}{A data frame with NAP and additional values for each case.} 
+\item{N}{Number of cases.}
 }
 \description{
 The \code{nap} function calculates the nonoverlap of all pairs (NAP; Parker
@@ -41,7 +39,7 @@ intuitive NAP (0-100\%) is also displayed.
 \examples{
 
 ## Calculate NAP for a study with  lower expected phase B scores (e.g. aggressive behavior)
-gretchen <- scdf(c(12,14,9,10,10,6,4,5,3,4), B.start = 5)
+gretchen <- scdf(c(A = 12,14,9,10, B = 10,6,4,5,3,4))
 nap(gretchen, decreasing = TRUE)
 
 ## Request NAP for all cases fom the Grosche2011 data
@@ -54,9 +52,11 @@ single-case research: Nonoverlap of all pairs. \emph{Behavior Therapy, 40},
 357-367.
 }
 \seealso{
-\code{\link{overlapSC}}, \code{\link{describeSC}},
-\code{\link{pand}}, \code{\link{pem}}, \code{\link{pet}}, \code{\link{pnd}}
+Other overlap functions: \code{\link{overlapSC}},
+  \code{\link{pand}}, \code{\link{pem}}, \code{\link{pet}},
+  \code{\link{tauUSC}}
 }
 \author{
 Juergen Wilbert
 }
+\concept{overlap functions}

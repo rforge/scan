@@ -40,6 +40,12 @@ ex_sc <- scaleSC(exampleAB_50, var = "values", center = TRUE, scale = TRUE)
 hplm(ex_sc)
 
 }
+\seealso{
+Other data manipulation functions: \code{\link{fillmissingSC}},
+  \code{\link{longSCDF}}, \code{\link{rankSC}},
+  \code{\link{smoothSC}}, \code{\link{truncateSC}}
+}
 \author{
 Juergen Wilbert
 }
+\concept{data manipulation functions}

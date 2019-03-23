@@ -7,8 +7,7 @@
 rankSC(data, var = NULL, grand = TRUE, ...)
 }
 \arguments{
-\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
-this format.}
+\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
 \item{var}{A charcter or character with the names of the variables to be ranked.}
 
@@ -25,8 +24,13 @@ Rank-transformation of single-case data files
 \examples{
 Huber2014_rank <- rankSC(Huber2014, var = "values")
 plot(Huber2014_rank, style = "grid2")
-
+}
+\seealso{
+Other data manipulation functions: \code{\link{fillmissingSC}},
+  \code{\link{longSCDF}}, \code{\link{scaleSC}},
+  \code{\link{smoothSC}}, \code{\link{truncateSC}}
 }
 \author{
 Juergen Wilbert
 }
+\concept{data manipulation functions}

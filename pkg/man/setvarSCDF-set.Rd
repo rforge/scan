@@ -3,9 +3,10 @@
 \name{setvarSCDF<-}
 \alias{setvarSCDF<-}
 \alias{setvarSCDF}
-\title{Deprecated function: Set the variables of an scdf}
+\title{Deprecated function use attr(scdf, "dv") instead.
+Set the variables of an scdf}
 \usage{
-setvarSCDF(x, var = "values") <- value
+setvarSCDF(x, var = "dv") <- value
 }
 \arguments{
 \item{x}{An scdf.}
@@ -16,9 +17,9 @@ setvarSCDF(x, var = "values") <- value
 }
 \description{
 By default scan uses the variable names 'values'
-as the dependend variable, 'phase' as indicator of a phase, and 'mt' as the
+as the dependent variable, 'phase' as indicator of a phase, and 'mt' as the
 measurement-time. These variable names are attributes of an scdf. But you
-might have other variables you want to use (e.g., another dependend
+might have other variables you want to use (e.g., a different dependent
 variable). With this function you can change these attributes of an scdf.
 }
 \examples{

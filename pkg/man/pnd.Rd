@@ -39,10 +39,7 @@ error-proneness the PND should not be used, but \code{\link{nap}} or
 pnd(GruenkeWilbert2014)
 
 }
-\seealso{
-\code{\link{overlapSC}}, \code{\link{describeSC}},
-\code{\link{nap}}, \code{\link{pand}}, \code{\link{pem}}, \code{\link{pet}}
-}
 \author{
 Juergen Wilbert
 }
+\concept{overlap}

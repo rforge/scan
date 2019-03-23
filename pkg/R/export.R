@@ -1,12 +1,16 @@
-#' Export scan output to csv Files
+#' Export scan objects to html or latex
+#' 
+#' This function is in an experimental status.
+#' Export creates html files of tables or displayes them directly in the viewer pane of rstudio.
+#' When applied in rmarkdown, tables can also be created for pdf/latex output.
 #'
 #' @param object An scdf
-#' @param filename Character string with the filename.
+#' @param filename Character string with the filename. If a filename is provided
+#' the output will be written into this file.
 #' @param kable_options list with arguments passed to the kable function.
 #' @param kable_styling_options list with arguments passed to the kable_styling function.
-#' 
-#' @param cols Defines which columns are included when an scdf is exported. It is either a vector 
-#' with variable names or the string "Main" will select the central variables.
+#' @param cols Defines which columns are included when a scdf is exported. It is either a vector 
+#' with variable names or the string "main" will select the central variables.
 #' @param flip If TRUE, some objects are displayed with rows and columns flipped.
 #' @param note If TRUE additional information are printed below the table.
 #' @param ... Further Arguments passed to internal functions. 
@@ -344,11 +348,9 @@ export <- function(object, filename = NULL,
       cols <- names(object[[1]])
     if (identical(cols,"main"))
       cols = c(attr(object, .opt$phase), attr(object, .opt$dv), attr(object, .opt$mt))
-    if (is.null(names(object)))
-      names(object) <- paste0("Case",1:N)
- 
-    nonames <- which(is.na(names(object)))
-    names(object)[nonames] <- paste0("Case",nonames)
+    
+    names(object) <- .case.names(names(object), length(object))
+    
     max.row <- max(unlist(lapply(object, nrow)))
     for(i in 1:cases) {
       n.row <- nrow(object[[i]])

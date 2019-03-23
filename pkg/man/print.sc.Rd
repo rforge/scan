@@ -2,15 +2,15 @@
 % Please edit documentation in R/print.sc.R
 \name{print.sc}
 \alias{print.sc}
-\title{Print method for return objects of scan}
+\title{Print method for scan objects}
 \usage{
 \method{print}{sc}(x, ...)
 }
 \arguments{
 \item{x}{Object}
 
-\item{...}{-}
+\item{...}{Further parameters passed to the print function}
 }
 \description{
-Print method for return objects of scan
+Print method for scan objects
 }

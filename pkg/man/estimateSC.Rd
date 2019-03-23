@@ -8,8 +8,7 @@ estimateSC(data, dvar, pvar, mvar, s = NULL, rtt = NULL,
   model = "JW", ...)
 }
 \arguments{
-\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
-this format.}
+\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
 \item{dvar}{Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.}
 
@@ -21,7 +20,10 @@ this format.}
 
 \item{rtt}{The reliability of the measurements. The reliability is estimated when rtt = NULL.}
 
-\item{model}{Model for calculating the interaction term.}
+\item{model}{Model used for calculating the slope parameter (see Huitema &
+McKean, 2000). Default is \code{model = "B&L-B"}. Possible values are:
+\code{"B&L-B"}, \code{"H-M"}, \code{"Mohr#1"}, \code{"Mohr#2"}, \code{"JW"}, \code{"JW2"}, and
+\code{"Manly"}.}
 
 \item{...}{Further arguments passed to the lm function.}
 }
@@ -31,7 +33,7 @@ A list of parameters for each single-case. Parameters include name, length, and 
 \description{
 This functions takes an scdf an extracts design parameters. The resulting in
 object can be unsed to randomly create new scdf files with the same
-underlying parameters. This might be usefull for monte-carlo stdies and
+underlying parameters. This might be usefull for monte-carlo studies and
 bootstrapping procedures.
 }
 \examples{

@@ -4,27 +4,26 @@
 \alias{pet}
 \title{Percent exceeding the trend}
 \usage{
-pet(data, dvar = NULL, pvar = NULL, mvar = NULL, ci = 0.95,
-  decreasing = FALSE, phases = c("A", "B"))
+pet(data, dvar, pvar, mvar, ci = 0.95, decreasing = FALSE,
+  phases = c("A", "B"))
 }
 \arguments{
-\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
-this format.}
+\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
-\item{dvar}{Character string with the name of the dependent variable.}
+\item{dvar}{Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.}
 
-\item{pvar}{Character string with the name of the phase variable.}
+\item{pvar}{Character string with the name of the phase variable. Defaults to the attributes in the scdf file.}
 
-\item{mvar}{Character string with the name of the measurement time variable.}
+\item{mvar}{Character string with the name of the measurement time variable. Defaults to the attributes in the scdf file.}
 
-\item{ci}{Width of the confidence interval. Default is \code{ci = .95}.}
+\item{ci}{Width of the confidence interval. Default is \code{ci = 0.95}.}
 
 \item{decreasing}{If you expect data to be lower in the B phase, set
 \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.}
 
 \item{phases}{A vector of two characters or numbers indicating the two
 phases that should be compared. E.g., \code{phases = c("A","C")} or
-\code{phases = c(2,4)} for comparing the second and the fourth phase. Phases
+\code{phases = c(2,4)} for comparing the second to the fourth phase. Phases
 could be combined by providing a list with two elements. E.g., \code{phases
 = list(A = c(1,3), B = c(2,4))} will compare phases 1 and 3 (as A) against 2
 and 4 (as B). Default is \code{phases = c("A","B")}.}
@@ -47,14 +46,18 @@ the predicted progress is computed.
 \examples{
 
 ## Calculate the PET and use a 99\%-CI for the additional calculation
-dat <- rSC(n = 5, slope = 0.2)
+# create random example data
+design <- design.rSC(n = 5, slope = 0.2)
+dat <- rSC(design, seed = 23)
 pet(dat, ci = .99)
 
 }
 \seealso{
-\code{\link{overlapSC}}, \code{\link{describeSC}},
-\code{\link{nap}}, \code{\link{pand}}, \code{\link{pem}}, \code{\link{pnd}}
+Other overlap functions: \code{\link{nap}},
+  \code{\link{overlapSC}}, \code{\link{pand}},
+  \code{\link{pem}}, \code{\link{tauUSC}}
 }
 \author{
 Juergen Wilbert
 }
+\concept{overlap functions}

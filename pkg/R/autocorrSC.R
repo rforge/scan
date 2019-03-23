@@ -3,10 +3,7 @@
 #' The autocorrSC function calculates autocorrelations within each phase and
 #' across all phases.
 #' 
-#' @param data A single-case data frame. See \code{\link{scdf}} to learn about this format.
-#' @param dvar Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.
-#' @param pvar Character string with the name of the phase variable. Defaults to the attributes in the scdf file.
-#' @param mvar Character string with the name of the measurement time variable. Defaults to the attributes in the scdf file.
+#' @inheritParams .inheritParams
 #' @param lag.max The lag up to which autocorrelations will be computed.
 #' Default is \code{lag.max = 3}.
 #' @param ... Further arguments passed to the \code{\link{acf}} function

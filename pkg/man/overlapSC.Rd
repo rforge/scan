@@ -8,14 +8,13 @@ overlapSC(data, dvar, pvar, mvar, decreasing = FALSE, phases = c("A",
   "B"))
 }
 \arguments{
-\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
-this format.}
+\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
-\item{dvar}{Character string with the name of the dependent variable.}
+\item{dvar}{Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.}
 
-\item{pvar}{Character string with the name of the phase variable.}
+\item{pvar}{Character string with the name of the phase variable. Defaults to the attributes in the scdf file.}
 
-\item{mvar}{Character string with the name of the measurement time variable.}
+\item{mvar}{Character string with the name of the measurement time variable. Defaults to the attributes in the scdf file.}
 
 \item{decreasing}{If you expect data to be lower in the B phase, set
 \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.}
@@ -31,6 +30,9 @@ and 4 (as B). Default is \code{phases = c("A","B")}.}
 \item{overlap}{A data frame consisting of the following indices for
 each single-case for all cases: PND, PEM, PET, NAP, PAND, Tau-U (A vs. B -
 Trend A), Diff_mean, Diff_trend, SMD.}
+\item{phases.A}{Selection for A phase.}
+\item{phases.B}{Selection for B phase.}
+\item{design}{Phase design.}
 }
 \description{
 The \code{overlapSC} function provides the most common overlap indices for
@@ -47,11 +49,13 @@ overlapSC(GruenkeWilbert2014)
 ## Combining phases for analyszing designs with more than two phases   
 overlapSC(exampleA1B1A2B2, phases = list(c("A1","A2"), c("B1","B2")))
 
-## Write overlap indices to .csv-file
-overl <- overlapSC(Waddell2011)
-write.csv(overl$overlap, file = "overlap_indices.csv")
-
+}
+\seealso{
+Other overlap functions: \code{\link{nap}},
+  \code{\link{pand}}, \code{\link{pem}}, \code{\link{pet}},
+  \code{\link{tauUSC}}
 }
 \author{
 Juergen Wilbert
 }
+\concept{overlap functions}

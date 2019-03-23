@@ -2,16 +2,7 @@
 #' 
 #' The \code{hplm} function computes a hierarchical piecewise regression model.
 #' 
-#' 
-#' @param data A single-case data frame. See \code{\link{scdf}} to learn about
-#' this format.
-#' @param dvar Character string with the name of the dependent variable.
-#' @param pvar Character string with the name of the phase variable.
-#' @param mvar Character string with the name of the measurement time variable.
-#' @param model Model used for calculating the slope parameter (see Huitema &
-#' McKean, 2000). Default is \code{model = "B&L-B"}. Possible values are:
-#' \code{"B&L-B"}, \code{"H-M"}, \code{"Mohr#1"}, \code{"Mohr#2"}, \code{"JW"}, \code{"JW2"}, and
-#' \code{"Manly"}.
+#' @inheritParams .inheritParams
 #' @param method Method used to fit your model. Pass \code{"REML"} to maximize
 #' the restricted log-likelihood or \code{"ML"} for maximized log-likelihood.
 #' Default is \code{"ML"}.
@@ -22,9 +13,6 @@
 #' the level, trend, and treatment parameter are estimated.
 #' @param lr.test If set TRUE likelihood ratio tests are calculated comparing model with vs. without random slope parameters.
 #' @param ICC If \code{ICC = TRUE} an intraclass-correlation is estimated.
-#' @param trend A logical indicating if a trend parameters is included in the model.
-#' @param level A logical indicating if a level parameters is included in the model.
-#' @param slope A logical indicating if a slope parameters is included in the model.
 #' @param fixed Defaults to the fixed part of the standard piecewise regression model. The
 #' parameter phase followed by the phase name (e.g., phaseB) indicates the level effect of the corresponding phase. The parameter 'inter' followed by the phase name (e.g., interB) adresses the slope effect based on the method
 #' provide in the model argument (e.g., "B&L-B"). The formula can be changed
@@ -45,7 +33,7 @@
 #' \item{ICC}{List containing intraclass correlation and test parameters.}
 #' \item{model.without}{Object of class gls containing the fixed effect model.}
 #' @author Juergen Wilbert
-#' @seealso \code{\link{plm}}
+#' @family regression functions
 #' @examples
 #' 
 #' ## Compute hplm model on a MBD over fifty cases (restricted log-likelihood)
@@ -60,21 +48,9 @@
 
 hplm <- function(data, dvar, pvar, mvar, model = "B&L-B", method = "ML", control = list(opt = "optim"), random.slopes = FALSE, lr.test = FALSE, ICC = TRUE, trend = TRUE, level = TRUE, slope = TRUE, fixed = NULL, random = NULL, update.fixed = NULL, data.l2 = NULL, ...) {
 
-  if(missing(dvar)) 
-    dvar <- attr(data, .opt$dv) 
-  else 
-    attr(data, .opt$dv) <- dvar
-
-  if(missing(pvar))
-    pvar <- attr(data, .opt$phase)
-  else
-    attr(data, .opt$phase) <- pvar
-  
-  if(missing(mvar))
-    mvar <- attr(data, .opt$mt)
-  else
-    attr(data, .opt$mt) <- mvar
-  
+  if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
+  if (missing(pvar)) pvar <- attr(data, .opt$phase) else attr(data, .opt$phase) <- pvar
+  if (missing(mvar)) mvar <- attr(data, .opt$mt) else attr(data, .opt$mt) <- mvar
   dat <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
   
   ATTRIBUTES <- attributes(dat)
@@ -87,86 +63,75 @@ hplm <- function(data, dvar, pvar, mvar, model = "B&L-B", method = "ML", control
   out$model$random.slopes       <- random.slopes
   out$model$ICC                 <- ICC
   out$N                         <- N
-  
-  if(!random.slopes && is.null(random))
-    random <- as.formula("~1|case")
-  
-  for(case in 1: N) {
-    dat_dummy <- .plm.dummy(dat[[case]], model = model, dvar = dvar, pvar = pvar, mvar = mvar)
-    dat[[case]][,mvar] <- dat_dummy$mt
-    dat[[case]] <- cbind(dat[[case]],dat_dummy[,-1])
-    n_Var <- (ncol(dat_dummy) - 1) / 2
-    VAR_INTER <- names(dat_dummy)[(ncol(dat_dummy)-n_Var+1):ncol(dat_dummy)]
-    VAR_PHASE <- names(dat_dummy)[2:(n_Var+1)]
-  }
-  
+
+# interaction and dummy coding and L2 --------------------------------------
+
+  tmp_model <- .add_model_dummies(data = dat, model = model)
+  dat <- tmp_model$data
+
   dat <- longSCDF(dat, l2 = data.l2)
 
-  if(is.null(fixed)) {
-    INTER <- ""
-    PHASE <- ""
-    MT    <- ""
-    if(slope) {
-      INTER <- paste0(VAR_INTER, collapse = "+")
-      INTER <- paste0("+ ", INTER)
-    }
-    if(level) {
-      PHASE <- paste0(VAR_PHASE, collapse = "+")
-      PHASE <- paste0("+ ", PHASE)
-    }
-    if(trend)
-      MT <- paste0("+ ",mvar," ")
-    fixed <- formula(paste0(dvar, " ~ 1",MT, PHASE, INTER))
-  } 
+# create formulas ---------------------------------------------------------
+
+  if (is.null(fixed))
+    fixed <- as.formula(.create_fixed_formula(
+      dvar, mvar, slope, level, trend, tmp_model$VAR_PHASE, tmp_model$VAR_INTER
+    ))
   
-  if(!is.null(update.fixed))
-    fixed <- update(fixed, update.fixed)
+  if (!is.null(update.fixed)) fixed <- update(fixed, update.fixed)
   
-  if(is.null(random)) {
-    INTER <- ""
-    PHASE <- ""
-    MT    <- ""
-    if(slope) {
-      INTER <- paste0(VAR_INTER, collapse = "+")
-      INTER <- paste0("+ ", INTER)
-    }
-    if(level) {
-      PHASE <- paste0(VAR_PHASE, collapse = "+")
-      PHASE <- paste0("+ ", PHASE)
-    }
-    if(trend)
-      MT <- paste0("+ ",mvar," ")
-    random <- formula(paste0("~ 1",MT, PHASE, INTER,"|case"))
-    
-  }
+  if (!random.slopes && is.null(random)) random <- as.formula("~1|case")
   
-  
+  if (is.null(random))
+    random <- as.formula(.create_random_formula(
+      mvar, slope, level, trend, tmp_model$VAR_PHASE, tmp_model$VAR_INTER
+    ))
+
   out$formula <- list(fixed = fixed, random = random)
   
-  out$hplm <- lme(fixed = fixed, random = random, data = dat, na.action=na.omit, method = method, control=control, keep.data = FALSE, ...)
+# lme hplm model ----------------------------------------------------------
+
+  out$hplm <- lme(
+    fixed = fixed, random = random, data = dat, na.action = na.omit, 
+    method = method, control = control, keep.data = FALSE, ...
+  )
+  
   out$hplm$call$fixed <- fixed
-  if(lr.test) {
-    
+
+# LR tests ----------------------------------------------------------------
+
+  if (lr.test) {
     PREDIC_RAND    <- unlist(strsplit(as.character(random[2]), "\\|"))[1]
     PREDIC_RAND_ID <- unlist(strsplit(as.character(random[2]), "\\|"))[2]
-    PREDIC_RAND <- unlist(strsplit(PREDIC_RAND, "\\+"))
-    PREDIC_RAND <- trimws(PREDIC_RAND)
+    PREDIC_RAND    <- unlist(strsplit(PREDIC_RAND, "\\+"))
+    PREDIC_RAND    <- trimws(PREDIC_RAND)
     PREDIC_RAND_ID <- trimws(PREDIC_RAND_ID)
 
-    if(length(PREDIC_RAND) == 1)
+    if (length(PREDIC_RAND) == 1) {
       stop("LR Test not applicable with only one random effect.")
-    random.ir <- list(formula(gsub("1","-1",random)))
+    }
+    
+    random.ir <- list(formula(gsub("1", "-1", random)))
     for(i in 2:length(PREDIC_RAND))
-      random.ir[[i]] <- formula(paste0("~",paste0(PREDIC_RAND[!PREDIC_RAND %in% PREDIC_RAND[i]], collapse = " + ")," | ",PREDIC_RAND_ID))
+      random.ir[[i]] <- formula(
+        paste0("~", paste0(PREDIC_RAND[!PREDIC_RAND %in% PREDIC_RAND[i]], 
+        collapse = " + "), " | ", PREDIC_RAND_ID)
+      )
     
     out$random.ir$restricted <- list()
     
+    # lme
     for(i in 1:length(random.ir)) {
-      out$random.ir$restricted[[i]] <- lme(fixed = fixed, random = random.ir[i], data = dat, na.action=na.omit, method = method, control=control, keep.data = FALSE, ...)
+      out$random.ir$restricted[[i]] <- lme(
+        fixed = fixed, random = random.ir[i], data = dat, 
+        na.action = na.omit, method = method, control=control, 
+        keep.data = FALSE, ...)
+      
       out$random.ir$restricted[[i]]$call$fixed <- fixed
     }
     out$LR.test <- list()
     
+    # LR test
     for(i in 1:length(random.ir)) {
       out$LR.test[[i]] <- anova(out$random.ir$restricted[[i]], out$hplm)
       
@@ -174,14 +139,20 @@ hplm <- function(data, dvar, pvar, mvar, model = "B&L-B", method = "ML", control
     attr(out$random.ir, "parameters") <- c("Intercept", PREDIC_RAND)
   }
   
-
-  if(ICC) {
-    .formula.null <- as.formula(paste0(dvar," ~ 1"))
-    out$model.0 <- lme(.formula.null, random =~1|case, data = dat, method = method, na.action=na.omit, control = control)
+  if (ICC) {
+    .formula.null <- as.formula(paste0(dvar, " ~ 1"))
+    out$model.0 <- lme(
+      .formula.null, random =~1|case, data = dat, 
+      method = method, na.action=na.omit, control = control
+    )
     out$model.0$call$fixed <- .formula.null
+    
     VC <- as.numeric(VarCorr(out$model.0))
-    out$ICC$value <- VC[1]/(VC[1]+VC[2])	
-    out$model.without <- gls(.formula.null, data = dat, method = method, na.action=na.omit, control = control)
+    out$ICC$value <- VC[1] / (VC[1] + VC[2])	
+    out$model.without <- gls(
+      .formula.null, data = dat, method = method, 
+      na.action = na.omit, control = control
+    )
     out$model.without$call$model <- .formula.null
     dif <- anova(out$model.0, out$model.without)
     out$ICC$L <- dif$L.Ratio[2]

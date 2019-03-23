@@ -17,11 +17,11 @@ plotSC(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL,
 
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
-\item{dvar}{Character string with the name of the dependent variable.}
+\item{dvar}{Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.}
 
-\item{pvar}{Character string with the name of the phase variable.}
+\item{pvar}{Character string with the name of the phase variable. Defaults to the attributes in the scdf file.}
 
-\item{mvar}{Character string with the name of the measurement time variable.}
+\item{mvar}{Character string with the name of the measurement time variable. Defaults to the attributes in the scdf file.}
 
 \item{ylim}{Lower and upper limits of the y-axis (e.g., \code{ylim = c(0,
 20)} sets the y-axis to a scale from 0 to 20). With multiple single-cases
@@ -76,8 +76,8 @@ the marks.  \item\code{"cex"} Size of the marks.  } Use for example
 \code{marks = list(positions = c(1, 8, 15), col = "red", cex = 3)} to make
 the MTs one, eight and 18 appear big and red.}
 
-\item{phase.names}{By default phases are labeled 'A' and 'B'. Use this
-argument to specify different labels: \code{phase.names = c("Baseline",
+\item{phase.names}{By default phases are labeled based on the levels of the phase variable. 
+Use this argument to specify different labels: \code{phase.names = c("Baseline",
 "Intervention")}.}
 
 \item{xlab}{The label of the x-axis. Default is \code{xlab = "Measurement
@@ -87,7 +87,8 @@ time"}.}
 
 \item{main}{Main title of the plot.}
 
-\item{case.names}{Case names. If not provided, names are taken from the scdf or left blank if the scdf does not contain case names.}
+\item{case.names}{Case names. If not provided, names are taken from the scdf.
+Set \code{case.names = ""} if you don't like to include case names.}
 
 \item{style}{Either a character with the name of a pre-implemented style or a style object. See \code{\link{style.plotSC}} to learn about this format.}
 }

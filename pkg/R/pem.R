@@ -5,13 +5,7 @@
 #' distribution is computed.  Different measures of central tendency can be
 #' addressed for alternative analyses.
 #' 
-#' 
-#' @param data A single-case data frame. See \code{\link{scdf}} to learn about
-#' this format.
-#' @param dvar Character string with the name of the independend variable.
-#' @param pvar Character string with the name of the phase variable.
-#' @param decreasing If you expect data to be lower in the B phase, set
-#' \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.
+#' @inheritParams .inheritParams
 #' @param binom.test Computes a binomial test for a 50/50 distribution. Default
 #' is \code{binom.test = TRUE}.
 #' @param chi.test Computes a Chi-square test. The default setting
@@ -21,19 +15,10 @@
 #' \code{FUN = median}
 #' @param \dots Additional arguments for the \code{FUN} parameter (e.g.
 #' \code{FUN = mean, trim = 0.1} will use the 10 percent trimmed arithmetic
-#' mean instead of the median for comparisons).
-#' @param phases A vector of two characters or numbers indicating the two
-#' phases that should be compared. E.g., \code{phases = c("A","C")} or
-#' \code{phases = c(2,4)} for comparing the second to the fourth phase. Phases
-#' could be combined by providing a list with two elements. E.g., \code{phases
-#' = list(A = c(1,3), B = c(2,4))} will compare phases 1 and 3 (as A) against 2
-#' and 4 (as B). Default is \code{phases = c("A","B")}.
-#' @return \item{PEM}{Percent exceeding the median.} \item{test}{A list of
-#' results from the binomial- and chi-square test.} \item{decreasing}{Logical
-#' argument from function call (see \code{Arguments} above).}
+#' mean instead of the median for comparisons). The function must take a vector
+#' of numeric values and the \code{na.rm} argument and return a numeric value.
 #' @author Juergen Wilbert
-#' @seealso \code{\link{overlapSC}}, \code{\link{describeSC}},
-#' \code{\link{nap}}, \code{\link{pand}}, \code{\link{pet}}, \code{\link{pnd}}
+#' @family overlap functions
 #' @examples
 #' 
 #' ## Calculate the PEM including the Binomial and Chi-square tests for a single-case
@@ -41,18 +26,12 @@
 #' pem(dat, chi.test = TRUE)
 #' 
 #' @export
-pem <- function(data, dvar = NULL, pvar = NULL, decreasing = FALSE, binom.test = TRUE, chi.test = FALSE, FUN = median, phases = c("A","B"), ...) {
+pem <- function(data, dvar, pvar, decreasing = FALSE, binom.test = TRUE, chi.test = FALSE, FUN = median, phases = c(1, 2), ...) {
 
-  if(!is.null(dvar)) 
-    attr(data, .opt$dv) <- dvar
-  else
-    dvar <- attr(data, .opt$dv)
-  
-  if(!is.null(pvar))
-    attr(data, .opt$phase) <- pvar
-  else
-    pvar <- attr(data, .opt$phase)
-  
+  # set attributes to arguments else set to defaults of scdf
+  if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
+  if (missing(pvar)) pvar <- attr(data, .opt$phase) else attr(data, .opt$phase) <- pvar
+
   data <- .SCprepareData(data, na.rm = TRUE, change.var.values = FALSE, change.var.phase = FALSE)
   data <- .keepphasesSC(data, phases = phases,pvar = pvar)$data
   

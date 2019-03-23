@@ -10,8 +10,7 @@
 #' of each phase for each single case.
 #' @return A truncated data frame (for each single-case).
 #' @author Juergen Wilbert
-#' @seealso \code{\link{outlierSC}}, \code{\link{fillmissingSC}},
-#' \code{\link{scdf}}
+#' @family data manipulation functions
 #' @keywords manip
 #' @examples
 #' 

@@ -59,24 +59,17 @@
 #' et al. (2011).
 #' 
 #' 
-#' @param data A single-case data frame.
-#' @param dvar Character string with the name of the independend variable.
-#' @param pvar Character string with the name of the phase variable.
+#' @inheritParams .inheritParams
 #' @param ties.method Defines how to handle ties. \code{"omit"} (default) excludes all
 #' ties from the calculation. \code{"positive"} counts all ties as positive
 #' comparisons, while \code{"negative"} counts them as negative comparisons.
-#' @param phases hases A vector of two characters or numbers indicating the two
-#' phases that should be compared. E.g., \code{phases = c("A","C")} or
-#' \code{phases = c(2,4)} for comparing the second to the fourth phase. Phases
-#' could be combined by providing a list with two elements. E.g., \code{phases
-#' = list(A = c(1,3), B = c(2,4))} will compare phases 1 and 3 (as A) against 2
-#' and 4 (as B). Default is \code{phases = c("A","B")}.
 #' @param method \code{"complete"} (default) or \code{"parker"}. Teh latter calculates the number of possible pairs as described in Parler et al. (2011) which might lead to tau-U values greater than 1.
 #' @return \item{table}{A data frame containing statistics from the Tau-U
 #' family, including: Pairs, positive and negative comparisons, S, and Tau}
 #' \item{matrix}{The matrix of comparisons used for calculating the
 #' statistics.} \item{tau_u}{Tau-U value.}
 #' @author Juergen Wilbert
+#' @family overlap functions
 #' @references Parker, R. I., Vannest, K. J., Davis, J. L., & Sauber, S. B.
 #' (2011). Combining Nonoverlap and Trend for Single-Case Research: Tau-U.
 #' \emph{Behavior Therapy, 42}, 284-299.
@@ -93,18 +86,12 @@
 #' tauUSC(Grosche2011)
 #' 
 #' @export
-tauUSC <- function (data, dvar = NULL, pvar = NULL, ties.method = "omit", method = "complete", phases = c("A","B")) {
+tauUSC <- function (data, dvar, pvar, ties.method = "omit", method = "complete", phases = c(1, 2)) {
 
-  if(!is.null(dvar)) 
-    attr(data, .opt$dv) <- dvar
-  else
-    dvar <- attr(data, .opt$dv)
-  
-  if(!is.null(pvar))
-    attr(data, .opt$phase) <- pvar
-  else
-    pvar <- attr(data, .opt$phase)
-  
+  # set attributes to arguments else set to defaults of scdf
+  if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
+  if (missing(pvar)) pvar <- attr(data, .opt$phase) else attr(data, .opt$phase) <- pvar
+
   data <- .SCprepareData(data, change.var.values = FALSE, change.var.phase = FALSE)
   data <- .keepphasesSC(data, phases = phases,pvar = pvar)$data
   
@@ -124,17 +111,17 @@ tauUSC <- function (data, dvar = NULL, pvar = NULL, ties.method = "omit", method
     
     A <- data[[i]][data[[i]][, pvar] == "A", dvar]
     B <- data[[i]][data[[i]][, pvar] == "B", dvar]  
-    AB <- c(A,B)
+    AB <- c(A, B)
     nA <- length(A)
     nB <- length(B)
-    nAB <- nA+nB
+    nAB <- nA + nB
     
-    tau_m <- matrix(NA, nrow = nAB, ncol = nAB, dimnames = (list(AB,AB)))
-    tmp <- t(sapply(AB,function(x) x > AB))
+    tau_m <- matrix(NA, nrow = nAB, ncol = nAB, dimnames = list(AB,AB))
+    tmp <- t(sapply(AB, function(x) x > AB))
     tau_m[tmp] <- "-"
-    tmp <- t(sapply(AB,function(x) x < AB))
+    tmp <- t(sapply(AB, function(x) x < AB))
     tau_m[tmp] <- "+"
-    tmp <- t(sapply(AB,function(x) x == AB))
+    tmp <- t(sapply(AB, function(x) x == AB))
     tau_m[tmp] <- "T"
     
     diag(tau_m) <- 0
@@ -144,57 +131,56 @@ tauUSC <- function (data, dvar = NULL, pvar = NULL, ties.method = "omit", method
     neg.s <- c("-")
     tie.s <- c("T")
     if(ties.method == "positive") 
-      pos.s <- c("+","T")
+      pos.s <- c("+", "T")
     if(ties.method == "negative") 
-      neg.s <- c("-","T")
+      neg.s <- c("-", "T")
  
-    AvBm <- tau_m[1:nA,(nA+1):nAB]
+    AvBm <- tau_m[1:nA, (nA + 1):nAB]
     AvBpos <- sum(AvBm%in%pos.s)
     AvBneg <- sum(AvBm%in%neg.s)
     AvBtie <- sum(AvBm%in%tie.s)
     
-    AvAm <- tau_m[1:nA,1:nA]
+    AvAm <- tau_m[1:nA, 1:nA]
     AvApos <- sum(AvAm%in%pos.s)
     AvAneg <- sum(AvAm%in%neg.s)
     AvAtie <- sum(AvAm%in%tie.s)
     
-    BvBm <- tau_m[(nA+1):nAB,(nA+1):nAB]
+    BvBm <- tau_m[(nA + 1):nAB, (nA + 1):nAB]
     BvBpos <- sum(BvBm%in%pos.s)
     BvBneg <- sum(BvBm%in%neg.s)
     BvBtie <- sum(BvBm%in%tie.s)
     
-    AvBKen      <- .kendall(AB, c(rep(0,nA),rep(1,nB)))
+    AvBKen      <- .kendall(AB, c(rep(0, nA),rep(1, nB)))
     AvAKen      <- .kendall(A, 1:nA)
     BvBKen      <- .kendall(B, 1:nB)
-    BvB_AKen    <- .kendall(c(A,B), c(nA:1,1:nB))
-    AvB_B_AKen  <- .kendall(c(A, B),c(nA:1,(nA + 1):nAB))
-    AvB_AKen    <- .kendall(c(A, B),c(nA:1,rep(nA+1,nB)))
-    AvB_BKen    <- .kendall(c(A, B),c(rep(0, nA),(nA + 1):nAB))
+    BvB_AKen    <- .kendall(c(A, B), c(nA:1, 1:nB))
+    AvB_B_AKen  <- .kendall(c(A, B),c(nA:1, (nA + 1):nAB))
+    AvB_AKen    <- .kendall(c(A, B),c(nA:1, rep(nA+1, nB)))
+    AvB_BKen    <- .kendall(c(A, B),c(rep(0, nA), (nA + 1):nAB))
+
+    AvB_pair <- nA * nB
+    AvA_pair <- (nA * (nA - 1))/2
+    BvB_pair <- (nB * (nB - 1))/2
+    ABvAB_pair <- (nAB * (nAB - 1)) / 2
+    
+    pairs <- c(
+      AvB_pair,              # A vs. B
+      AvA_pair,              # A vs. A
+      BvB_pair,              # B vs. B
+      AvA_pair + BvB_pair,   # A vs. A - B vs. B
+      #(nAB*(nAB-1))/2,                        
+      AvB_pair + AvA_pair,   # A vs. B - A vs. A 
+      AvB_pair + BvB_pair    # A vs. B + B vs. B
+     )
     
     if(method == "parker") {
-      out$pairs <- c(
-        nA*nB,                                   # A vs. B
-        (nA*(nA-1))/2,                           # A vs. A
-        (nB*(nB-1))/2,                           # B vs. B
-        (nA*(nA-1))/2 + (nB*(nB-1))/2,           # A vs. A - B vs. B
-        #(nAB*(nAB-1))/2,                        
-        nA*nB + (nA*(nA-1))/2,                   # A vs. B - A vs. A 
-        nA*nB + (nB*(nB-1))/2,                   # A vs. B + B vs. B
-        (nAB*(nAB-1))/2 #nA*nB + (nB*(nB-1))/2   # A vs. B + B vs. B - A vs. A
-      )
+      out$pairs <- c(pairs, 
+        ABvAB_pair)  # A vs. B + B vs. B - A vs. A
     }
     
     if(method == "complete") {
-      out$pairs <- c(
-        nA*nB,                                    #A vs. B
-        (nA*(nA-1))/2,                            #A vs. A
-        (nB*(nB-1))/2,                            
-        (nB*(nB-1))/2 + (nA*(nA-1))/2,
-        #(nAB*(nAB-1))/2, 
-        nA*nB + (nA*(nA-1))/2,
-        nA*nB + (nB*(nB-1))/2, 
-        nA*nB + (nA*(nA-1))/2 + (nB*(nB-1))/2
-      )
+      out$pairs <- c(pairs, 
+        AvB_pair + AvA_pair + BvB_pair)  # A vs. B + B vs. B - A vs. A)
     }
     
     out$pos <- c(
@@ -230,11 +216,9 @@ tauUSC <- function (data, dvar = NULL, pvar = NULL, ties.method = "omit", method
       AvBtie+BvBtie+AvAtie
     )
     
-    
     out$S <- out$pos-out$neg
-    
     out$D <- c(
-      out$pairs[1]-out$ties[1]/2,
+      out$pairs[1] - out$ties[1] / 2,
       AvAKen$D,
       BvBKen$D,
       BvB_AKen$D,

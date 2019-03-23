@@ -14,18 +14,16 @@ methods::setOldClass(c("scdf", "list"))
 #' 
 #' @aliases scdf scdf-class as.scdf checkSCDF
 #' makeSCDF
-#' @param values A vector containing measurement values of the target variable.
+#' @param values A vector containing measurement values of the dependent variable.
 #' @param B.start The first measurement of phase B (simple coding if design is
 #' strictly AB).
-#' @param mt A vector defining measurement times. Default is \code{MT =
+#' @inheritParams .inheritParams
+#' @param mt A vector defining measurement times. Default is \code{mt =
 #' (1,2,3,...,n)}.
 #' @param phase.design A vector defining the length and label of each phase.
 #' E.g., \code{phase.length = c(A1 = 10, B1 = 10, A2 = 10, B2 = 10)}.
 #' @param name A name for the case.
-#' @param phase A vector defining phase assignment.
-#' @param dvar A character string with the name of the independent variable.
-#' @param pvar A character string with the name of the phase variable.
-#' @param mvar A character string with the name of the measurement-time variable.
+#' @param phase A vector defining phase assignments.
 #' @param ...  Additional variables. E.g., \code{teacher = c(0,1,0,1,0,0,1),
 #' lesson = c(1,3,4,5,2,3)}.
 #' @return Returns a single-case data frame \code{scdf} suitable for all
@@ -34,9 +32,19 @@ methods::setOldClass(c("scdf", "list"))
 #' @details If the dependent variable is a named vector then the names are extracted
 #' to create a phase design (e.g., values = c(A = 2,3,5,4,3, B = 6,5,4,3) will create 
 #' an AB phase design with five and four measuresments).
+#' An scdf contains several attributes:
+#'  \code{dvar} The name of the dependent variable.
+#'  \code{phase} The name of the phase variable.
+#'  \code{mt} The name of the measurement time variable.
+#'  \code{author} Information on the author of the data.
+#'  \code{info} Further information on the data. E.g., a publication.
+#'  \code{dvar, phase, and mt} are the defaults most of the \code{scan} function
+#'  use. You can change the values of the attributes with the \code{attr} function 
+#'  (e.g., \code{attr(exampleAB_add, "dvar") <- "depression"} defines depression
+#'  as the dependent variable. Please notice that all \code{scan} functions 
+#'  have arguments to define \code{dvar, phase, and mt} for a given analysis.
 #' @author Juergen Wilbert
-#' @seealso \code{\link{longSCDF}}, \code{\link{readSC}}
-#' \code{\link{writeSC}}
+#' @family data manipulation function
 #' @examples
 #' 
 #' ## Scores on a letter naming task were collected on eleven days in a row. The intervention
@@ -45,16 +53,19 @@ methods::setOldClass(c("scdf", "list"))
 #' plot(klaas)
 #' 
 #' #Alternative coding 1:
-#' klaas <- scdf(c(A = 5, 7, 8, 5, 7, B = 12, 16, 18, 15, 14, 19), name = "Klaas")
+#' klaas <- scdf(
+#'   c(A = 5, 7, 8, 5, 7, B = 12, 16, 18, 15, 14, 19), 
+#'   name = "Klaas"
+#' )
 #' 
 #' #Alternative coding 2:
 #' klaas <- scdf(c(5, 7, 8, 5, 7, 12, 16, 18, 15, 14, 19), 
-#'               phase.design = c(A = 5, B = 6), name = "Klaas")
+#'   phase.design = c(A = 5, B = 6), name = "Klaas")
 #' 
 #' ## Unfortunately in a similar SCDR there were no data collected on days 3 and 9. Use NA to
 #' ## pass them to the package.
 #' emmi <- scdf(c(5, 7, NA, 5, 7, 12, 16, 18, NA, 14, 19), 
-#'              phase.design = c(A = 5, B = 6), name = "Emmi")
+#'   phase.design = c(A = 5, B = 6), name = "Emmi")
 #' describeSC(emmi)
 #' 
 #' ## In a MBD over three persons, data were again collected eleven days in a row. Intervention
@@ -71,45 +82,44 @@ methods::setOldClass(c("scdf", "list"))
 #' ## only on schooldays. The sequence of measurements is passed to the package by using a
 #' ## vector of measurement times.
 #' frida <- scdf(c(3, 2, 4, 2, 2, 3, 5, 6, 8, 10, 8, 12, 14, 13, 12), B.start = 9,
-#'     mt = c(1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18))
+#'   mt = c(1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18))
 #' summary(frida)
 #' plot(frida)
 #' describeSC(frida)
 #' 
 #' ## example with two independent variables and four phases
-#' jim  <- scdf(zvt = c(47, 58, 76, 63, 71, 59, 64, 69, 72, 77, 76, 73), 
-#'               d2 = c(131, 134, 141, 141, 140, 140, 138, 140, 141, 140, 138, 140), 
-#'              phase.design = c(A1=3, B1=3, A2=3, B2=3), dvar = "zvt")
-#' overlapSC(jim, phases = list(c("A1","A2"),c("B1","B2")))
+#' jim  <- scdf(
+#'   zvt = c(47, 58, 76, 63, 71, 59, 64, 69, 72, 77, 76, 73), 
+#'   d2 = c(131, 134, 141, 141, 140, 140, 138, 140, 141, 140, 138, 140), 
+#'   phase.design = c(A1=3, B1=3, A2=3, B2=3), dvar = "zvt")
+#' overlapSC(jim, phases = list(c("A1", "A2"), c("B1", "B2")))
 #' 
 #' @export
 scdf <- function (values, B.start, mt, phase, phase.design, name, dvar = "values", pvar = "phase", mvar = "mt", ...){
   
   df <-list(...)
 
-  if("var.values" %in% names(df))
+  if ("var.values" %in% names(df)) {
     stop("'var.values' is deprecated. Please use 'dvar' instead.")
+  }
+  if (!missing(mt))     df <- c(mt     = list(mt), df)
+  if (!missing(phase))  df <- c(phase  = list(phase), df)
+  if (!missing(values)) df <- c(values = list(values), df)
   
-  if(!missing(mt))
-    df <- c(mt = list(mt), df)
-  if(!missing(phase))
-    df <- c(phase = list(phase), df)
-  if(!missing(values))
-    df <- c(values = list(values), df)
-  
-  if(!(dvar %in% names(df)))
+  if (!(dvar %in% names(df))) {
     stop("Independent variable not defined correctly!")
+  }
   
   # create phase.design from a named vector
-  if(!is.null(names(df[[dvar]]))) {
+  if (!is.null(names(df[[dvar]]))) {
     tmp.names <- names(df[[dvar]])
-    tmp <- c(which(tmp.names != ""),length(tmp.names)+1)
-    phase.design <- tmp[-1]-tmp[-length(tmp)]  
+    tmp <- c(which(tmp.names != ""),length(tmp.names) + 1)
+    phase.design <- tmp[-1] - tmp[-length(tmp)]  
     names(phase.design) <- tmp.names[which(tmp.names != "")]
   }
   
   # create phase.design from phase variable
-  if(!missing(phase)) {
+  if (!missing(phase)) {
     tmp.phase <- rle(phase)
     phase.design <- tmp.phase$lengths
     names(phase.design) <- tmp.phase$values
@@ -125,24 +135,23 @@ scdf <- function (values, B.start, mt, phase, phase.design, name, dvar = "values
   ### END : for backward campatibility
 
   # create default mt row
-  if(!(mvar %in% names(data)))
-    data[,mvar] <- 1:nrow(data)
+  if (!(mvar %in% names(data))) data[,mvar] <- 1:nrow(data)
   
-  if(!missing(B.start)) {
+  if (!missing(B.start)) {
     B.start <- match(B.start, data[,mvar])
-    if(is.na(B.start))
+    if (is.na(B.start))
       stop("No values provided at the measurement.time of B.start in var '",mvar,"'.")
     phase.design <- c("A" = B.start - 1, "B" = nrow(data) - B.start + 1)
   }
 
-  if(missing(phase.design))
+  if (missing(phase.design)) {
     stop("Phase design not defined correctly!")
-    
-  data[,pvar] <- factor(rep(names(phase.design),phase.design),levels = unique(names(phase.design)))
+  }  
+  data[, pvar] <- factor(rep(names(phase.design), phase.design), levels = unique(names(phase.design)))
   
-  if(!(mvar %in% names(data)))
+  if (!(mvar %in% names(data))){
     stop("Measurement-time variable not defined correctly!")
-  
+  }
   data <- list(data)
   attributes(data) <- .defaultAttributesSCDF() 
   
@@ -150,7 +159,7 @@ scdf <- function (values, B.start, mt, phase, phase.design, name, dvar = "values
   attr(data, .opt$phase) <- pvar
   attr(data, .opt$mt)    <- mvar
   
-  if(!missing(name))
+  if (!missing(name))
     names(data) <- name
   
   data
@@ -159,31 +168,31 @@ scdf <- function (values, B.start, mt, phase, phase.design, name, dvar = "values
 scdf.old <- function (values, B.start, mt, phase, phase.design, name, dvar = "values", pvar = "phase", mvar = "mt", ...){
   
   add.var <- list(...)
-  if("var.values" %in% names(add.var))
+  if ("var.values" %in% names(add.var))
     stop("'var.values' is deprecated. Please use 'dvar' instead.")
   
   add.var   <- as.data.frame(add.var)
   
   names.var <- names(add.var)
   
-  if(missing(values))
+  if (missing(values))
     data <- add.var
   
-  if(!missing(values)) {
+  if (!missing(values)) {
     data <- data.frame(values = values)
-    if(nrow(add.var) > 0)
+    if (nrow(add.var) > 0)
       data <- cbind(data,add.var)
   }
   
-  if(!missing(phase))
+  if (!missing(phase))
     data$phase <- phase
   
-  if(!missing(mt))
+  if (!missing(mt))
     data$mt <- mt
   
   ### for backward campatibility
-  #if(!missing(var.values)) {
-  #if("var.values" %in% names.var)
+  #if (!missing(var.values)) {
+  #if ("var.values" %in% names.var)
   #  warning("'var.values' is deprecated. Please use 'dvar' instead.")
   #  dvar <- var.values
   #}
@@ -197,31 +206,29 @@ scdf.old <- function (values, B.start, mt, phase, phase.design, name, dvar = "va
   }
   ### END : for backward campatibility
   
+  if (!(mvar %in% names(data))) data[, mvar] <- 1:nrow(data)
   
-  if(!(mvar %in% names(data)))
-    data[,mvar] <- 1:nrow(data)
-  
-  
-  
-  if(!missing(B.start)) {
-    B.start <- match(B.start, data[,mvar])
-    if(is.na(B.start))
+  if (!missing(B.start)) {
+    B.start <- match(B.start, data[, mvar])
+    if (is.na(B.start)) {
       stop("No values provided at B.start.")
+    }
     phase.design <- c("A" = B.start - 1, "B" = nrow(data) - B.start + 1)
   }
   
+  if (!missing(phase.design))
+    data[, pvar] <- rep(names(phase.design), phase.design)
   
-  if(!missing(phase.design))
-    data[,pvar] <- rep(names(phase.design),phase.design)
-  
-  if(!(dvar %in% names(data)))
+  if (!(dvar %in% names(data))) {
     stop("Independent variable not defined correctly!")
-  if(!(pvar %in% names(data)))
+  }
+  if (!(pvar %in% names(data))) {
     stop("Phase variable not defined correctly!")
-  if(!(mvar %in% names(data)))
+  }
+  if (!(mvar %in% names(data))) {
     stop("Measurement-time variable not defined correctly!")
-  
-  data[,pvar] <- factor(data[,pvar], levels = unique(data[,pvar]))
+  }
+  data[,pvar] <- factor(data[, pvar], levels = unique(data[, pvar]))
   
   data <- list(data)
   attributes(data) <- .defaultAttributesSCDF() 
@@ -230,8 +237,7 @@ scdf.old <- function (values, B.start, mt, phase, phase.design, name, dvar = "va
   attr(data, .opt$phase) <- pvar
   attr(data, .opt$mt)    <- mvar
   
-  if(!missing(name))
-    names(data) <- name
+  if (!missing(name)) names(data) <- name
   
   data
 }

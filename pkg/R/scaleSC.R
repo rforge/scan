@@ -16,7 +16,7 @@
 #'   of all measurements across all single-cases within the scdf.
 #' @return An scdf with the scaled values.
 #' @author Juergen Wilbert
-
+#' @family data manipulation functions
 #' @examples
 #' 
 #' ## Standardize a multiple case scdf and compute an hplm

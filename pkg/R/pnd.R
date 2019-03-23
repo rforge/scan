@@ -19,8 +19,7 @@
 #' and 4 (as B). Default is \code{phases = c("A","B")}.
 #' @return \item{PND}{Percentage of non-overlapping data.}
 #' @author Juergen Wilbert
-#' @seealso \code{\link{overlapSC}}, \code{\link{describeSC}},
-#' \code{\link{nap}}, \code{\link{pand}}, \code{\link{pem}}, \code{\link{pet}}
+#' @family overlap
 #' @examples
 #' 
 #' ## Calculate the PND for multiple single-case data

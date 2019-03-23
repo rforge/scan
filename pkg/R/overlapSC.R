@@ -3,23 +3,15 @@
 #' The \code{overlapSC} function provides the most common overlap indices for
 #' single-case data and some additional statistics.
 #' 
-#' 
-#' @param data A single-case data frame. See \code{\link{scdf}} to learn about
-#' this format.
-#' @param dvar Character string with the name of the dependent variable.
-#' @param pvar Character string with the name of the phase variable.
-#' @param mvar Character string with the name of the measurement time variable.
-#' @param decreasing If you expect data to be lower in the B phase, set
-#' \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.
-#' @param phases A vector of two characters or numbers indicating the two
-#' phases that should be compared. E.g., \code{phases = c("A","C")} or
-#' \code{phases = c(2,4)} for comparing the second to the fourth phase. Phases
-#' could be combined by providing a list with two elements. E.g., \code{phases
-#' = list(A = c(1,3), B = c(2,4))} will compare phases 1 and 3 (as A) against 2
-#' and 4 (as B). Default is \code{phases = c("A","B")}.
-#' @return \item{overlap}{A data frame consisting of the following indices for
+#' @inheritParams .inheritParams
+#' @return 
+#' \item{overlap}{A data frame consisting of the following indices for
 #' each single-case for all cases: PND, PEM, PET, NAP, PAND, Tau-U (A vs. B -
 #' Trend A), Diff_mean, Diff_trend, SMD.}
+#' \item{phases.A}{Selection for A phase.}
+#' \item{phases.B}{Selection for B phase.}
+#' \item{design}{Phase design.}
+#' @family overlap functions
 #' @author Juergen Wilbert
 #' @examples
 #' 
@@ -32,27 +24,13 @@
 #' ## Combining phases for analyszing designs with more than two phases   
 #' overlapSC(exampleA1B1A2B2, phases = list(c("A1","A2"), c("B1","B2")))
 #' 
-#' ## Write overlap indices to .csv-file
-#' overl <- overlapSC(Waddell2011)
-#' write.csv(overl$overlap, file = "overlap_indices.csv")
-#' 
 #' @export
 overlapSC <- function(data, dvar, pvar, mvar, decreasing = FALSE, phases = c("A","B")) {
-  
-  if(missing(dvar)) 
-    dvar <- attr(data, .opt$dv) 
-  else 
-    attr(data, .opt$dv) <- dvar
-  
-  if(missing(pvar))
-    pvar <- attr(data, .opt$phase)
-  else
-    attr(data, .opt$phase) <- pvar
-  
-  if(missing(mvar))
-    mvar <- attr(data, .opt$mt)
-  else
-    attr(data, .opt$mt) <- mvar
+
+  # set attributes to arguments else set to defaults of scdf
+  if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
+  if (missing(pvar)) pvar <- attr(data, .opt$phase) else attr(data, .opt$phase) <- pvar
+  if (missing(mvar)) mvar <- attr(data, .opt$mt) else attr(data, .opt$mt) <- mvar
   
   data.list <- .SCprepareData(data, change.var.values = FALSE, change.var.phase = FALSE,change.var.mt = FALSE)
   keep <- .keepphasesSC(data.list, phases = phases, pvar = pvar)

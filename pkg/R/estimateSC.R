@@ -1,19 +1,13 @@
-
 #' Estimate single-case design
 #'
 #' This functions takes an scdf an extracts design parameters. The resulting in
 #' object can be unsed to randomly create new scdf files with the same
-#' underlying parameters. This might be usefull for monte-carlo stdies and
+#' underlying parameters. This might be usefull for monte-carlo studies and
 #' bootstrapping procedures.
 #'
-#' @param data  A single-case data frame. See \code{\link{scdf}} to learn about
-#' this format.
-#' @param dvar Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.
-#' @param pvar Character string with the name of the phase variable. Defaults to the attributes in the scdf file.
-#' @param mvar Character string with the name of the measurement time variable. Defaults to the attributes in the scdf file.
+#' @inheritParams .inheritParams
 #' @param s The standard deviation depcting the between case variance of the overall performance. If more than two single-cases are included in the scdf, the variance is estimated if s is set to NULL.
 #' @param rtt The reliability of the measurements. The reliability is estimated when rtt = NULL.
-#' @param model Model for calculating the interaction term.
 #' @param ... Further arguments passed to the lm function.
 #'
 #' @return A list of parameters for each single-case. Parameters include name, length, and starting measurementtime of each phase, trend level, and slope effects for each phase, mean, standarddeviation, and reliability for each case.
@@ -36,15 +30,7 @@ estimateSC <- function(data, dvar, pvar, mvar, s = NULL, rtt = NULL, model = "JW
   if (is.null(case.names)) case.names <- paste0("Case", 1:cases)
   
   phases <- lapply(
-    data, 
-    function(case) {
-      phases <- rle(as.character(case[, pvar]))
-      phases$start <- c(1, cumsum(phases$lengths)+1)[1:length(phases$lengths)]
-      phases$stop <- cumsum(phases$lengths)  
-      class(phases) <- "list"
-      phases <- as.data.frame(phases)
-      phases
-    }
+    data, function(case) as.data.frame(.phasestructure(case, pvar))
   )
   
   B.start <- unlist(lapply(phases, function(x) x$start[2]))

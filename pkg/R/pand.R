@@ -10,27 +10,16 @@
 #' unrepresentative) datapoint.  Furthermore, PAND allows the comparison of
 #' real and expected associations (Chi-square test) and estimation of the
 #' effect size Phi, which equals Pearsons r for dichotomous data.  Thus,
-#' phi-Square is the amount of explained variance.  The original procedure for
+#' phi-Square is the amount of explained variance. The original procedure for
 #' computing the PAND (Parker, Hagan-Burke, & Vannest, 2007) does not account
 #' for ambivalent datapoints (ties).  The newer \code{NAP} overcomes this
 #' problem and has better precision-power (Parker, Vannest, & Davis, 2014).
 #' 
-#' @param data A single-case data frame. See \code{\link{scdf}} to learn about
-#' this format.
-#' @param dvar Character string with the name of the dependent variable.
-#' @param pvar Character string with the name of the phase variable.
-#' @param decreasing If you expect data to be lower in the B phase, set
-#' \code{decreasing = TRUE}. Default is \code{decreasing = FALSE}.
+#' @inheritParams .inheritParams
 #' @param correction The default \code{correction = TRUE} makes \code{pand} use
 #' a frequency matrix, which is corrected for ties. A tie is counted as the
 #' half of a measurement in both phases. Set \code{correction = FALSE} to use
 #' the uncorrected matrix, which is not recommended.
-#' @param phases A vector of two characters or numbers indicating the two
-#' phases that should be compared. E.g., \code{phases = c("A","C")} or
-#' \code{phases = c(2,4)} for comparing the second to the fourth phase. Phases
-#' could be combined by providing a list with two elements. E.g., \code{phases
-#' = list(A = c(1,3), B = c(2,4))} will compare phases 1 and 3 (as A) against 2
-#' and 4 (as B). Default is \code{phases = c("A","B")}.
 #' @return \item{PAND}{Percentage of all non-overlapping data.}
 #' \item{phi}{Effect size Phi based on expected and observed values.}
 #' \item{POD}{Percentage of overlapping data points.} \item{OD}{Number of
@@ -45,8 +34,7 @@
 #' \item{correction}{Logical argument from function call (see \code{Arguments}
 #' above).}
 #' @author Juergen Wilbert
-#' @seealso \code{\link{overlapSC}}, \code{\link{describeSC}},
-#' \code{\link{nap}}, \code{\link{pem}}, \code{\link{pet}}, \code{\link{pnd}}
+#' @family overlap functions
 #' @references Parker, R. I., Hagan-Burke, S., & Vannest, K. (2007). Percentage
 #' of All Non-Overlapping Data (PAND): An Alternative to PND. \emph{The Journal
 #' of Special Education, 40}, 194-204.
@@ -68,20 +56,13 @@
 #' pand(cubs, decreasing = TRUE)
 #' 
 #' @export
-pand <- function(data, dvar = NULL, pvar = NULL, decreasing = FALSE, correction = TRUE, phases = c("A","B")) {
+pand <- function(data, dvar, pvar, decreasing = FALSE, correction = TRUE, phases = c("A","B")) {
   
-  if(!is.null(dvar)) 
-    attr(data, .opt$dv) <- dvar
-  else
-    dvar <- attr(data, .opt$dv)
-  
-  if(!is.null(pvar))
-    attr(data, .opt$phase) <- pvar
-  else
-    pvar <- attr(data, .opt$phase)
+  # set attributes to arguments else set to defaults of scdf
+  if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
+  if (missing(pvar)) pvar <- attr(data, .opt$phase) else attr(data, .opt$phase) <- pvar
   
   data <- .SCprepareData(data, na.rm = TRUE, change.var.values = FALSE, change.var.phase = FALSE)
-  
   data <- .keepphasesSC(data, phases = phases,pvar = pvar)$data
   
   phase.expected <- list()
@@ -94,7 +75,6 @@ pand <- function(data, dvar = NULL, pvar = NULL, decreasing = FALSE, correction 
   for (i in 1:N) {
     A[[i]] <- data[[i]][data[[i]][, pvar] == "A", dvar]
     B[[i]] <- data[[i]][data[[i]][, pvar] == "B", dvar]
-    #if(class(data[[i]]$phase) != "factor")
     data[[i]][, pvar] <- factor(data[[i]][, pvar])
     
     phase.real[[i]]     <- as.numeric(data[[i]][order(data[[i]][, dvar]), pvar])
@@ -131,8 +111,8 @@ pand <- function(data, dvar = NULL, pvar = NULL, decreasing = FALSE, correction 
     BA <- sum(rang[(n1+1):n12] <= n1, na.rm = TRUE)
     if(correction) {
       ord <- z[rang,]
-      AB <- AB + 0.5*sum(ord[1:n1] == min(ord[(n1+1):n12], na.rm = TRUE), na.rm = TRUE)
-      BA <- BA + 0.5*sum(ord[(n1+1):n12] == max(ord[1:n1], na.rm = TRUE), na.rm = TRUE)
+      AB <- AB + 0.5 * sum(ord[1:n1] == min(ord[(n1 + 1):n12], na.rm = TRUE), na.rm = TRUE)
+      BA <- BA + 0.5 * sum(ord[(n1 + 1):n12] == max(ord[1:n1], na.rm = TRUE), na.rm = TRUE)
     }
     OD.PP[i] <- AB + BA
     OD.A <- OD.A + AB

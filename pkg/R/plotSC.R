@@ -5,10 +5,7 @@
 #' 
 #' 
 #' @aliases plotSC plot.scdf
-#' @param data A single-case data frame. See \code{\link{scdf}} to learn about this format.
-#' @param dvar Character string with the name of the dependent variable.
-#' @param pvar Character string with the name of the phase variable.
-#' @param mvar Character string with the name of the measurement time variable.
+#' @inheritParams .inheritParams
 #' @param ylim Lower and upper limits of the y-axis (e.g., \code{ylim = c(0,
 #' 20)} sets the y-axis to a scale from 0 to 20). With multiple single-cases
 #' you can use \code{ylim = c(0, NA)} to scale the y-axis from 0 to the maximum
@@ -59,14 +56,15 @@
 #' the marks.  \item\code{"cex"} Size of the marks.  } Use for example
 #' \code{marks = list(positions = c(1, 8, 15), col = "red", cex = 3)} to make
 #' the MTs one, eight and 18 appear big and red.
-#' @param phase.names By default phases are labeled 'A' and 'B'. Use this
-#' argument to specify different labels: \code{phase.names = c("Baseline",
+#' @param phase.names By default phases are labeled based on the levels of the phase variable. 
+#' Use this argument to specify different labels: \code{phase.names = c("Baseline",
 #' "Intervention")}.
 #' @param xlab The label of the x-axis. Default is \code{xlab = "Measurement
 #' time"}.
 #' @param ylab The labels of the y-axis. Default is \code{ylab = "Score"}.
 #' @param main Main title of the plot.
-#' @param case.names Case names. If not provided, names are taken from the scdf or left blank if the scdf does not contain case names.
+#' @param case.names Case names. If not provided, names are taken from the scdf.
+#' Set \code{case.names = ""} if you don't like to include case names.
 #' @param ... Further arguments passed to the plot command.
 #' @return Returns a plot of one or multiple single-cases.
 #' @author Juergen Wilbert
@@ -146,8 +144,8 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
   par("col.lab"  = style$col.text)
   par("col.axis" = style$col.text)
   
-  if(style$frame %in% "") style$frame <- NA
-  if(style$grid %in% "") style$grid  <- NA
+  if(style$frame %in% "")   style$frame <- NA
+  if(style$grid %in% "")    style$grid  <- NA
   if(style$fill.bg %in% "") style$fill.bg  <- NA
   
   ### END: define style
@@ -203,23 +201,68 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
     
     # plot ylim
     y.lim <- ylim
-    if(is.na(ylim[2])) y.lim[2] <- max(data[,dvar])
-    if(is.na(ylim[1])) y.lim[1] <- min(data[,dvar])
+    if(is.na(ylim[2])) y.lim[2] <- max(data[, dvar])
+    if(is.na(ylim[1])) y.lim[1] <- min(data[, dvar])
     
-    # last plot
-    if (case == N) {
-      par(mai = style$mai)
-      plot(data[,mvar], data[,dvar], xlab = xlab, type = "n", xlim = xlim, ylim = y.lim, ylab = ylab, xaxp = c(xlim[1],xlim[2],xlim[2] - xlim[1]),...)#, col.lab = col.text, col.axis = col.text, ...)
-    }
-    else {
+    # one plot
+    if (N == 1) {
+      if (main != "") par(mai = c(style$mai[1:2], style$mai[3] + 0.4, style$mai[4]))
+      if (main == "") par(mai = style$mai)
+      plot(
+        data[, mvar], data[, dvar], type = "n", 
+        xlim = xlim, ylim = y.lim, ann = FALSE,
+        xaxp = c(xlim[1], xlim[2], xlim[2] - xlim[1]), ...
+      )
+
+      if (style$ylab.orientation == 0) 
+        mtext(ylab, side = 2, line = 2, las = 0, cex = style$cex.lab)
+
+      if (style$ylab.orientation == 1)
+        mtext(ylab, side = 2, line = 2, las = 1, at = max(y.lim), cex = style$cex.lab)
+
+      mtext(xlab, side = 1, line = 2, las = 0, cex = style$cex.lab)
+    } 
+    
+    # multple plots, first to secondlast
+    if(N > 1 && case != N) {
       # first plot
-      if (case == 1)
-        par(mai = c(0.2, 0.82, 0.6, 0.42))
+      if (case == 1) {
+        if (main != "") 
+          par(mai = c(style$mai[1] * 2 / 6, style$mai[2], style$mai[3] * 3, style$mai[4]))
+        if (main == "") 
+          par(mai = c(style$mai[1] * 2 / 6, style$mai[2], style$mai[3] * 3, style$mai[4])) #par(mai = c(0.2, 0.82, 0.6, 0.42))
+      }
       # middle plot
       else  
-        par(mai = c(0.4, 0.82, 0.4, 0.42))
-      plot(data[,mvar], data[,dvar], xaxt = "n", xlab = "", type = "n", xlim = xlim, ylim = y.lim, ylab = ylab, ...)# col.lab = col.text, col.axis = col.text, ...)
+        par(mai = c(style$mai[1] * 4 / 6, style$mai[2], style$mai[3] * 2, style$mai[4])) #par(mai = c(0.4, 0.82, 0.4, 0.42))
+      
+      plot(
+        data[, mvar], data[, dvar], xaxt = "n", type = "n", 
+        xlim = xlim, ylim = y.lim, ann = FALSE, ...
+      )
+      if (style$ylab.orientation == 0) 
+        mtext(ylab, side = 2, line = 2, las = 0, cex = style$cex.lab)
+      
+      if (style$ylab.orientation == 1)
+        mtext(ylab, side = 2, line = 2, las = 1, at = max(y.lim), cex = style$cex.lab)
     }
+    # multiple plots, last plot
+    if (N > 1 && case == N) {
+      par(mai = style$mai)
+      plot(
+        data[, mvar], data[, dvar], type = "n", 
+        xlim = xlim, ylim = y.lim, ann = FALSE,
+        xaxp = c(xlim[1], xlim[2], xlim[2] - xlim[1]),...
+      )
+      if (style$ylab.orientation == 0) 
+        mtext(ylab, side = 2, line = 2, las = 0, cex = style$cex.lab)
+      
+      if (style$ylab.orientation == 1)
+        mtext(ylab, side = 2, line = 2, las = 1, at = max(y.lim), cex = style$cex.lab)
+      
+      mtext(xlab, side = 1, line = 2, las = 0, cex = style$cex.lab)
+      
+    } 
     usr <- par("usr")
 
     # plot styling
@@ -329,7 +372,7 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
       #  }
       #}
       
-      text(data[,mvar],data[,dvar], label = annotations.label, col = annotations.col, pos = annotations.pos, offset = annotations.offset, cex = annotations.cex, ...)
+      text(data[,mvar], data[,dvar], label = annotations.label, col = annotations.col, pos = annotations.pos, offset = annotations.offset, cex = annotations.cex, ...)
     }
     
 
@@ -356,16 +399,16 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
       }
       if (any(names(lines) == "trend")) {
         for(i in 1:length(design$values)) {
-          x <- data[design$start[i]:design$stop[i],mvar]
-          y <- data[design$start[i]:design$stop[i],dvar]
+          x <- data[design$start[i]:design$stop[i], mvar]
+          y <- data[design$start[i]:design$stop[i], dvar]
           reg <- lm(y~x)
           lines(c(min(x), max(x)), c(reg$coefficients[1] + min(x) * reg$coefficients[2], reg$coefficients[1] + max(x) * reg$coefficients[2]), lty = lty.line, col = col.line, lwd = lwd.line)
         }
       }
       if (any(names(lines) == "median")) {
         for(i in 1:length(design$values)) {
-          x <- data[design$start[i]:design$stop[i],mvar]
-          y <- data[design$start[i]:design$stop[i],dvar]
+          x <- data[design$start[i]:design$stop[i], mvar]
+          y <- data[design$start[i]:design$stop[i], dvar]
           lines(c(min(x), max(x)), c(median(y, na.rm = TRUE), median(y, na.rm = TRUE)), lty = lty.line, col = col.line, lwd = lwd.line)
         }      
         #labelxy <- c(max(Bx), median(B,na.rm = TRUE))
@@ -480,14 +523,14 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
     if(!is.null(style$text.ABlag)) {
       for(i in 1:(length(design$values) - 1)) {
         tex <- paste(unlist(strsplit(style$text.ABlag[i], "")), collapse ="\n")
-        text(data[design$stop[i]+1,mvar] - 0.5, (y.lim[2]-y.lim[1])/2 + y.lim[1], labels = tex, cex = 0.8, ...)
+        text(data[design$stop[i] + 1, mvar] - 0.5, (y.lim[2]-y.lim[1])/2 + y.lim[1], labels = tex, cex = 0.8, ...)
       }
       
     }
 
     # Adding case name --------------------------------------------------------
     if (length(case.names) ==  N)
-      mtext(case.names[case], side = 3, line = -1, adj = 0, at = 1, cex = style$cex.text, ...)	
+      mtext(case.names[case], side = 3, line = -1, adj = 0, at = min(xlim), cex = style$cex.text, ...)	
   }
   
 }

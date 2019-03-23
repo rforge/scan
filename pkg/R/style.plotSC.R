@@ -56,34 +56,21 @@
 
 style.plotSC <- function(style = "default", ...) {
   new <- list(...)
-  default <- list(frame = "black", fill = "", fill.bg = NA, grid = NA, annotations = NULL, 
-                  text.ABlag = NULL, lwd = 2, pch = 17, font = "sans", 
-                  cex = 1, cex.axis = 0.8, cex.text = 1, cex.lab = 1,
-                  las = 1, mai = c(0.6, 0.82, 0.2, 0.42), bty = "o", 
-                  col.lines = "black", col.dots = "black", col.seperators = "black", 
-                  col.bg = "white", col = "black", col.text = "black" 
-                  )
-  if(style == "default")
-    out <- list()
-  if(style == "annotate")
-    out <- list(annotations = list(cex = 0.6, col = "blue", offset = 0.4), pch = 19)
-  if(style == "grid")
-    out <- list(frame = NA, grid = "lightblue", fill.bg = "grey95", lwd = 0.7, cex = 1, pch = 19, las = 1, cex.axis = 0.8, las = 1)  
-  if(style == "grid2")
-    out <- list(frame = NA, fill = "white", grid = "lightgreen", frame = "black", fill.bg = "grey95", lwd = 0.7, cex = 1, pch =1, las = 1, cex.axis = 0.8, las = 1)  
-  if(style == "dark")
-    out <- list(fill.bg = "black", bty = "o", col.lines = "gold", col.bg = "grey10", col.dots = "red", col.seperators = "white", col = "white", col.text = "white")
-  if(style == "dark2")
-    out <- list(fill = "grey30", fill.bg = "black", grid = "white", lwd = 2, pch = 1, bty = "o", col.lines = "gold", col.dots = "red", col.seperators = "white", col = "white", col.bg = "grey10", col.text = "white", font = "mono")
-  if(style == "nodots")
-    out <- list(type = "l", col.dots = "", fill = "grey95", grid = "grey80", las = 1, fill.bg = "grey99")
-  if(style == "sienna")
-    out <- list(grid = "orange", pch = 18, col.lines = "grey85", col.dots = "seagreen4", lwd = 2, col.bg = "seashell", fill.bg = "moccasin", col.text = "sienna4", col = "darkolivegreen", col.seperators = "sienna4", las = 1, cex = 1, cex.text = 0.8, cex.lab = 0.8, cex.axis = 0.7, frame = "darkseagreen", font = "serif")
-  out <- c(out, default)
+  if (!(all(style %in% names(.opt$style)))) {
+    cat("Available styles: \n")
+    cat(paste(names(.opt$style), collapse = ", "),"\n")
+    stop("Style '", paste(style), "' is unknown.")
+  }
+  
+  styles <- list()
+  for(i in rev(style))
+    styles <- c(styles, .opt$style[[i]])
+
+  out <- c(styles, .opt$style$default)
   out <- out[unique(names(out))]
   if(is.list(new)) {
     out <- c(new, out)
     out <- out[unique(names(out))]
   }
-  out
+    invisible(out)
 }

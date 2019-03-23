@@ -11,14 +11,13 @@ hplm(data, dvar, pvar, mvar, model = "B&L-B", method = "ML",
   data.l2 = NULL, ...)
 }
 \arguments{
-\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
-this format.}
+\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
-\item{dvar}{Character string with the name of the dependent variable.}
+\item{dvar}{Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.}
 
-\item{pvar}{Character string with the name of the phase variable.}
+\item{pvar}{Character string with the name of the phase variable. Defaults to the attributes in the scdf file.}
 
-\item{mvar}{Character string with the name of the measurement time variable.}
+\item{mvar}{Character string with the name of the measurement time variable. Defaults to the attributes in the scdf file.}
 
 \item{model}{Model used for calculating the slope parameter (see Huitema &
 McKean, 2000). Default is \code{model = "B&L-B"}. Possible values are:
@@ -86,8 +85,10 @@ hplm(Leidig2018, data.l2 = Leidig2018_l2,
      
 }
 \seealso{
-\code{\link{plm}}
+Other regression functions: \code{\link{mplm}},
+  \code{\link{plm}}
 }
 \author{
 Juergen Wilbert
 }
+\concept{regression functions}

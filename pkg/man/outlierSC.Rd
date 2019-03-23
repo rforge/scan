@@ -4,18 +4,16 @@
 \alias{outlierSC}
 \title{Handling outliers in single-case data}
 \usage{
-outlierSC(data, dvar = NULL, pvar = NULL, mvar = NULL,
-  criteria = c("MAD", "3.5"))
+outlierSC(data, dvar, pvar, mvar, criteria = c("MAD", "3.5"))
 }
 \arguments{
-\item{data}{A single-case data frame. See \code{\link{makeSCDF}} to learn
-about this format.}
+\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
-\item{dvar}{Character string with the name of the dependent variable.}
+\item{dvar}{Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.}
 
-\item{pvar}{Character string with the name of the phase variable.}
+\item{pvar}{Character string with the name of the phase variable. Defaults to the attributes in the scdf file.}
 
-\item{mvar}{Character string with the name of the measurement time variable.}
+\item{mvar}{Character string with the name of the measurement time variable. Defaults to the attributes in the scdf file.}
 
 \item{criteria}{Specifies the criteria for outlier identification. Set
 \code{criteria = c("SD", 2)} to define two standard deviations as limit.
@@ -25,18 +23,20 @@ define any data point with a Cook's Distance greater than 4/n as an outlier,
 based on the Piecewise Linear Regression Model.}
 }
 \value{
-\item{data}{A data frame (for each single-case) without outliers.}
+\item{data}{A single-case data frame with substituted outliers.}
 \item{dropped.n}{A list with the number of dropped data points for each
-single-case.} \item{dropped.mt}{A list with the measurement-times of dropped
+single-case.}
+\item{dropped.mt}{A list with the measurement-times of dropped
 data points for each single-case (values are based on the \code{mt} variable
-of each single-case data frame).} \item{sd.matrix}{A list with a matrix for
-each case with values for the upper and lower boundaries based on the
-standard deviation.} \item{ci.matrix}{A list with a matrix for each
-single-case with values for the upper and lower boundaries based on the
-confidence interval.} \item{cook}{A list of Cook's Distances for each
-measurement of each single-case.} \item{criteria}{Criteria used for outlier
-analysis.} \item{N}{Number of single-cases.} \item{case.names}{Case
-identifier.}
+of each single-case data frame).} 
+\item{sd.matrix}{A list with a matrix for each case with values for the 
+upper and lower boundaries based on the standard deviation.} 
+\item{ci.matrix}{A list with a matrix for each single-case with values 
+for the upper and lower boundaries based on the confidence interval.} 
+\item{cook}{A list of Cook's Distances for each measurement of each single-case.} 
+\item{criteria}{Criteria used for outlier analysis.} 
+\item{N}{Number of single-cases.} 
+\item{case.names}{Case identifier.}
 }
 \description{
 Identifies and drops outliers within a single-case data frame (scdf).
@@ -54,11 +54,9 @@ res.outlier <- outlierSC(Grosche2011, criteria = c("Cook", "4/n"))
 plotSC(Grosche2011, marks = res.outlier)
 
 }
-\seealso{
-\code{\link{describeSC}}, \code{\link{fillmissingSC}},
-\code{\link{plotSC}}
-}
 \author{
 Juergen Wilbert
 }
+\concept{data manipulation functions
+\code{\link{plotSC}}}
 \keyword{manip}
