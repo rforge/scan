@@ -25,14 +25,14 @@
 #' overlapSC(exampleA1B1A2B2, phases = list(c("A1","A2"), c("B1","B2")))
 #' 
 #' @export
-overlapSC <- function(data, dvar, pvar, mvar, decreasing = FALSE, phases = c("A","B")) {
+overlapSC <- function(data, dvar, pvar, mvar, decreasing = FALSE, phases = c(1,2)) {
 
   # set attributes to arguments else set to defaults of scdf
   if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
   if (missing(pvar)) pvar <- attr(data, .opt$phase) else attr(data, .opt$phase) <- pvar
   if (missing(mvar)) mvar <- attr(data, .opt$mt) else attr(data, .opt$mt) <- mvar
   
-  data.list <- .SCprepareData(data, change.var.values = FALSE, change.var.phase = FALSE,change.var.mt = FALSE)
+  data.list <- .SCprepareData(data, change.var.values = FALSE, change.var.phase = FALSE, change.var.mt = FALSE)
   keep <- .keepphasesSC(data.list, phases = phases, pvar = pvar)
   data.list <- keep$data
   ATTRIBUTES <- attributes(data.list)
@@ -41,11 +41,11 @@ overlapSC <- function(data, dvar, pvar, mvar, decreasing = FALSE, phases = c("A"
 
   case.names <- names(data.list)
 
-  VAR <- c("PND","PEM","PET","NAP","NAP.rescaled","PAND","TAU_U","Diff_mean", "Diff_trend","SMD")
+  VAR <- c("PND","PEM","PET","NAP","NAP.rescaled","PAND","TAU_U", "Base_Tau",  "Diff_mean", "Diff_trend","SMD")
   d.f <- as.data.frame(matrix(nrow = N, ncol = length(VAR)))
   colnames(d.f) <- VAR
   rownames(d.f) <- c(case.names)
-
+  
   for(i in 1:N) {
     data <- data.list[i]
     d.f$PND[i] <- pnd(data, decreasing = decreasing)$PND
@@ -56,6 +56,7 @@ overlapSC <- function(data, dvar, pvar, mvar, decreasing = FALSE, phases = c("A"
     d.f$PAND[i] <- pand(data, decreasing = decreasing)$PAND
     #d.f$TAU_U[i] <- tauUSC(data)$Overall_tau_u[2]
     d.f$TAU_U[i] <- tauUSC(data)$table[[1]]["A vs. B + Trend B - Trend A","Tau"]
+    d.f$Base_Tau[i] <- corrected_tauSC(data)$tau
     
     data <- data[[1]]
     A <- data[data[, pvar] == "A", dvar]
@@ -69,7 +70,7 @@ overlapSC <- function(data, dvar, pvar, mvar, decreasing = FALSE, phases = c("A"
     
   }
   
-
+  
   out <- list(overlap = d.f, phases.A = keep$phases.A, phases.B = keep$phases.B, design = keep$design[[1]]$values)
   class(out) <- c("sc","overlap")
   attr(out, .opt$phase) <- ATTRIBUTES[[.opt$phase]]

@@ -18,7 +18,9 @@ tauUSC(data, dvar, pvar, ties.method = "omit", method = "complete",
 ties from the calculation. \code{"positive"} counts all ties as positive
 comparisons, while \code{"negative"} counts them as negative comparisons.}
 
-\item{method}{\code{"complete"} (default) or \code{"parker"}. Teh latter calculates the number of possible pairs as described in Parler et al. (2011) which might lead to tau-U values greater than 1.}
+\item{method}{\code{"complete"} (default) or \code{"parker"}. The latter 
+calculates the number of possible pairs as described in Parler et al. (2011) 
+which might lead to tau-U values greater than 1.}
 
 \item{phases}{A vector of two characters or numbers indicating the two
 phases that should be compared. E.g., \code{phases = c("A","C")} or
@@ -56,9 +58,10 @@ Parker, R. I., Vannest, K. J., Davis, J. L., & Sauber, S. B.
 \emph{Behavior Therapy, 42}, 284-299.
 }
 \seealso{
-Other overlap functions: \code{\link{nap}},
-  \code{\link{overlapSC}}, \code{\link{pand}},
-  \code{\link{pem}}, \code{\link{pet}}
+Other overlap functions: \code{\link{corrected_tauSC}},
+  \code{\link{nap}}, \code{\link{overlapSC}},
+  \code{\link{pand}}, \code{\link{pem}}, \code{\link{pet}},
+  \code{\link{pnd}}
 }
 \author{
 Juergen Wilbert

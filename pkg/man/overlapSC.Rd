@@ -4,8 +4,7 @@
 \alias{overlapSC}
 \title{Overlap indices for single-case data}
 \usage{
-overlapSC(data, dvar, pvar, mvar, decreasing = FALSE, phases = c("A",
-  "B"))
+overlapSC(data, dvar, pvar, mvar, decreasing = FALSE, phases = c(1, 2))
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
@@ -51,8 +50,9 @@ overlapSC(exampleA1B1A2B2, phases = list(c("A1","A2"), c("B1","B2")))
 
 }
 \seealso{
-Other overlap functions: \code{\link{nap}},
-  \code{\link{pand}}, \code{\link{pem}}, \code{\link{pet}},
+Other overlap functions: \code{\link{corrected_tauSC}},
+  \code{\link{nap}}, \code{\link{pand}}, \code{\link{pem}},
+  \code{\link{pet}}, \code{\link{pnd}},
   \code{\link{tauUSC}}
 }
 \author{

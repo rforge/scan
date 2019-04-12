@@ -47,15 +47,16 @@ the predicted progress is computed.
 
 ## Calculate the PET and use a 99\%-CI for the additional calculation
 # create random example data
-design <- design.rSC(n = 5, slope = 0.2)
+design <- design_rSC(n = 5, slope = 0.2)
 dat <- rSC(design, seed = 23)
 pet(dat, ci = .99)
 
 }
 \seealso{
-Other overlap functions: \code{\link{nap}},
-  \code{\link{overlapSC}}, \code{\link{pand}},
-  \code{\link{pem}}, \code{\link{tauUSC}}
+Other overlap functions: \code{\link{corrected_tauSC}},
+  \code{\link{nap}}, \code{\link{overlapSC}},
+  \code{\link{pand}}, \code{\link{pem}}, \code{\link{pnd}},
+  \code{\link{tauUSC}}
 }
 \author{
 Juergen Wilbert

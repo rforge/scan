@@ -71,9 +71,9 @@ methods::setOldClass(c("scdf", "list"))
 #' ## In a MBD over three persons, data were again collected eleven days in a row. Intervention
 #' ## starting points differ between subjects as they were randomly assigned. The three SCDFs
 #' ## are then combined in a list for further conjoined analyses.
-#' charlotte <- scdf(c(5, 7, 10, 5, 12, 7, 10, 18, 15, 14, 19), B.start = 6)
-#' theresa   <- scdf(c(3, 4, 3, 5, 7, 4, 7, 9, 8, 10, 12),      B.start = 5)
-#' antonia   <- scdf(c(9, 8, 8, 7, 5, 7, 6, 14, 15, 12, 16),    B.start = 7)
+#' charlotte <- scdf(c(A = 5, 7, 10, 5, 12, B = 7, 10, 18, 15, 14, 19))
+#' theresa   <- scdf(c(A = 3, 4, 3, 5, B = 7, 4, 7, 9, 8, 10, 12))
+#' antonia   <- scdf(c(A = 9, 8, 8, 7, 5, 7, B = 6, 14, 15, 12, 16))
 #' mbd <- c(charlotte, theresa, antonia)
 #' names(mbd) <- c("Charlotte", "Theresa", "Antonia")
 #' overlapSC(mbd)
@@ -81,7 +81,7 @@ methods::setOldClass(c("scdf", "list"))
 #' ## In a classroom-based intervention it was not possible to measure outcomes every day, but
 #' ## only on schooldays. The sequence of measurements is passed to the package by using a
 #' ## vector of measurement times.
-#' frida <- scdf(c(3, 2, 4, 2, 2, 3, 5, 6, 8, 10, 8, 12, 14, 13, 12), B.start = 9,
+#' frida <- scdf(c(A = 3, 2, 4, 2, 2, 3, 5, 6, B = 8, 10, 8, 12, 14, 13, 12),
 #'   mt = c(1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18))
 #' summary(frida)
 #' plot(frida)
@@ -91,14 +91,14 @@ methods::setOldClass(c("scdf", "list"))
 #' jim  <- scdf(
 #'   zvt = c(47, 58, 76, 63, 71, 59, 64, 69, 72, 77, 76, 73), 
 #'   d2 = c(131, 134, 141, 141, 140, 140, 138, 140, 141, 140, 138, 140), 
-#'   phase.design = c(A1=3, B1=3, A2=3, B2=3), dvar = "zvt")
+#'   phase.design = c(A1 = 3, B1 = 3, A2 = 3, B2 = 3), dvar = "zvt")
 #' overlapSC(jim, phases = list(c("A1", "A2"), c("B1", "B2")))
 #' 
 #' @export
 scdf <- function (values, B.start, mt, phase, phase.design, name, dvar = "values", pvar = "phase", mvar = "mt", ...){
   
-  df <-list(...)
-
+  df <- list(...)
+  
   if ("var.values" %in% names(df)) {
     stop("'var.values' is deprecated. Please use 'dvar' instead.")
   }

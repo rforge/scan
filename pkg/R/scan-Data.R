@@ -14,6 +14,7 @@
 #' Grosche2014 
 #' GruenkeWilbert2014 
 #' Huber2014
+#' example_A24
 #' exampleAB_simple 
 #' exampleAB 
 #' exampleAB_add 

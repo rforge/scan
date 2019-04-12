@@ -9,8 +9,7 @@
 
 plotSC(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL,
   lines = NULL, marks = NULL, phase.names = NULL, xlab = NULL,
-  ylab = NULL, main = "", case.names = NULL, style = "default",
-  ...)
+  ylab = NULL, main = "", case.names = NULL, style = "grid", ...)
 }
 \arguments{
 \item{...}{Further arguments passed to the plot command.}
@@ -114,7 +113,7 @@ plot(Grosche2011$Georg, style = "sienna", ylim = c(0,NA),
        lines = list("loreg", lty = "solid", col = "black", lwd = 3))
 
 ## Plot a random MBD over three cases and mark interesting MTs
-dat <- rSC(design = design.rSC(3))
+dat <- rSC(design = design_rSC(3))
 plot(dat, marks = list(positions = list(c(2,4,5),c(1,2,3),c(7,8,9)), col = "blue",
        cex = 1.4),annotations = list(label = "values","col" = "red", cex = 0.75,
        offset = 1, round = 0))

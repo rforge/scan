@@ -7,10 +7,7 @@
 #' 
 #' 
 #' @aliases randSC rand.test
-#' @param data A single-case data frame or a list of single-case data frames.
-#' See \code{\link{scdf}} to learn about this format.
-#' @param dvar Character string with the name of the dependent variable.
-#' @param pvar Character string with the name of the phase variable.
+#' @inheritParams .inheritParams
 #' @param statistic Defines the statistic on which the comparison of phases A
 #' and B is based on. Default setting is \code{statistic = "Mean B-A"}). The
 #' following comparisons are possible: \itemize{ \item\code{"Mean A-B"}: Uses
@@ -91,55 +88,59 @@
 #' randSC(Grosche2011, statistic = "Median B-A", complete = TRUE, limit = 4)
 #' 
 #' @export
-randSC <- function (data, dvar = NULL, pvar = NULL, statistic = "Mean B-A", number = 500, complete = FALSE,limit = 5, startpoints = NA, exclude.equal = FALSE, graph = FALSE, output = "c", phases = c("A","B")) {
+randSC <- function (data, dvar, pvar, statistic = "Mean B-A", 
+                    number = 500, complete = FALSE, limit = 5, 
+                    startpoints = NA, exclude.equal = FALSE, 
+                    graph = FALSE, output = "c", phases = c("A","B")) {
   
-  if(!is.null(dvar)) 
-    attr(data, .opt$dv) <- dvar
-  else
-    dvar <- attr(data, .opt$dv)
-  
-  if(!is.null(pvar))
-    attr(data, .opt$phase) <- pvar
-  else
-    pvar <- attr(data, .opt$phase)
+  if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
+  if (missing(pvar)) pvar <- attr(data, .opt$phase) else attr(data, .opt$phase) <- pvar
 
-  #if(!all(unlist(lapply(data, function(x) identical(rle(as.character(x[,pvar]))$values, phases)))))
-  #  warning(paste0("Phase sequence is not ",paste0(phases, collapse = " "), " for all cases. Analyzes are restricted to the data of the ",paste0(phases,collapse = " ")," phases.\n"))
-  
   data <- .SCprepareData(data, change.var.values = FALSE, change.var.phase = FALSE)
   
   keep <- .keepphasesSC(data, phases = phases, pvar = pvar)
   data <- keep$data
   
-  a <- lapply(data, function(x) x[x[,pvar] == "A", dvar])
-  b <- lapply(data, function(x) x[x[,pvar] == "B", dvar])
-  obs <- lapply(data, function(x) x[,dvar])
-  MT <- lapply(data, nrow)
-  N <- length(data)
-  if(length(limit) == 1) limit[2] <- limit[1]
-  obs.B.start <- unlist(lapply(a, function(x) length(x)+1))
+  a   <- lapply(data, function(x) x[x[, pvar] == "A", dvar])
+  b   <- lapply(data, function(x) x[x[, pvar] == "B", dvar])
+  obs <- lapply(data, function(x) x[, dvar])
+  MT  <- lapply(data, nrow)
+  N   <- length(data)
   
-  if(is.na(startpoints[1])) {
-    pos.startpts <- lapply(MT, function(x) (limit[1]+1):(x-limit[2]+1))
+  if (identical(exclude.equal, "auto")) exclude.equal <- N == 1
+  
+# starting points ---------------------------------------------------------
+
+  if (length(limit) == 1) limit[2] <- limit[1]
+  obs.B.start <- unlist(lapply(a, function(x) length(x) + 1))
+  
+  if (is.na(startpoints[1])) {
+    pos.startpts <- lapply(MT, function(x) (limit[1] + 1):(x - limit[2] + 1))
   } else {
     pos.startpts <- lapply(MT, function(x) startpoints)
   }
   
-  possible.combinations <- cumprod(unlist(lapply(pos.startpts, length)))[N]	
+  ### posible combinations
+  
+  possible.combinations <- lapply(pos.startpts, length)
+  possible.combinations <- cumprod(unlist(possible.combinations))[N]	
   
   auto.corrected.number <- FALSE
-  if(!complete && possible.combinations <= number) {
+  if (!complete && possible.combinations <= number) {
     auto.corrected.number <- TRUE
     complete <- TRUE
   }
   
-  if(!complete) {
-    startpts <- matrix(unlist(lapply(pos.startpts, function(x) sample(x, number, replace = TRUE))), nrow = number, ncol = N)
+  if (!complete) {
+    startpts <- lapply(pos.startpts, function(x) sample(x, number, replace = TRUE))
+    startpts <- matrix(unlist(startpts), nrow = number, ncol = N)
   }
-  if(complete) {
+  if (complete) {
     startpts <- expand.grid(pos.startpts)
-    number <- nrow(startpts)
+    number   <- nrow(startpts)
   }
+  
+# Random A and B phases ---------------------------------------------------
   
   rnd.a <- list()
   for (i in 1:number) {
@@ -157,13 +158,14 @@ randSC <- function (data, dvar = NULL, pvar = NULL, statistic = "Mean B-A", numb
     rnd.b[[i]] <- ascores
   }
   
-  
+# Functions for phase differences -----------------------------------------
+
   if (statistic == "B-A" || statistic == "Mean B-A") {
-    means.b <- unlist(lapply(rnd.b, function(x) lapply(x,mean,na.rm = TRUE)))
-    means.a <- unlist(lapply(rnd.a, function(x) lapply(x,mean,na.rm = TRUE)))
+    means.b <- unlist(lapply(rnd.b, function(x) lapply(x, mean,na.rm = TRUE)))
+    means.a <- unlist(lapply(rnd.a, function(x) lapply(x, mean,na.rm = TRUE)))
     ma <- matrix(means.b-means.a, ncol = N, nrow = number, byrow = TRUE)
     
-    dist <- apply(ma,1,mean,na.rm = TRUE)
+    dist <- apply(ma, 1, mean, na.rm = TRUE)
     means.b <- unlist(lapply(b, mean,na.rm = TRUE))
     means.a <- unlist(lapply(a, mean,na.rm = TRUE))
     ma <- matrix(means.b-means.a, ncol = N, nrow = 1, byrow = TRUE)
@@ -195,31 +197,32 @@ randSC <- function (data, dvar = NULL, pvar = NULL, statistic = "Mean B-A", numb
   }
   
   if (statistic == "Median A-B") {
-    medians.b <- unlist(lapply(rnd.b, function(x) lapply(x,median,na.rm = TRUE)))
-    medians.a <- unlist(lapply(rnd.a, function(x) lapply(x,median,na.rm = TRUE)))
-    ma <- matrix(medians.a-medians.b, ncol = N, nrow = number, byrow = TRUE)
+    medians.b <- unlist(lapply(rnd.b, function(x) lapply(x, median, na.rm = TRUE)))
+    medians.a <- unlist(lapply(rnd.a, function(x) lapply(x, median, na.rm = TRUE)))
+    ma <- matrix(medians.a - medians.b, ncol = N, nrow = number, byrow = TRUE)
     
-    dist <- apply(ma,1,median,na.rm = TRUE)
-    medians.b <- unlist(lapply(b, median,na.rm = TRUE))
-    medians.a <- unlist(lapply(a, median,na.rm = TRUE))
-    ma <- matrix(medians.a-medians.b, ncol = N, nrow = 1, byrow = TRUE)
-    obs.stat <- median(ma,na.rm = TRUE)
+    dist <- apply(ma, 1, median,na.rm = TRUE)
+    medians.b <- unlist(lapply(b, median, na.rm = TRUE))
+    medians.a <- unlist(lapply(a, median, na.rm = TRUE))
+    ma <- matrix(medians.a - medians.b, ncol = N, nrow = 1, byrow = TRUE)
+    obs.stat <- median(ma, na.rm = TRUE)
   }	
   
   
   if (statistic == "Mean |A-B|") {
-    means.b <- unlist(lapply(rnd.b, function(x) lapply(x,mean,na.rm = TRUE)))
-    means.a <- unlist(lapply(rnd.a, function(x) lapply(x,mean,na.rm = TRUE)))
-    ma <- matrix(abs(means.a-means.b), ncol = N, nrow = number, byrow = TRUE)
+    means.b <- unlist(lapply(rnd.b, function(x) lapply(x, mean, na.rm = TRUE)))
+    means.a <- unlist(lapply(rnd.a, function(x) lapply(x, mean, na.rm = TRUE)))
+    ma <- matrix(abs(means.a - means.b), ncol = N, nrow = number, byrow = TRUE)
     
-    dist <- apply(ma,1,mean,na.rm = TRUE)
-    means.b <- unlist(lapply(b, mean,na.rm = TRUE))
-    means.a <- unlist(lapply(a, mean,na.rm = TRUE))
-    ma <- matrix(abs(means.a-means.b), ncol = N, nrow = 1, byrow = TRUE)
-    obs.stat <- mean(ma,na.rm = TRUE)
+    dist <- apply(ma, 1, mean,na.rm = TRUE)
+    means.b <- unlist(lapply(b, mean, na.rm = TRUE))
+    means.a <- unlist(lapply(a, mean, na.rm = TRUE))
+    ma <- matrix(abs(means.a - means.b), ncol = N, nrow = 1, byrow = TRUE)
+    obs.stat <- mean(ma, na.rm = TRUE)
   }
   
-  
+# p value -----------------------------------------------------------------
+
   if (!exclude.equal)
     test <- dist >= obs.stat
   else
@@ -227,27 +230,26 @@ randSC <- function (data, dvar = NULL, pvar = NULL, statistic = "Mean B-A", numb
   
   p.value <- sum(test)/number
   
-  ### return
-  
+# return ------------------------------------------------------------------
+
   if (output == "p") 
     return(p.value)
   
-  
   if (graph){
     h <- hist(dist, plot = FALSE)
-    lab <- paste0(round(h$counts/length(dist)*100,0), "%")
-    xlim <- c(min(h$breaks,na.rm = TRUE), max(h$breaks,na.rm = TRUE))
-    if(obs.stat < xlim[1]) 
+    lab <- paste0(round(h$counts / length(dist) * 100, 0), "%")
+    xlim <- c(min(h$breaks,na.rm = TRUE), max(h$breaks, na.rm = TRUE))
+    if (obs.stat < xlim[1]) 
       xlim[1] <- obs.stat
-    if(obs.stat > xlim[2]) 
+    if (obs.stat > xlim[2]) 
       xlim[2] <- obs.stat
     hist(dist, xlab = statistic, labels = lab, xlim = xlim, ylab = "Frequency", main = "Random distribution", col = "grey")
     abline(v = obs.stat, lty = 2, lwd = 2) 
     if (p.value < 0.5) pos <- 2 else pos <- 4
-    text(obs.stat, max(h$counts,na.rm = TRUE), "observed value", pos = pos)
+    text(obs.stat, max(h$counts, na.rm = TRUE), "observed value", pos = pos)
   }
   
-  Z <- (obs.stat - mean(dist,na.rm = TRUE)) / sd(dist,na.rm = TRUE)
+  Z <- (obs.stat - mean(dist, na.rm = TRUE)) / sd(dist, na.rm = TRUE)
   p.Z.single <- 1 - pnorm(Z)
   
   if (output == "c") {
@@ -258,7 +260,6 @@ randSC <- function (data, dvar = NULL, pvar = NULL, statistic = "Mean B-A", numb
     out
   }
 }
-
 
 rand.test <- function(...) {randSC(...)}
 

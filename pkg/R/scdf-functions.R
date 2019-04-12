@@ -62,17 +62,20 @@ c.scdf <- function(...) {
 }
 
 
-as.scdf <- function(object) {
+#' as_scdf
+#' Converts a data frame to an scdf object
+#'
+#' @param object A scdf object
+#'
+#' @export
+
+as_scdf <- function(object) {
   
   if(is.data.frame((object)))
     object <- list(object)
 
   if(!is.list(object))
     stop("Object must be a data.frame or a list of data.frames.")
-  
-  VARS <- c("phase","values","mt")
-  if(!all(unlist(lapply(object, function(x) all(VARS %in% names(x))))))
-    stop("All data.frames must contain the variables phase, values, and mt.")
   
   attributes(object) <- .defaultAttributesSCDF(attributes(object)) 
   object

@@ -77,3 +77,25 @@
   col = "darkolivegreen", col.seperators = "sienna4", las = 1, cex = 1, 
   cex.text = 0.8, cex.lab = 0.8, cex.axis = 0.7, frame = "darkseagreen", 
   font = "serif")
+
+
+.opt$mc_fun <- list(
+  plm_level = function(x) .plm.mt(x, type = "level p"),
+  plm_slope = function(x) .plm.mt(x, type = "slope p"),
+  plm_poisson_level = function(x) .plm.mt(x, count.data = TRUE, type = "level p"),
+  plm_poisson_slope = function(x) .plm.mt(x, count.data = TRUE, type = "slope p"),
+  hplm_level = function(x, ...) {
+      res <- summary(hplm(x, random.slopes = FALSE, ICC = FALSE, ...)$hplm)$tTable
+      #param <- (nrow(res) - 2) / 2
+      res[3, 5]
+    },
+  hplm_slope = function(x, ...) {
+    res <- summary(hplm(x, random.slopes = FALSE, ICC = FALSE, ...)$hplm)$tTable
+    param <- (nrow(res) - 2) / 2
+    res[2 + param + 1, 5]
+  },
+  tauU = function(x) tauUSC(x, method = "parker")$table[[1]][5, 12],
+  base_tau = function(x) corrected_tauSC(x)$p,
+  
+  rand = function(x) randSC(x, number = 100, exclude.equal = "auto", output = "p")
+)

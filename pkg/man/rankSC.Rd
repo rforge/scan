@@ -22,7 +22,7 @@ An \code{scdf} object where the values of the variable(s) are replaced with rank
 Rank-transformation of single-case data files
 }
 \examples{
-Huber2014_rank <- rankSC(Huber2014, var = "values")
+Huber2014_rank <- rankSC(Huber2014, var = "compliance")
 plot(Huber2014_rank, style = "grid2")
 }
 \seealso{

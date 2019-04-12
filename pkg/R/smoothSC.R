@@ -6,9 +6,7 @@
 #' data points step-by-step. With a local regression function, each data point
 #' is regressed by its surrounding data points.
 #' 
-#' 
-#' @param data A single-case data frame or a list of single-case data frames.
-#' See \code{\link{scdf}} to learn about this format.
+#' @inheritParams .inheritParams
 #' @param FUN Function determining the smoothed scores. Default \code{FUN =
 #' "movingMedian"} is a moving Median function. Further possible values are:
 #' \code{"movingMean"} and a non-parametric \code{"localRegression"}.
@@ -34,31 +32,34 @@
 #' plot(study)
 #' 
 #' @export
-smoothSC <- function(data, FUN = "movingMedian", intensity = NULL){
-  data <- .SCprepareData(data)
+smoothSC <- function(data, dvar, mvar, FUN = "movingMedian", intensity = NULL){
+  if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
+  if (missing(mvar)) mvar <- attr(data, .opt$mt) else attr(data, .opt$mt) <- mvar
+  
+  data <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE)
   ATTRIBUTES <- attributes(data)
   NAMES <- names(data)
   if (FUN == "movingMean") {
     if(is.null(intensity)) 
       intensity <- 1
     out <-lapply(data, function(x) {
-      x$values <- .SCmovingAverage(x$values, intensity, mean)
+      x[, dvar] <- .SCmovingAverage(x[, dvar], intensity, mean)
       x})
   }
   if (FUN == "movingMedian") {
     if(is.null(intensity)) 
       intensity <- 1
     out <- lapply(data, function(x) {
-      x$values <- .SCmovingAverage(x$values, intensity, median)
+      x[, dvar] <- .SCmovingAverage(x[, dvar], intensity, median)
       x})
   }
   if (FUN == "localRegression") {
     if(is.null(intensity)) 
       intensity <- 0.2
     out <- lapply(data, function(x) {
-      xval <- x$mt[!is.na(x$values)]
-      yval <- x$values[!is.na(x$values)]
-      x$values <- lowess(yval~xval, f = intensity)$y
+      xval <- x[!is.na(x[, dvar]), mvar]
+      yval <- x[!is.na(x[, dvar]), dvar]
+      x[, dvar] <- lowess(yval~xval, f = intensity)$y
       x})
   }
   attributes(out) <- ATTRIBUTES

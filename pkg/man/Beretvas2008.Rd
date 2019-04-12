@@ -11,6 +11,7 @@
 \alias{Grosche2014}
 \alias{GruenkeWilbert2014}
 \alias{Huber2014}
+\alias{example_A24}
 \alias{exampleAB_simple}
 \alias{exampleAB}
 \alias{exampleAB_add}

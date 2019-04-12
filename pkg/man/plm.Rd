@@ -63,7 +63,7 @@ McKean, 2000).
 
 ## Compute a piecewise regression model for a random single-case
 set.seed(123)
-AB <- design.rSC(
+AB <- design_rSC(
   phase.design = list(A = 10, B = 20), 
   level = list(A = 0, B = 1), slope = list(A = 0, B = 0.05), 
   trend = list(0.05)
@@ -72,7 +72,7 @@ dat <- rSC(design = AB)
 plm(dat, AR = 3)
 
 ## Another example with a more complex design
-A1B1A2B2 <- design.rSC(
+A1B1A2B2 <- design_rSC(
   phase.design = list(A1 = 15, B1 = 20, A2 = 15, B2 = 20), 
   level = list(A1 = 0, B1 = 1, A2 = -1, B2 = 1),
   slope = list(A1 = 0, B1 = 0.0, A1 = 0, B2 = 0.0),
@@ -97,8 +97,8 @@ time-series intervention models. \emph{Educational and Psychological
 Measurement, 60}, 38-58.
 }
 \seealso{
-Other regression functions: \code{\link{hplm}},
-  \code{\link{mplm}}
+Other regression functions: \code{\link{corrected_tauSC}},
+  \code{\link{hplm}}, \code{\link{mplm}}
 }
 \author{
 Juergen Wilbert

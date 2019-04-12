@@ -2,10 +2,10 @@
 #'
 #' The \code{rSC} function generates random single-case data frames
 #' for monte-carlo studies and demonstration purposes.
-#' \code{design.rSC} is used to set up a design matrix with all parameters needed for the \code{rSC} function.
+#' \code{design_rSC} is used to set up a design matrix with all parameters needed for the \code{rSC} function.
 #'
 #'  
-#' @param design A design matrix which is created by design.rSC and specifies
+#' @param design A design matrix which is created by design_rSC and specifies
 #'   all paramters.
 #' @param round Rounds the scores to the defined decimal. To round to the second
 #'   decimal, set \code{round = 2}.
@@ -15,7 +15,7 @@
 #'   the 2,000 most popular names for newborns in 2012 in the U.S. (1,000 male
 #'   and 1,000 female names).
 #' @param seed A seed number for the random generator.
-#' @param ... Paramteres that are directly passed from the rSC function to the design.rSC function for a more concise coding.
+#' @param ... Paramteres that are directly passed from the rSC function to the design_rSC function for a more concise coding.
 #' @param n Number of cases to be created (Default is \code{n = 1}).
 #' @param phase.design A vector defining the length and label of each phase.
 #' E.g., \code{phase.length = c(A1 = 10, B1 = 10, A2 = 10, B2 = 10)}.
@@ -94,14 +94,14 @@
 #' @examples
 #'
 #' ## Create random single-case data and inspect it
-#' design <- design.rSC(n = 3, rtt = 0.75, slope = 0.1, extreme.p = 0.1,
+#' design <- design_rSC(n = 3, rtt = 0.75, slope = 0.1, extreme.p = 0.1,
 #'        missing.p = 0.1)
 #' dat <- rSC(design, round = 1, random.names = TRUE, seed = 123)
 #' describeSC(dat)
 #' plotSC(dat)
 #'
 #' ## And now have a look at poisson-distributed data
-#' design <- design.rSC(n = 3, B.start = c(6,10,14), MT = c(12,20,22), m = 10,
+#' design <- design_rSC(n = 3, B.start = c(6,10,14), MT = c(12,20,22), m = 10,
 #'                     distribution = "poisson", level = -5, missing.p = 0.1)
 #' dat <- rSC(design, seed = 1234)
 #' pand(dat, decreasing = TRUE, correction = FALSE)
@@ -113,69 +113,14 @@ NULL
 #' @rdname random
 #' @export
 rSC <- function(design = NULL, round = NA, random.names = FALSE, seed = NULL, ...) {
-  if(!is.null(seed))
-    set.seed(seed)
+  if(!is.null(seed)) set.seed(seed)
   
   if(is.numeric(design)) {
-    warning("The first argument is expected to be a design matrix created by design.rSC. If you want to set n, please name the first argument with n = ...")
+    warning("The first argument is expected to be a design matrix created by design_rSC. If you want to set n, please name the first argument with n = ...")
     n <- design
     design <- NULL
   }
-  if(is.null(design)) {
-    design <- design.rSC(...)
-  }
-  
-  if(FALSE) {
-    MT  <- rep(MT, length.out = n)
-    m   <- rep(m, length.out = n)
-    s   <- rep(s, length.out = n)
-    rtt <- rep(rtt, length.out = n)
-    extreme.p <- rep(extreme.p, length.out = n)
-    missing.p <- rep(missing.p, length.out = n)
-    d.level   <- rep(d.level, length.out = n)
-    d.slope   <- rep(d.slope, length.out = n)
-    d.trend   <- rep(d.trend, length.out = n)
-    
-    if(!is.na(B.start[1])) {
-      if (B.start[1] == "rand") {
-        tmp.start <- round(as.numeric(B.start[2]) * MT)
-        tmp.end   <- round(as.numeric(B.start[3]) * MT)  
-        B.start   <- round(runif(n, tmp.start, tmp.end))
-      }
-      
-      if(any(B.start < 1) && any(B.start >= 1)) stop("A B.start vector must not include values below and above 1 at the same time.")
-      if(B.start[1] < 1 && B.start[1] > 0) B.start <- round(B.start * MT) + 1
-      B.start <- rep(B.start, length.out = n)  
-      cases <- list()
-      for(i in 1:length(B.start)) {
-        cases[[i]] <- data.frame(phase = c("A","B"), length = c(B.start[i] - 1, 1 + MT[i] - B.start[i]))
-      }
-      
-    }
-    
-    error <- sqrt(((1-rtt)/rtt) * s^2)
-    
-    for(i in 1:n) {
-      cases[[i]]$mt             <- sum(cases[[i]]$length)
-      cases[[i]]$rtt            <- rtt[i]
-      cases[[i]]$error          <- error[i]
-      cases[[i]]$missing.p      <- missing.p[i]
-      cases[[i]]$extreme.p      <- extreme.p[i]
-      cases[[i]]$extreme.low    <- extreme.d[1]
-      cases[[i]]$extreme.high   <- extreme.d[2]
-      cases[[i]]$trend          <- d.trend[i]
-      cases[[i]]$level          <- c(0,d.level[i])
-      cases[[i]]$slope          <- c(0,d.slope[i])
-      cases[[i]]$m              <- m[i]
-      cases[[i]]$s              <- s[i]
-      
-      cases[[i]]$start  <- c(1, cumsum(cases[[i]]$length) + 1)[1:length(cases[[i]]$length)]
-      cases[[i]]$stop   <- cumsum(cases[[i]]$length)
-      
-    }
-    design <- list(cases = cases)
-    design$distribution <- distribution
-  }
+  if(is.null(design)) design <- design_rSC(...)
   
   n <- length(design$cases)
   
@@ -187,7 +132,7 @@ rSC <- function(design = NULL, round = NA, random.names = FALSE, seed = NULL, ..
   for (i in 1:n) {
     if(distribution == "normal") {
       start_values <- c(cases[[i]]$m[1], rep(0, cases[[i]]$mt[1] - 1))
-      trend_values <- c(0, rep(cases[[i]]$trend[1] * cases[[i]]$s[1] , cases[[i]]$mt[1] - 1))
+      trend_values <- c(0, rep(cases[[i]]$trend[1] * cases[[i]]$s[1], cases[[i]]$mt[1] - 1))
       slope_values <- c()
       level_values <- c()
       for(j in 1:nrow(cases[[i]])) {
@@ -220,7 +165,7 @@ rSC <- function(design = NULL, round = NA, random.names = FALSE, seed = NULL, ..
       if(distribution == "poisson")
         measured_values <- rpois(n = length(true_values), true_values)
       if(distribution == "binomial")
-        measured_values <- rbinom(n = length(true_values), size = round(true_values * (1/prob)), prob = prob)
+        measured_values <- rbinom(n = length(true_values), size = round(true_values * (1 / prob)), prob = prob)
     } 
     
 
@@ -251,22 +196,23 @@ rSC <- function(design = NULL, round = NA, random.names = FALSE, seed = NULL, ..
     dat[[i]] <- data.frame(phase = condition, values = measured_values, mt = 1:cases[[i]]$mt[1])
   }
   
-  if(random.names == "male")
-    names(dat) <- sample(.opt$male.names,n)
-  if(random.names == "female")
-    names(dat) <- sample(.opt$female.names,n)
+  if(random.names == "male")   names(dat) <- sample(.opt$male.names, n)
+  if(random.names == "female") names(dat) <- sample(.opt$female.names, n)
   
-  if(isTRUE(random.names))
-    names(dat) <- sample(.opt$names,n)
-  
-  
-  attributes(dat) <- .defaultAttributesSCDF(attributes(dat))    #class(dat) <- c("scdf","list")
-  return(dat)
+  if(isTRUE(random.names)) names(dat) <- sample(.opt$names, n)
+
+  attributes(dat) <- .defaultAttributesSCDF(attributes(dat))
+  dat
 }
 
 #' @rdname random
 #' @export
-design.rSC <- function(n = 1, phase.design = list(A = 5, B = 15), trend = list(0), level = list(0), slope = list(0), rtt = list(0.80), m = list(50), s = list(10), extreme.p = list(0), extreme.d = c(-4,-3), missing.p = list(0), distribution = "normal", prob = 0.5, MT = NULL, B.start = NULL) {
+design_rSC <- function(n = 1, phase.design = list(A = 5, B = 15), 
+                       trend = list(0), level = list(0), slope = list(0), 
+                       rtt = list(0.80), m = list(50), s = list(10), 
+                       extreme.p = list(0), extreme.d = c(-4,-3), 
+                       missing.p = list(0), distribution = "normal", 
+                       prob = 0.5, MT = NULL, B.start = NULL) {
   
   if(!is.null(B.start)) {
     MT  <- rep(MT, length.out = n)
@@ -278,34 +224,29 @@ design.rSC <- function(n = 1, phase.design = list(A = 5, B = 15), trend = list(0
     
     if(any(B.start < 1) && any(B.start >= 1)) 
       stop("A B.start vector must not include values below and above 1 at the same time.")
-    if(B.start[1] < 1 && B.start[1] > 0) 
-      B.start <- round(B.start * MT) + 1
+    if(B.start[1] < 1 && B.start[1] > 0) B.start <- round(B.start * MT) + 1
     B.start <- rep(B.start, length.out = n)  
     
-    phase.design <- rep(list(A = rep(NA,n), B = rep(NA,n)))
+    phase.design <- rep(list(A = rep(NA, n), B = rep(NA, n)))
     for(i in 1:length(B.start)) {
       phase.design$A[i] <- B.start[i] - 1
       phase.design$B[i] <- 1 + MT[i] - B.start[i]
     }
   }
   
-  if(length(m) != n)
-    m <- rep(m, length = n)
-  if(length(s) != n)
-    s <- rep(s, length = n)
-  if(length(rtt) != n)
-    rtt <- rep(rtt, length = n)
-  #if(length(trend) != n)
-  #  trend <- rep(list(trend), length = n)
-  if(is.list(trend))
-    trend <- unlist(trend)
-  trend <- .check.designSC(trend,n)
-  level <- .check.designSC(level,n)
-  slope <- .check.designSC(slope,n)
-  phase.design <- .check.designSC(phase.design,n)
+  if(length(m) != n)   m     <- rep(m, length = n)
+  if(length(s) != n)   s     <- rep(s, length = n)
+  if(length(rtt) != n) rtt   <- rep(rtt, length = n)
+  if(is.list(trend))   trend <- unlist(trend)
+  
+  trend        <- .check.designSC(trend, n)
+  level        <- .check.designSC(level, n)
+  slope        <- .check.designSC(slope, n)
+  phase.design <- .check.designSC(phase.design, n)
   
   if(length(extreme.p) != n)
     extreme.p <- lapply(numeric(n),function(y) unlist(extreme.p))
+    # or:        extreme.p <- rep(n, list(unlist(extreme.p)))
   if(length(extreme.d) != n)
     extreme.d <- lapply(numeric(n),function(y) unlist(extreme.d))
   if(length(missing.p) != n)
@@ -316,9 +257,8 @@ design.rSC <- function(n = 1, phase.design = list(A = 5, B = 15), trend = list(0
   out$distribution <- distribution
   out$prob <- prob
   
-  for(case in 1: n) {
-    
-    error <- sqrt(((1-rtt[[case]])/rtt[[case]]) * s[[case]]^2)
+  for(case in 1:n) {
+    error <- sqrt(((1 - rtt[[case]]) / rtt[[case]]) * s[[case]]^2)
     design <- data.frame(phase = names(phase.design))
     design$length       <- unlist(lapply(phase.design, function(x) x[case]))
     design$mt           <- sum(design$length)
@@ -328,26 +268,25 @@ design.rSC <- function(n = 1, phase.design = list(A = 5, B = 15), trend = list(0
     design$extreme.p    <- extreme.p[[case]]
     design$extreme.low  <- extreme.d[[case]][1]
     design$extreme.high <- extreme.d[[case]][2]
-    design$trend        <- trend[[1]][case] #unlist(lapply(trend, function(x) x[case])) #trend[[case]]
-    design$level        <- unlist(lapply(level, function(x) x[case])) #level[[case]]
+    design$trend        <- trend[[1]][case]
+    design$level        <- unlist(lapply(level, function(x) x[case])) 
     design$level[1]     <- 0
-    design$slope        <- unlist(lapply(slope, function(x) x[case])) #slope[[case]]
+    design$slope        <- unlist(lapply(slope, function(x) x[case]))
     design$slope[1]     <- 0
     design$m            <- m[[case]]
-    design$s            <- s[[case]]#unlist(lapply(s, function(x) x[case])) #s[[case]]
+    design$s            <- s[[case]]
     
-    design$start <- c(1,cumsum(design$length)+1)[1:length(design$length)]
+    design$start <- c(1, cumsum(design$length) + 1)[1:length(design$length)]
     design$stop <- cumsum(design$length)
     
     out$cases[[case]] <- design
   }
-  
-  return(out)
+  attr(out, "call") <-  mget(names(formals()),sys.frame(sys.nframe()))
+  out
 }
 
 .check.designSC <- function(data, n) {
-  if(is.numeric(data))
-    data <- list(data)
+  if(is.numeric(data)) data <- list(data)
   for(phase in 1:length(data)) {
     if(length(data[[phase]]) != n)
       data[[phase]] <- rep(data[[phase]], length = n)
@@ -355,5 +294,8 @@ design.rSC <- function(n = 1, phase.design = list(A = 5, B = 15), trend = list(0
   data
 }
 
-                                    
+design.rSC <- function(...) {
+  warning(.opt$function_deprecated_warning,"Please use describe_rSC instead")
+  design_rSC(...)
+}                            
                                     

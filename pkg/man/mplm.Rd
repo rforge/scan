@@ -53,8 +53,8 @@ The \code{mplm} function computes a multivariate piecewise regression model.
 mplm(exampleAB_add, dvar = c("wellbeing","depression"))
 }
 \seealso{
-Other regression functions: \code{\link{hplm}},
-  \code{\link{plm}}
+Other regression functions: \code{\link{corrected_tauSC}},
+  \code{\link{hplm}}, \code{\link{plm}}
 }
 \author{
 Juergen Wilbert

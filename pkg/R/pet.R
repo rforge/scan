@@ -21,7 +21,7 @@
 #' 
 #' ## Calculate the PET and use a 99%-CI for the additional calculation
 #' # create random example data
-#' design <- design.rSC(n = 5, slope = 0.2)
+#' design <- design_rSC(n = 5, slope = 0.2)
 #' dat <- rSC(design, seed = 23)
 #' pet(dat, ci = .99)
 #' 

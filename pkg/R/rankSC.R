@@ -7,7 +7,7 @@
 #' @author Juergen Wilbert
 #' @family data manipulation functions
 #' @examples
-#' Huber2014_rank <- rankSC(Huber2014, var = "values")
+#' Huber2014_rank <- rankSC(Huber2014, var = "compliance")
 #' plot(Huber2014_rank, style = "grid2")
 #' @export
 

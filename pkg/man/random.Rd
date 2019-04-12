@@ -3,20 +3,20 @@
 \name{random}
 \alias{random}
 \alias{rSC}
-\alias{design.rSC}
+\alias{design_rSC}
 \title{Single-case data generator}
 \usage{
 rSC(design = NULL, round = NA, random.names = FALSE, seed = NULL,
   ...)
 
-design.rSC(n = 1, phase.design = list(A = 5, B = 15),
+design_rSC(n = 1, phase.design = list(A = 5, B = 15),
   trend = list(0), level = list(0), slope = list(0),
   rtt = list(0.8), m = list(50), s = list(10), extreme.p = list(0),
   extreme.d = c(-4, -3), missing.p = list(0),
   distribution = "normal", prob = 0.5, MT = NULL, B.start = NULL)
 }
 \arguments{
-\item{design}{A design matrix which is created by design.rSC and specifies
+\item{design}{A design matrix which is created by design_rSC and specifies
 all paramters.}
 
 \item{round}{Rounds the scores to the defined decimal. To round to the second
@@ -30,7 +30,7 @@ and 1,000 female names).}
 
 \item{seed}{A seed number for the random generator.}
 
-\item{...}{Paramteres that are directly passed from the rSC function to the design.rSC function for a more concise coding.}
+\item{...}{Paramteres that are directly passed from the rSC function to the design_rSC function for a more concise coding.}
 
 \item{n}{Number of cases to be created (Default is \code{n = 1}).}
 
@@ -125,19 +125,19 @@ A single-case data frame. See \code{\link{scdf}} to learn about this format.
 \description{
 The \code{rSC} function generates random single-case data frames
 for monte-carlo studies and demonstration purposes.
-\code{design.rSC} is used to set up a design matrix with all parameters needed for the \code{rSC} function.
+\code{design_rSC} is used to set up a design matrix with all parameters needed for the \code{rSC} function.
 }
 \examples{
 
 ## Create random single-case data and inspect it
-design <- design.rSC(n = 3, rtt = 0.75, slope = 0.1, extreme.p = 0.1,
+design <- design_rSC(n = 3, rtt = 0.75, slope = 0.1, extreme.p = 0.1,
        missing.p = 0.1)
 dat <- rSC(design, round = 1, random.names = TRUE, seed = 123)
 describeSC(dat)
 plotSC(dat)
 
 ## And now have a look at poisson-distributed data
-design <- design.rSC(n = 3, B.start = c(6,10,14), MT = c(12,20,22), m = 10,
+design <- design_rSC(n = 3, B.start = c(6,10,14), MT = c(12,20,22), m = 10,
                     distribution = "poisson", level = -5, missing.p = 0.1)
 dat <- rSC(design, seed = 1234)
 pand(dat, decreasing = TRUE, correction = FALSE)

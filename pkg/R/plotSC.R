@@ -84,7 +84,7 @@
 #'        lines = list("loreg", lty = "solid", col = "black", lwd = 3))
 #' 
 #' ## Plot a random MBD over three cases and mark interesting MTs
-#' dat <- rSC(design = design.rSC(3))
+#' dat <- rSC(design = design_rSC(3))
 #' plot(dat, marks = list(positions = list(c(2,4,5),c(1,2,3),c(7,8,9)), col = "blue",
 #'        cex = 1.4),annotations = list(label = "values","col" = "red", cex = 0.75,
 #'        offset = 1, round = 0))
@@ -96,7 +96,7 @@ plot.scdf <- function(...) {
 
 #' @rdname plot.scdf
 #' @export
-plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NULL, marks = NULL, phase.names = NULL, xlab = NULL, ylab = NULL, main = "", case.names = NULL, style = "default", ...) {
+plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NULL, marks = NULL, phase.names = NULL, xlab = NULL, ylab = NULL, main = "", case.names = NULL, style = "grid", ...) {
   
   dots <- list(...)
   op <- par(no.readonly = TRUE)
@@ -116,12 +116,12 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
     ref.style <- "default"
     if("style" %in% names(style))
       ref.style <- style$style
-    style <- c(style, style.plotSC(ref.style))
+    style <- c(style, style_plotSC(ref.style))
     style <- style[unique(names(style))]
   }
   
   if(is.character(style))
-    style <- style.plotSC(style)
+    style <- style_plotSC(style)
   
   #for pre style backwards compatibility
   sty.names <- c("fill","fill.bg","frame","grid","lwd","pch","text.ABlag","type")

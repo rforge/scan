@@ -136,6 +136,7 @@ export <- function(object, filename = NULL,
                   "NAP-R = NAP rescaled; \n",
                   "PAND = Percentage all nonoverlapping data;", 
                   "Tau U = Parker's Tau-U; ",
+                  "Base Tau = Baseline corrected Tau; ",
                   "Delta M = Mean difference between phases; ",
                   "Delta Trend = Trend difference between phases; ",
                   "SMD = Standardized Mean Difference."
@@ -147,8 +148,8 @@ export <- function(object, filename = NULL,
     
     colnames(out)[5] <- "NAP-R"
     colnames(out)[7] <- "Tau-U"
-    colnames(out)[8] <- "Delta M"
-    colnames(out)[9] <- "Delta Trend"
+    colnames(out)[9] <- "Delta M"
+    colnames(out)[10] <- "Delta Trend"
     
     if (isTRUE(flip)) out <- t(out)
     

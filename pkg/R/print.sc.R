@@ -8,6 +8,21 @@ print.sc <- function(x, ...) {
   value <- class(x)[2]
   note <- FALSE
 
+# baseline corrected tau --------------------------------------------------
+  if (value == "base_corr_tau") {
+    cat("Baseline corrected tau\n\n")
+    cat("Auto correlation in baseline:\n")
+    cat("tau =", round(x$auto_tau$tau.b, 2))
+    cat("; p =", round(x$auto_tau$p, 3),"\n\n")
+    if (x$correction) cat("Baseline correction applied.\n\n")
+    if (!x$correction) cat("Baseline correction not applied.\n\n")
+    
+    cat("Baseline corrected tau:\n")
+    cat("tau =", round(x$tau, 2))
+    cat("; p =", round(x$p, 3),"\n\n")
+
+  }
+
 # mpr ---------------------------------------------------------------------
 
   if (value == "mpr") {
@@ -460,6 +475,25 @@ print.sc <- function(x, ...) {
     cat("\n")
   }
   
+
+# deisgn ------------------------------------------------------------------
+
+  if (value == "design") {
+    cat("A scdf design matrix\n\n")
+    cat("Number of cases:", length(x$cases), "\n")
+    cat("Mean: ", x$cases[[1]]$m[1], "\n")
+    cat("SD = ", x$cases[[1]]$s[1], "\n")
+    cat("rtt = ", x$cases[[1]]$rtt[1], "\n")
+    cat("Phase design: ", as.character(x$cases[[1]]$phase), "\n")
+
+    cat("mean trend-effect: ", apply(sapply(x$cases, function(x) {x$trend}), 1, mean, na.rm = TRUE)[1], "\n")
+    cat("mean level-effect: ", apply(sapply(x$cases, function(x) {x$level}), 1, mean, na.rm = TRUE), "\n")
+    cat("mean slope-effect: ", apply(sapply(x$cases, function(x) {x$slope}), 1, mean, na.rm = TRUE), "\n")
+    cat("sd trend-effect: ", apply(sapply(x$cases, function(x) {x$trend}), 1, sd, na.rm = TRUE)[1], "\n")
+    cat("sd level-effect: ", apply(sapply(x$cases, function(x) {x$level}), 1, sd, na.rm = TRUE), "\n")
+    cat("sd slope-effect: ", apply(sapply(x$cases, function(x) {x$slope}), 1, sd, na.rm = TRUE), "\n")
+    cat("Distribution: ", x$distribution)
+  }  
   ##### Additonal notes #####
   if (note) {
     if (attr(x, .opt$dv) != "values" || attr(x, .opt$phase) != "phase" || attr(x, .opt$mt) != "mt")

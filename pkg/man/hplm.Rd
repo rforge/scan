@@ -85,8 +85,8 @@ hplm(Leidig2018, data.l2 = Leidig2018_l2,
      
 }
 \seealso{
-Other regression functions: \code{\link{mplm}},
-  \code{\link{plm}}
+Other regression functions: \code{\link{corrected_tauSC}},
+  \code{\link{mplm}}, \code{\link{plm}}
 }
 \author{
 Juergen Wilbert

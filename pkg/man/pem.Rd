@@ -53,9 +53,10 @@ pem(dat, chi.test = TRUE)
 
 }
 \seealso{
-Other overlap functions: \code{\link{nap}},
-  \code{\link{overlapSC}}, \code{\link{pand}},
-  \code{\link{pet}}, \code{\link{tauUSC}}
+Other overlap functions: \code{\link{corrected_tauSC}},
+  \code{\link{nap}}, \code{\link{overlapSC}},
+  \code{\link{pand}}, \code{\link{pet}}, \code{\link{pnd}},
+  \code{\link{tauUSC}}
 }
 \author{
 Juergen Wilbert

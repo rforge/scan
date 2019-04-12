@@ -15,6 +15,7 @@
 #' @import knitr
 #' @import kableExtra
 #' @import htmlTable 
+#' @import mblm
 NULL
 
 

@@ -1,58 +1,3 @@
-.kendall <- function(x,y) {
-  
-  out <- list()
-  dat <- data.frame(cbind(x,y))
-  dat <- dat[order(dat$x),]
-  C <- 0
-  D <- 0
-  N <- nrow(dat)
-  for(i in 1:(N-1)) {
-    
-    C <- C + sum( dat$y[(i+1):N] > dat$y[i] & dat$x[(i+1):N] > dat$x[i])
-    D <- D + sum( dat$y[(i+1):N] < dat$y[i] & dat$x[(i+1):N] > dat$x[i])
-    
-  }
-  
-  tie.x <- rle(sort(x))$lengths
-  tie.y <- rle(sort(y))$lengths
-  
-  ti <- sum(sapply(tie.x,function(x) (x*(x-1)/2)))
-  ui <- sum(sapply(tie.y,function(x) (x*(x-1)/2)))
-  
-  S <- C-D
-  n0 <- N*(N-1)/2
-  out$N <- N
-  out$n0 <- n0
-  out$ti <- ti
-  out$ui <- ui
-  out$.C <- C
-  out$.D <- D
-  out$S <- S
-  out$tau <- S/n0
-  out$tau.b <- S / sqrt( (n0-ti)*(n0-ui) )
-  #out$se <- sqrt( (2*N+5)/n0) / 3
-  #out$z  <- 3*S / sqrt( n0*(2*N+5)/2 )
-  #out$z <- out$tau.b / out$se
-  #out$p  <- (1-pnorm(out$z, lower = FALSE)) *2
-  out$D <- out$S / out$tau.b
-  v0 <- N *(N-1) * (2*N+5)
-  vt <- sum(sapply(tie.x,function(x) (x*(x-1))*(2*x+5)))
-  vu <- sum(sapply(tie.y,function(x) (x*(x-1))*(2*x+5)))
-  v1 <- sum(sapply(tie.x,function(x) (x*(x-1)))) * sum(sapply(tie.y,function(x) (x*(x-1))))
-  v2 <- sum(sapply(tie.x,function(x) (x*(x-1))*(x-2))) * sum(sapply(tie.y,function(x) (x*(x-1))*(x-2)))
-  
-  out$varS <- (v0 - vt - vu)/18 + (v1/(2*N*(N-1))) + (v2 /(9*N*(N-1)*(N-2)))
-  
-  out$sdS <- sqrt(out$varS)
-  out$se <- out$sdS/out$D
-  out$z <- out$tau.b / out$se
-  out$p  <- (1-pnorm(out$z, lower.tail = FALSE)) *2
-  out
-}
-
-
-
-
 #' Tau-U for single-case data
 #' 
 #' This function calculates indices of the Tau-U family as proposed by Parker
@@ -63,7 +8,9 @@
 #' @param ties.method Defines how to handle ties. \code{"omit"} (default) excludes all
 #' ties from the calculation. \code{"positive"} counts all ties as positive
 #' comparisons, while \code{"negative"} counts them as negative comparisons.
-#' @param method \code{"complete"} (default) or \code{"parker"}. Teh latter calculates the number of possible pairs as described in Parler et al. (2011) which might lead to tau-U values greater than 1.
+#' @param method \code{"complete"} (default) or \code{"parker"}. The latter 
+#' calculates the number of possible pairs as described in Parler et al. (2011) 
+#' which might lead to tau-U values greater than 1.
 #' @return \item{table}{A data frame containing statistics from the Tau-U
 #' family, including: Pairs, positive and negative comparisons, S, and Tau}
 #' \item{matrix}{The matrix of comparisons used for calculating the
@@ -130,10 +77,8 @@ tauUSC <- function (data, dvar, pvar, ties.method = "omit", method = "complete",
     pos.s <- c("+")
     neg.s <- c("-")
     tie.s <- c("T")
-    if(ties.method == "positive") 
-      pos.s <- c("+", "T")
-    if(ties.method == "negative") 
-      neg.s <- c("-", "T")
+    if(ties.method == "positive") pos.s <- c("+", "T")
+    if(ties.method == "negative") neg.s <- c("-", "T")
  
     AvBm <- tau_m[1:nA, (nA + 1):nAB]
     AvBpos <- sum(AvBm%in%pos.s)
@@ -146,21 +91,21 @@ tauUSC <- function (data, dvar, pvar, ties.method = "omit", method = "complete",
     AvAtie <- sum(AvAm%in%tie.s)
     
     BvBm <- tau_m[(nA + 1):nAB, (nA + 1):nAB]
-    BvBpos <- sum(BvBm%in%pos.s)
-    BvBneg <- sum(BvBm%in%neg.s)
-    BvBtie <- sum(BvBm%in%tie.s)
+    BvBpos <- sum(BvBm %in% pos.s)
+    BvBneg <- sum(BvBm %in% neg.s)
+    BvBtie <- sum(BvBm %in% tie.s)
     
     AvBKen      <- .kendall(AB, c(rep(0, nA),rep(1, nB)))
     AvAKen      <- .kendall(A, 1:nA)
     BvBKen      <- .kendall(B, 1:nB)
-    BvB_AKen    <- .kendall(c(A, B), c(nA:1, 1:nB))
-    AvB_B_AKen  <- .kendall(c(A, B),c(nA:1, (nA + 1):nAB))
-    AvB_AKen    <- .kendall(c(A, B),c(nA:1, rep(nA+1, nB)))
-    AvB_BKen    <- .kendall(c(A, B),c(rep(0, nA), (nA + 1):nAB))
+    BvB_AKen    <- .kendall(AB, c(nA:1, 1:nB))
+    AvB_B_AKen  <- .kendall(AB, c(nA:1, (nA + 1):nAB))
+    AvB_AKen    <- .kendall(AB, c(nA:1, rep(nA + 1, nB)))
+    AvB_BKen    <- .kendall(AB, c(rep(0, nA), (nA + 1):nAB))
 
     AvB_pair <- nA * nB
-    AvA_pair <- (nA * (nA - 1))/2
-    BvB_pair <- (nB * (nB - 1))/2
+    AvA_pair <- (nA * (nA - 1)) / 2
+    BvB_pair <- (nB * (nB - 1)) / 2
     ABvAB_pair <- (nAB * (nAB - 1)) / 2
     
     pairs <- c(
@@ -242,10 +187,10 @@ tauUSC <- function (data, dvar, pvar, ties.method = "omit", method = "complete",
       sqrt(AvB_B_AKen$varS)
     )
     out$VAR <- out$SD^2
-    out$SE.Tau.b <- out$SD/out$D
+    out$SE.Tau.b <- out$SD / out$D
     
-    out$Z <- out$S/out$SD
-    out$p <- pnorm(abs(out$Z), lower.tail = FALSE)*2
+    out$Z <- out$S / out$SD
+    out$p <- pnorm(abs(out$Z), lower.tail = FALSE) * 2
     
     ret$table[[i]] <- out		
     ret$matrix[[i]] <- tau_m

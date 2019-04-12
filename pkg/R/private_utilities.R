@@ -157,3 +157,60 @@
   x[nonames] <- paste0("Case", nonames)
   x
 }
+
+.kendall <- function(x, y, continuity_correction = TRUE) {
+  
+  out <- list()
+  dat <- data.frame(cbind(x, y))
+  dat <- dat[order(dat$x), ]
+  C <- 0
+  D <- 0
+  N <- nrow(dat)
+  for(i in 1:(N - 1)) {
+    C <- C + sum(dat$y[(i + 1):N] > dat$y[i] & dat$x[(i + 1):N] > dat$x[i])
+    D <- D + sum(dat$y[(i + 1):N] < dat$y[i] & dat$x[(i + 1):N] > dat$x[i])
+  }
+  
+  tie.x <- rle(sort(x))$lengths
+  tie.y <- rle(sort(y))$lengths
+  
+  ti <- sum(sapply(tie.x, function(x) (x * (x - 1) / 2)))
+  ui <- sum(sapply(tie.y, function(x) (x * (x - 1) / 2)))
+  
+  S  <- C - D
+  n0 <- N * (N - 1) / 2
+  out$N  <- N
+  out$n0 <- n0
+  out$ti <- ti
+  out$ui <- ui
+  out$.C <- C
+  out$.D <- D
+  out$S  <- S
+  out$tau   <- S / n0
+  out$tau.b <- S / sqrt( (n0 - ti) * (n0 - ui) )
+  out$D <- out$S / out$tau.b
+  v0 <- N * (N - 1) * (2 * N + 5)
+  vt <- sum(sapply(tie.x, function(x) (x * (x - 1)) * (2 * x + 5)))
+  vu <- sum(sapply(tie.y, function(x) (x * (x - 1)) * (2 * x + 5)))
+  v1 <- sum(sapply(tie.x, function(x) (x * (x - 1)))) * sum(sapply(tie.y, function(x) (x * (x - 1))))
+  v2 <- sum(sapply(tie.x, function(x) (x * (x - 1)) * (x - 2))) * sum(sapply(tie.y, function(x) (x * (x - 1)) * (x - 2)))
+  
+  out$varS <- (v0 - vt - vu) / 18 + (v1 / (2 * N * (N - 1))) + 
+    (v2 / (9 * N * (N - 1) * (N - 2)))
+  
+  out$sdS <- sqrt(out$varS)
+  out$se  <- out$sdS / out$D
+  
+  if (!continuity_correction) out$z <- out$S / out$sdS #out$tau.b / out$se
+  if (continuity_correction)  out$z <- (out$S + 1) / out$sdS 
+  
+  out$p <- pnorm(abs(out$z), lower.tail = FALSE) * 2
+  
+  if (is.infinite(out$z)) {
+    out$p <- NA
+    out$tau <- NA
+  }
+  
+  
+  out
+}

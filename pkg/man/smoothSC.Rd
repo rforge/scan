@@ -4,11 +4,14 @@
 \alias{smoothSC}
 \title{Smoothing single-case data}
 \usage{
-smoothSC(data, FUN = "movingMedian", intensity = NULL)
+smoothSC(data, dvar, mvar, FUN = "movingMedian", intensity = NULL)
 }
 \arguments{
-\item{data}{A single-case data frame or a list of single-case data frames.
-See \code{\link{scdf}} to learn about this format.}
+\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
+
+\item{dvar}{Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.}
+
+\item{mvar}{Character string with the name of the measurement time variable. Defaults to the attributes in the scdf file.}
 
 \item{FUN}{Function determining the smoothed scores. Default \code{FUN =
 "movingMedian"} is a moving Median function. Further possible values are:
