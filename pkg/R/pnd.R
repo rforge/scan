@@ -16,17 +16,11 @@
 #' pnd(GruenkeWilbert2014)
 #' 
 #' @export
-pnd <- function(data, dvar = NULL, pvar = NULL, decreasing = FALSE, phases = c("A","B")) {
+pnd <- function(data, dvar, pvar, decreasing = FALSE, phases = c("A","B")) {
 
-  if(!is.null(dvar)) 
-    attr(data, .opt$dv) <- dvar
-  else
-    dvar <- attr(data, .opt$dv)
-  
-  if(!is.null(pvar))
-    attr(data, .opt$phase) <- pvar
-  else
-    pvar <- attr(data, .opt$phase)
+  # set attributes to arguments else set to defaults of scdf
+  if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
+  if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
   
   data <- .SCprepareData(data, na.rm = TRUE, change.var.values = FALSE, change.var.phase = FALSE)
   data <- .keepphasesSC(data, phases = phases, pvar = pvar)$data

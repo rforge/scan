@@ -43,7 +43,8 @@ hplm(ex_sc)
 \seealso{
 Other data manipulation functions: \code{\link{fillmissingSC}},
   \code{\link{longSCDF}}, \code{\link{rankSC}},
-  \code{\link{smoothSC}}, \code{\link{truncateSC}}
+  \code{\link{shiftSC}}, \code{\link{smoothSC}},
+  \code{\link{truncateSC}}
 }
 \author{
 Juergen Wilbert

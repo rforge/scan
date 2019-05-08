@@ -4,8 +4,7 @@
 \alias{pnd}
 \title{Percentage of non-overlapping data}
 \usage{
-pnd(data, dvar = NULL, pvar = NULL, decreasing = FALSE,
-  phases = c("A", "B"))
+pnd(data, dvar, pvar, decreasing = FALSE, phases = c("A", "B"))
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}

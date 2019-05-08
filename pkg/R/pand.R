@@ -59,9 +59,9 @@
 pand <- function(data, dvar, pvar, decreasing = FALSE, correction = TRUE, phases = c("A","B")) {
   
   # set attributes to arguments else set to defaults of scdf
-  if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
-  if (missing(pvar)) pvar <- attr(data, .opt$phase) else attr(data, .opt$phase) <- pvar
-  
+  if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
+  if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
+
   data <- .SCprepareData(data, na.rm = TRUE, change.var.values = FALSE, change.var.phase = FALSE)
   data <- .keepphasesSC(data, phases = phases,pvar = pvar)$data
   

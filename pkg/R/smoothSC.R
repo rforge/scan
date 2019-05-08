@@ -24,17 +24,20 @@
 #' @examples
 #' 
 #' ## Use the three different smoothing functions and compare the results
-#' study <- c(Huber2014$Berta,
-#'            smoothSC(Huber2014$Berta, FUN = "movingMedian"),
-#'            smoothSC(Huber2014$Berta, FUN = "movingMean"),
-#'            smoothSC(Huber2014$Berta, FUN = "localRegression"))
-#' names(study) <- c("Original","Moving Median","Moving Mean", "Local Regression")
-#' plot(study)
+#' study <- c(
+#'   Huber2014$Berta,
+#'   smoothSC(Huber2014$Berta, FUN = "movingMedian"),
+#'   smoothSC(Huber2014$Berta, FUN = "movingMean"),
+#'   smoothSC(Huber2014$Berta, FUN = "localRegression")
+#' )
+#' plot(study, case.names = c("Original","Moving Median","Moving Mean", "Local Regression"))
 #' 
 #' @export
 smoothSC <- function(data, dvar, mvar, FUN = "movingMedian", intensity = NULL){
-  if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
-  if (missing(mvar)) mvar <- attr(data, .opt$mt) else attr(data, .opt$mt) <- mvar
+  
+  # set attributes to arguments else set to defaults of scdf
+  if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
+  if (missing(mvar)) mvar <- scdf_attr(data, .opt$mt) else scdf_attr(data, .opt$mt) <- mvar
   
   data <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE)
   ATTRIBUTES <- attributes(data)

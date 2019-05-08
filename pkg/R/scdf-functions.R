@@ -6,25 +6,26 @@
 #' @export
 c.scdf <- function(...) {
   scdfs <- list(...)
-  ATTRIBUTES <- attributes(..1)
   
-  LEN <- length(scdfs)
-  NAMES <- c()
-  for(i in 1:LEN)
-    NAMES <- c(NAMES, names(...elt(i)))
+  ATTRIBUTES <- attributes(scdfs[[1]])
 
+  case_names <- unlist(lapply(scdfs, names))
+   
   data <- unlist(scdfs, recursive = FALSE)
-
   attributes(data) <- .defaultAttributesSCDF()
 
-  if(!is.null(ATTRIBUTES$var.values))
-    attr(data, .opt$dv) <- ATTRIBUTES[[.opt$dv]]
-  if(!is.null(ATTRIBUTES$var.phase))
-    attr(data, .opt$phase) <- ATTRIBUTES[[.opt$phase]]
-  if(!is.null(ATTRIBUTES$var.mt))
-    attr(data, .opt$mt) <- ATTRIBUTES[[.opt$mt]]
-  names(data) <- NAMES
-  if(!is.null(names(scdfs)))
+  #if (!is.null(ATTRIBUTES[[.opt$dv]])) 
+  #  attr(data, .opt$dv) <- ATTRIBUTES[[.opt$dv]]
+  #if (!is.null(ATTRIBUTES[[.opt$phase]]))
+  #  attr(data, .opt$phase) <- ATTRIBUTES[[.opt$phase]]
+  #if (!is.null(ATTRIBUTES[[.opt$mt]]))
+  #  attr(data, .opt$mt) <- ATTRIBUTES[[.opt$mt]]
+
+  if (!is.null(ATTRIBUTES[[.opt$scdf]]))
+    attr(data, .opt$scdf) <- ATTRIBUTES[[.opt$scdf]]
+  
+  names(data) <- case_names
+  if (!is.null(names(scdfs)))
     names(data)[which(names(scdfs) != "")] <- names(scdfs)[which(names(scdfs) != "")]
   return(data)
 }
@@ -41,23 +42,19 @@ c.scdf <- function(...) {
   if (is.character(i) && !(i %in% names(x))) {
     warning("Unknown case: '", i, "'.")
   }
-  ATTRIBUTES <- attributes(x)
-  
   out <- x[i]
-  attributes(out)[c(.opt$phase,.opt$dv, .opt$mt)] <- ATTRIBUTES[c(.opt$phase,.opt$dv, .opt$mt)]
-  class(out) <- c("scdf","list")
+  attr(out, .opt$scdf) <- attr(x, .opt$scdf)
+  class(out) <- c("scdf", "list")
   out
 }
 
 ##' @rdname Subsetting
 ##' @export
 `[.scdf`<- function(x, i) {
-  ATTRIBUTES <- attributes(x)
-  
   class(x) <- "list"
   out <- x[i]
-  attributes(out)[c(.opt$phase,.opt$dv, .opt$mt)] <- ATTRIBUTES[c(.opt$phase,.opt$dv, .opt$mt)]
-  class(out) <- c("scdf","list")
+  attr(out, .opt$scdf) <- attr(x, .opt$scdf)
+  class(out) <- c("scdf", "list")
   out
 }
 
@@ -71,10 +68,10 @@ c.scdf <- function(...) {
 
 as_scdf <- function(object) {
   
-  if(is.data.frame((object)))
+  if (is.data.frame((object)))
     object <- list(object)
 
-  if(!is.list(object))
+  if (!is.list(object))
     stop("Object must be a data.frame or a list of data.frames.")
   
   attributes(object) <- .defaultAttributesSCDF(attributes(object)) 
@@ -85,34 +82,36 @@ as_scdf <- function(object) {
 
 checkSCDF <- function(data) {
   cat("Checking object ...\n\n")
-  if(!identical(class(data),c("scdf","list")))
+  if (!identical(class(data),c("scdf","list")))
     cat("Object is not of class 'scdf'.\n")
-  if(!("list" %in% class(data))) {
+  if (!("list" %in% class(data))) {
     cat("Object is not of class 'list'.\n")
     return(invisible(FALSE))
   }
-  if(!all(unlist(lapply(data, function(x) is.data.frame(x))))) {
+  if (!all(unlist(lapply(data, function(x) is.data.frame(x))))) {
     cat("Not all list-elements are data frames.\n")
     return(invisible(FALSE))
   }
-  if(!all(unlist(lapply(data, function(x) {c("phase")%in%names(x)})))) {
+  if (!all(unlist(lapply(data, function(x) {c("phase") %in% names(x)})))) {
     cat("Not all dataframes have a phase column.\n")
     return(invisible(FALSE))
   }
-  if(!all(unlist(lapply(data, function(x) {c("values")%in%names(x)})))) {
+  if (!all(unlist(lapply(data, function(x) {c("values") %in% names(x)})))) {
     cat("Not all dataframes have a values column.\n")
     return(invisible(FALSE))
   }
-  if(!all(unlist(lapply(data, function(x) {c("mt")%in%names(x)}))))
+  if (!all(unlist(lapply(data, function(x) {c("mt") %in% names(x)}))))
     cat("Note: Not all dataframes have an 'mt' column.\n")
   phases <- rle(as.character(data[[1]]$phase))$values
-  if(!all(unlist(lapply(data, function(x) identical(rle(as.character(x$phase))$values, phases)))))
+  if (!all(unlist(lapply(data, function(x) identical(rle(as.character(x$phase))$values, phases)))))
     cat("Warning: Phases are not identical for all cases.\n")
   cat("Done!\n")
   return(invisible(FALSE))
 }
 
-
+#' @rdname scdf
+#' @param MT Deprecated: Measurement times
+#' @export
 makeSCDF <- function (data, B.start = NULL, MT = NULL){
   warning("This function is deprecated. Please use the scdf function.\n\n")
   

@@ -54,17 +54,12 @@
 #' rciSC(byHeart2011[1], graph = TRUE)
 #' 
 #' @export
-rciSC <- function(data, dvar = NULL, pvar = NULL, rel = 0.80, ci = 0.95, graph = FALSE, phases = c("A","B")) {
-  if(!is.null(dvar)) 
-    attr(data, .opt$dv) <- dvar
-  else
-    dvar <- attr(data, .opt$dv)
+rciSC <- function(data, dvar, pvar, rel = 0.80, ci = 0.95, graph = FALSE, phases = c("A","B")) {
   
-  if(!is.null(pvar))
-    attr(data, .opt$phase) <- pvar
-  else
-    pvar <- attr(data, .opt$phase)
-  
+  # set attributes to arguments else set to defaults of scdf
+  if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
+  if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
+
   data <- .SCprepareData(data, na.rm = TRUE, change.var.values = FALSE, change.var.phase = FALSE)
   data <- .keepphasesSC(data, phases = phases,pvar = pvar)$data
   
@@ -72,8 +67,8 @@ rciSC <- function(data, dvar = NULL, pvar = NULL, rel = 0.80, ci = 0.95, graph =
   if(N > 1)
     stop("Multiple single-cases are given. Calculations can only be applied to one single-case data set.\n")
 
-  A <- lapply(data, function(x) x[,dvar][x[,pvar] == "A"])
-  B <- lapply(data, function(x) x[,dvar][x[,pvar] == "B"])
+  A <- lapply(data, function(x) x[, dvar][x[, pvar] == "A"])
+  B <- lapply(data, function(x) x[, dvar][x[, pvar] == "B"])
   A <- unlist(A)
   B <- unlist(B)
   sA <- sd(A, na.rm = TRUE)

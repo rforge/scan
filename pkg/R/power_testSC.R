@@ -1,20 +1,19 @@
 #' Empirical power analysis for single-case data
 #' 
 #' The \code{power_testSC} command conducts a Monte-Carlo study on the
-#' test-power and alpha-error of a randomization-test and a
-#' piecewise-regression model.  The distribution values of the Monte-Carlo
-#' sample are either specified by the user or estimated based on actual data.
+#' test-power and alpha-error of a set of single-cases. The distribution 
+#' values of the Monte-Carlo sample are either specified by the user or 
+#' estimated based on actual data.
 #' 
 #' @aliases power_testSC
 #' 
 #' @inheritParams .inheritParams
 #' @param design An object created by design_rSC
-#' @param stat Defines the tests the power analysis is computed for. The
-#' default \code{stat = c("rand.test","plm")} computes a power analysis for the
-#' \code{\link{randSC}} and the \code{\link{plm}} analyses. Further
-#' possibilities are \code{"hplm"} for a hierarchiacal linear regression model
-#' and \code{"plm.poisson"} for a generalized piecewise-regression model under
-#' the assumption of poisson distributed errors.
+#' @param stat Defines the tests the power analysis is based on. The
+#' default \code{stat = c("plm_level", "rand", "tauU")} computes a power analysis based on
+#' \code{\link{tauUSC}}, \code{\link{randSC}} and \code{\link{plm}} analyses. Further
+#' possibilities are: "plm_slope", "plm_poisson_level", "plm_poisson_slope", "hplm_level", 
+#' "hplm_slope", "base_tau".
 #' @param n_sim Number of sample studies created for the the Monte-Carlo study.
 #' Default is \code{n = 100}
 #' @param alpha Alpha level used to calculate the proportion of significant
@@ -30,13 +29,14 @@
 #'   n = 1, phase.design = list(A = 6, B = 9), 
 #'   rtt = 0.8, level = 1.4
 #' )
-#' res <- power_testSC( design, n_sim = 10)
+#' res <- power_testSC(design, n_sim = 10)
+#' 
 #' ## Would you achieve higher power by setting up a MBD with three cases?
 #' design <- design_rSC(
 #'   n = 3, phase.design = list(A = 6, B = 9), 
 #'   rtt = 0.8, level = 1.4
 #' )
-#' res <- power_testSC( design, n_sim = 10, stat = c("hplm_level", "rand"))
+#' res <- power_testSC(design, n_sim = 10, stat = c("hplm_level", "rand"))
 #' 
 #' @export
 

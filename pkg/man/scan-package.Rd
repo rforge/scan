@@ -6,10 +6,7 @@
 \alias{scan}
 \title{Single-Case Data Analyses}
 \description{
-A package to analyze single-case data.
-}
-\details{
-Most procedures also support multiple-baseline designs.
+A collection of procedures for analysing, visualising, and managing single-case data.
 }
 \author{
 Juergen Wilbert [aut, cre]

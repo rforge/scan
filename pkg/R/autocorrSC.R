@@ -22,25 +22,16 @@
 
 autocorrSC <- function(data, dvar, pvar, mvar, lag.max = 3, ...) {
   
-  if(missing(dvar))
-    dvar <- attr(data, .opt$dv)
-  else
-    attr(data, .opt$dv) <- dvar
-  if (missing(pvar))
-    pvar <- attr(data, .opt$phase)
-  else
-    attr(data, .opt$phase) <- pvar
-  if (missing(mvar))
-    mvar <- attr(data, .opt$mt)
-  else
-    attr(data, .opt$mt) <- mvar
+  if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
+  if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
+  if (missing(mvar)) mvar <- scdf_attr(data, .opt$mt) else scdf_attr(data, .opt$mt) <- mvar
   
   data <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
   
   N <- length(data)
   case.names <- names(data)
   if (is.null(case.names))
-    case.names <- paste("Case",1:N, sep = "")
+    case.names <- paste("Case", 1:N, sep = "")
   VAR <- paste0("lag_",1:lag.max)
   
   design <- rle(as.character(data[[1]][,pvar]))$values

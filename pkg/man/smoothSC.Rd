@@ -38,18 +38,20 @@ is regressed by its surrounding data points.
 \examples{
 
 ## Use the three different smoothing functions and compare the results
-study <- c(Huber2014$Berta,
-           smoothSC(Huber2014$Berta, FUN = "movingMedian"),
-           smoothSC(Huber2014$Berta, FUN = "movingMean"),
-           smoothSC(Huber2014$Berta, FUN = "localRegression"))
-names(study) <- c("Original","Moving Median","Moving Mean", "Local Regression")
-plot(study)
+study <- c(
+  Huber2014$Berta,
+  smoothSC(Huber2014$Berta, FUN = "movingMedian"),
+  smoothSC(Huber2014$Berta, FUN = "movingMean"),
+  smoothSC(Huber2014$Berta, FUN = "localRegression")
+)
+plot(study, case.names = c("Original","Moving Median","Moving Mean", "Local Regression"))
 
 }
 \seealso{
 Other data manipulation functions: \code{\link{fillmissingSC}},
   \code{\link{longSCDF}}, \code{\link{rankSC}},
-  \code{\link{scaleSC}}, \code{\link{truncateSC}}
+  \code{\link{scaleSC}}, \code{\link{shiftSC}},
+  \code{\link{truncateSC}}
 }
 \author{
 Juergen Wilbert

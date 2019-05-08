@@ -2,9 +2,7 @@
 #' 
 #' This function restructures and exports single-case data into a .csv-file.
 #' 
-#' 
-#' @param data A single-case data frame or a list of single-case data frames.
-#' See \code{\link{makeSCDF}} to learn about this format.
+#' @inheritParams .inheritParams
 #' @param filename A character string defining the output file name (e.g.
 #' \code{"SC_data.csv"}.
 #' @param sep The field separator string. Values within rows will be separated

@@ -2,7 +2,6 @@
 % Please edit documentation in R/randSC.R
 \name{randSC}
 \alias{randSC}
-\alias{rand.test}
 \title{Randomization Tests for single-case data}
 \usage{
 randSC(data, dvar, pvar, statistic = "Mean B-A", number = 500,

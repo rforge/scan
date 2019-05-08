@@ -281,7 +281,7 @@ design_rSC <- function(n = 1, phase.design = list(A = 5, B = 15),
     
     out$cases[[case]] <- design
   }
-  attr(out, "call") <-  mget(names(formals()),sys.frame(sys.nframe()))
+  attr(out, "call") <-  mget(names(formals()), sys.frame(sys.nframe()))
   out
 }
 

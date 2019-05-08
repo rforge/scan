@@ -1,11 +1,20 @@
 .defaultAttributesSCDF <- function(attri = NULL) {
   out <- list()
-  if (!is.null(attri))
-    out <- attri
+  
+  if (!is.null(attri)) out <- attri
+  
   out$class <- c("scdf","list")
-  out[.opt$phase] <- "phase"
-  out[.opt$dv]    <- "values"
-  out[.opt$mt]    <- "mt"
+  #out[.opt$phase] <- "phase"
+  #out[.opt$dv]    <- "values"
+  #out[.opt$mt]    <- "mt"
+  
+  scdf <- list()
+  scdf[[.opt$phase]]   <- "phase"
+  scdf[[.opt$dv]]      <- "values"
+  scdf[[.opt$mt]]      <- "mt"
+  out[[.opt$scdf]]     <- scdf
+  
+  
   out
 }  
 
@@ -17,9 +26,9 @@
 
 .SCac <- function(x, lag = 1) {
   m <- mean(x, na.rm = TRUE)
-  ax1 <- x[1:(length(x) - lag)]-m
-  ax2 <- x[(lag + 1):length(x)]-m
-  ac <- sum(ax1*ax2, na.rm = TRUE)/sum((x-m)^2, na.rm = TRUE)
+  ax1 <- x[1:(length(x) - lag)] - m
+  ax2 <- x[(lag + 1):length(x)] - m
+  ac <- sum(ax1 * ax2, na.rm = TRUE) / sum((x - m)^2, na.rm = TRUE)
   ac
 }
 
@@ -37,7 +46,7 @@
 .SCbeta <- function(model) {
   b <- model$coefficients[-1]
   sx <- apply(model$model[-1], 2, sd)
-  sy <- apply(model$model[1], 2, sd)
+  sy <- apply(model$model[ 1], 2, sd)
   c(model$coefficients, b * sx / sy)
 }
 
@@ -54,8 +63,8 @@
   if (is.data.frame(data)) data <- list(data)
   ATTRIBUTES <- attributes(data)
   
-  res <- lapply(data, function(x) rle(as.character(x[,pvar]))$values)
-  if (!all(unlist(lapply(res[-1], function(x) identical(x,res[[1]])))))
+  res <- lapply(data, function(x) rle(as.character(x[, pvar]))$values)
+  if (!all(unlist(lapply(res[-1], function(x) identical(x, res[[1]])))))
     warning("Single-cases do have differing desings.")
   
   if (class(phases) %in% c("character","numeric","integer")) {

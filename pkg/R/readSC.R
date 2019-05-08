@@ -51,7 +51,7 @@
 readSC <- function(filename = NULL, data = NULL, sep = ",", dec = ".", sort.labels = FALSE, cvar = "case", pvar = "phase", dvar = "values", mvar = "mt", phase.names = NULL, type = "csv", ...) {
   if(is.null(filename) && is.null(data)) {
     filename <- file.choose()
-    cat("Import file",filename,"\n\n")
+    cat("Import file", filename,"\n\n")
   }
   if(!is.null(data)) {
     type <- "data"
@@ -81,7 +81,7 @@ readSC <- function(filename = NULL, data = NULL, sep = ",", dec = ".", sort.labe
   else
     dat[, cvar] <- factor(dat[, cvar])
   
-  dat[,pvar] <- factor(dat[, pvar], levels = unique(dat[, pvar]))
+  dat[, pvar] <- factor(dat[, pvar], levels = unique(dat[, pvar]))
   
   if(!is.null(phase.names))
     levels(dat[,pvar]) <- phase.names
@@ -98,9 +98,9 @@ readSC <- function(filename = NULL, data = NULL, sep = ",", dec = ".", sort.labe
   #  dat <- .SCprepareData(dat)
   #}
   class(dat) <- c("scdf","list")
-  attr(dat, .opt$phase) <- pvar
-  attr(dat, .opt$dv)    <- dvar
-  attr(dat, .opt$mt)    <- mvar
+  scdf_attr(dat, .opt$phase) <- pvar
+  scdf_attr(dat, .opt$dv)    <- dvar
+  scdf_attr(dat, .opt$mt)    <- mvar
   
   
   return(dat)

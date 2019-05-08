@@ -44,8 +44,8 @@
 fillmissingSC <- function(data, dvar, mvar, interpolation = "linear", na.rm = TRUE) {
 
   # set attributes to arguments else set to defaults of scdf
-  if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
-  if (missing(mvar)) mvar <- attr(data, .opt$mt) else attr(data, .opt$mt) <- mvar
+  if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
+  if (missing(mvar)) mvar <- scdf_attr(data, .opt$mt) else scdf_attr(data, .opt$mt) <- mvar
   
   ATTRIBUTES <- attributes(data)
   

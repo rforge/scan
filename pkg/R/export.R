@@ -22,8 +22,6 @@ export <- function(object, filename = NULL,
                    cols, flip = FALSE, note = TRUE, ...) {
   
   cat(.opt$function_debugging_warning)  
-
-  type = "html"
   
   default_kable_styling <- list(
     bootstrap_options = c("bordered", "condensed"),
@@ -167,7 +165,7 @@ export <- function(object, filename = NULL,
 # plm ---------------------------------------------------------------------
 
   if (x == "pr") {
-    caption <- paste0("Piecewise-regression model for variable '", attr(object,.opt$dv),"'.")
+    caption <- paste0("Piecewise-regression model for variable '", scdf_attr(object,.opt$dv),"'.")
     
     if (object$ar == 0) out <- summary(object$full.model)$coefficients
     if (object$ar  > 0) out <- summary(object$full.model)$tTable
@@ -216,40 +214,36 @@ export <- function(object, filename = NULL,
       test <- sprintf("F(%d, %d) = %.2f; p %s; R\u00b2 = %0.3f; Adjusted R\u00b2 = %0.3f", object$F.test["df1"], object$F.test["df2"],object$F.test["F"], .nice.p(object$F.test["p"], TRUE), object$F.test["R2"], object$F.test["R2.adj"])
     }
   
-    if (identical(type, "html")) {
+    kable_options$x <- out
+    kable_options$align <- c("l", rep("r", ncol(out) - 1))
+    table <- do.call(kable, kable_options)
+    kable_styling_options$kable_input <- table
+    table <- do.call(kable_styling, kable_styling_options)
+    table <- add_header_above(table, c(" " = 2, "CI(95%)" = 2, " " = 4))
+    tmp <- attributes(table)
+    table <- footnote(table, general = test)
+    table <- paste0(#"<p>Table.<br>\n",
+      "<i>", caption, "</i>",
+      table)#test)
+    attributes(table) <- tmp
 
-      kable_options$x <- out
-      kable_options$align <- c("l", rep("r", ncol(out) - 1))
-      table <- do.call(kable, kable_options)
-      kable_styling_options$kable_input <- table
-      table <- do.call(kable_styling, kable_styling_options)
-      table <- add_header_above(table, c(" " = 2, "CI(95%)" = 2, " " = 4))
-      tmp <- attributes(table)
-      table <- footnote(table, general = test)
-      table <- paste0(#"<p>Table.<br>\n",
-                      "<i>",caption, "</i>",
-                      table)
-                      #test)
-      attributes(table) <- tmp
-    }
-    
-    if (identical(type, "html2")) {
-      table <- htmlTable(out,
-        cgroup = c("","", "CI (95%)","","","",""),
-        n.cgroup = c(1,1,2,1,1,1),
-        align = "lc",
-        align.header = "lc",
-        caption = caption,
-        tfoot = paste0("<i>Note:</i> ",test),
-        rnames = FALSE, ...)
-    }
+    # if (identical(type, "html2")) {
+    #   table <- htmlTable(out,
+    #     cgroup = c("","", "CI (95%)","","","",""),
+    #     n.cgroup = c(1,1,2,1,1,1),
+    #     align = "lc",
+    #     align.header = "lc",
+    #     caption = caption,
+    #     tfoot = paste0("<i>Note:</i> ",test),
+    #     rnames = FALSE, ...)
+    # }
 
   } 
   
 # hplm --------------------------------------------------------------------
   
   if (x == "hplm") {
-    caption <- paste0("Hierarchical Piecewise Linear Regression for variable '", attr(object,.opt$dv),"'.")
+    caption <- paste0("Hierarchical Piecewise Linear Regression for variable '", scdf_attr(object,.opt$dv),"'.")
     
     Summary <- summary(object$hplm)
     if (object$model$ICC)
@@ -348,14 +342,14 @@ export <- function(object, filename = NULL,
     if (missing(cols))
       cols <- names(object[[1]])
     if (identical(cols,"main"))
-      cols = c(attr(object, .opt$phase), attr(object, .opt$dv), attr(object, .opt$mt))
+      cols = c(scdf_attr(object, .opt$phase), scdf_attr(object, .opt$dv), scdf_attr(object, .opt$mt))
     
     names(object) <- .case.names(names(object), length(object))
     
     max.row <- max(unlist(lapply(object, nrow)))
     for(i in 1:cases) {
       n.row <- nrow(object[[i]])
-      object[[i]][,attr(object, .opt$phase)] <- as.character(object[[i]][,attr(object, .opt$phase)])
+      object[[i]][,scdf_attr(object, .opt$phase)] <- as.character(object[[i]][,scdf_attr(object, .opt$phase)])
       if (n.row < max.row) 
         object[[i]][(n.row + 1):max.row, names(object[[i]])] <- ""
     }
@@ -375,9 +369,9 @@ export <- function(object, filename = NULL,
     names(case.names) <- names(object)
     table <- add_header_above(table, case.names)
     footnote <- ""
-    if (!is.null(attr(object,"info"))) footnote <- attr(object,"info")
-    if (!is.null(attr(object,"author"))) 
-      footnote <- paste0(footnote,"\nAuthor: ",attr(object,"author"))
+    if (!is.null(scdf_attr(object,"info"))) footnote <- scdf_attr(object,"info")
+    if (!is.null(scdf_attr(object,"author"))) 
+      footnote <- paste0(footnote,"\nAuthor: ",scdf_attr(object,"author"))
     if (footnote != "") table <- footnote(table, general = footnote)
   }
 

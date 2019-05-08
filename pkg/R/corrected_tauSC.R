@@ -16,9 +16,10 @@
 
 corrected_tauSC <- function(data, dvar, pvar, mvar, phases = c(1,2), alpha = 0.05, continuity = TRUE, repeated = TRUE) {
   
-  if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
-  if (missing(pvar)) pvar <- attr(data, .opt$phase) else attr(data, .opt$phase) <- pvar
-  if (missing(mvar)) mvar <- attr(data, .opt$mt) else attr(data, .opt$mt) <- mvar
+  if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
+  if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
+  if (missing(mvar)) mvar <- scdf_attr(data, .opt$mt) else scdf_attr(data, .opt$mt) <- mvar
+
   data <- .SCprepareData(data, change.var.values = FALSE, change.var.phase = FALSE, change.var.mt = FALSE)
   data <- .keepphasesSC(data, phases = phases, pvar = pvar)$data
   

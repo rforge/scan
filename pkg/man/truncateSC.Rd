@@ -4,11 +4,12 @@
 \alias{truncateSC}
 \title{Truncate single-case data}
 \usage{
-truncateSC(data, truncate = list(A = c(0, 0), B = c(0, 0)))
+truncateSC(data, pvar, truncate = list(A = c(0, 0), B = c(0, 0)))
 }
 \arguments{
-\item{data}{A single-case data frame or a list of single-case data frames.
-See \code{\link{scdf}} to learn about this format.}
+\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
+
+\item{pvar}{Character string with the name of the phase variable. Defaults to the attributes in the scdf file.}
 
 \item{truncate}{A list with a vector of two (beginning and end) values for each phase defining the number of data points to be deleted.
 For lists of single-case data frames, the truncation is adapted to the length 
@@ -23,7 +24,7 @@ This function truncates data points at the beginning and / or end each phase.
 \examples{
 
 # Truncate the first two data points of both phases and compare the two data sets
-study <- c(byHeart2011[1], truncateSC(byHeart2011[1], list(A = c(2,0), B = c(2,0))))
+study <- c(byHeart2011[1], truncateSC(byHeart2011[1], truncate = list(A = c(2,0), B = c(2,0))))
 names(study) <- c("Original","Selected")
 plot(study)
 
@@ -31,7 +32,8 @@ plot(study)
 \seealso{
 Other data manipulation functions: \code{\link{fillmissingSC}},
   \code{\link{longSCDF}}, \code{\link{rankSC}},
-  \code{\link{scaleSC}}, \code{\link{smoothSC}}
+  \code{\link{scaleSC}}, \code{\link{shiftSC}},
+  \code{\link{smoothSC}}
 }
 \author{
 Juergen Wilbert

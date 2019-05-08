@@ -1,5 +1,6 @@
 .onAttach <- function(lib, pkg, ...) {
-	out <- paste0("scan ",utils::packageVersion("scan")," (development version, ",utils::packageDate('scan'),")\n", #", packageDate("scan"), ")\n",
+	out <- paste0("scan ", utils::packageVersion("scan"), 
+	              " (development version, ",utils::packageDate('scan'), ")\n",
 	              "Single-Case Data Analysis for Single and Multiple Baseline Designs\n")
 	packageStartupMessage(out)
 }	
@@ -17,7 +18,7 @@
   )
   
   toset <- !(names(op_scan) %in% names(op))
-  if(any(toset)) options(op_scan[toset])
+  if (any(toset)) options(op_scan[toset])
   
   invisible()
   

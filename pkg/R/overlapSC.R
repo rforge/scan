@@ -28,14 +28,14 @@
 overlapSC <- function(data, dvar, pvar, mvar, decreasing = FALSE, phases = c(1,2)) {
 
   # set attributes to arguments else set to defaults of scdf
-  if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
-  if (missing(pvar)) pvar <- attr(data, .opt$phase) else attr(data, .opt$phase) <- pvar
-  if (missing(mvar)) mvar <- attr(data, .opt$mt) else attr(data, .opt$mt) <- mvar
+  if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
+  if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
+  if (missing(mvar)) mvar <- scdf_attr(data, .opt$mt) else scdf_attr(data, .opt$mt) <- mvar
   
   data.list <- .SCprepareData(data, change.var.values = FALSE, change.var.phase = FALSE, change.var.mt = FALSE)
   keep <- .keepphasesSC(data.list, phases = phases, pvar = pvar)
   data.list <- keep$data
-  ATTRIBUTES <- attributes(data.list)
+  
   design <- rle(as.character(data.list[[1]][, pvar]))$values
   N <- length(data.list)
 
@@ -73,6 +73,7 @@ overlapSC <- function(data, dvar, pvar, mvar, decreasing = FALSE, phases = c(1,2
   
   out <- list(overlap = d.f, phases.A = keep$phases.A, phases.B = keep$phases.B, design = keep$design[[1]]$values)
   class(out) <- c("sc","overlap")
+  ATTRIBUTES <- attributes(data.list)[[.opt$scdf]]
   attr(out, .opt$phase) <- ATTRIBUTES[[.opt$phase]]
   attr(out, .opt$mt)    <- ATTRIBUTES[[.opt$mt]]
   attr(out, .opt$dv)    <- ATTRIBUTES[[.opt$dv]]

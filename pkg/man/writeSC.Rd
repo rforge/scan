@@ -7,8 +7,7 @@
 writeSC(data, filename = NULL, sep = ",", dec = ".", ...)
 }
 \arguments{
-\item{data}{A single-case data frame or a list of single-case data frames.
-See \code{\link{makeSCDF}} to learn about this format.}
+\item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
 \item{filename}{A character string defining the output file name (e.g.
 \code{"SC_data.csv"}.}

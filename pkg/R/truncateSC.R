@@ -2,9 +2,7 @@
 #' 
 #' This function truncates data points at the beginning and / or end each phase.
 #' 
-#' 
-#' @param data A single-case data frame or a list of single-case data frames.
-#' See \code{\link{scdf}} to learn about this format.
+#' @inheritParams .inheritParams
 #' @param truncate A list with a vector of two (beginning and end) values for each phase defining the number of data points to be deleted.
 #' For lists of single-case data frames, the truncation is adapted to the length 
 #' of each phase for each single case.
@@ -15,18 +13,22 @@
 #' @examples
 #' 
 #' # Truncate the first two data points of both phases and compare the two data sets
-#' study <- c(byHeart2011[1], truncateSC(byHeart2011[1], list(A = c(2,0), B = c(2,0))))
+#' study <- c(byHeart2011[1], truncateSC(byHeart2011[1], truncate = list(A = c(2,0), B = c(2,0))))
 #' names(study) <- c("Original","Selected")
 #' plot(study)
 #' 
 #' @export
-truncateSC <- function (data, truncate = list(A = c(0,0), B = c(0,0))){
+truncateSC <- function (data, pvar, truncate = list(A = c(0,0), B = c(0,0))){
+  
+  # set attributes to arguments else set to defaults of scdf
+  if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
+
   data <- .SCprepareData(data)
   N = length(data)
   
   cat("Deletet measurements per case:\n\n")
   for(i in 1:N) {
-    phases        <- rle(as.character(data[[i]]$phase))
+    phases        <- rle(as.character(data[[i]][ ,pvar]))
     phases$start  <- c(1, cumsum(phases$lengths) + 1)[1 : length(phases$lengths)]
     phases$stop   <- cumsum(phases$lengths)
     class(phases) <- "list"
@@ -41,7 +43,7 @@ truncateSC <- function (data, truncate = list(A = c(0,0), B = c(0,0))){
     cat(paste0(names(data)[i], ": "))
     cat(deselect)
     cat("\n")
-    data[[i]] <- data[[i]][-deselect,]
+    data[[i]] <- data[[i]][-deselect, ]
   }
   return(data)
 }

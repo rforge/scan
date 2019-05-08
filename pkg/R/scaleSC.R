@@ -27,28 +27,30 @@
 
 scaleSC <- function(data, var = NULL, center = TRUE, scale = FALSE, m = 0, sd = 1, grand = TRUE) {
   
-  if(is.null(var))
+  if(is.null(var)) {
     stop("Please provide names of variables to be scaled.")
+  }
   
-  data <- .SCprepareData(data)
+  data <- .SCprepareData(data, change.var.values = FALSE, change.var.phase = FALSE, change.var.mt = FALSE)
+  
   N    <- length(data)
   
   if(grand) {
     means <- c()
     sds   <- c()
     for(i in 1:length(var)) {
-      means <- c(means,mean(unlist(lapply(data, function(x) x[,var[i]])), na.rm = TRUE))
-      sds   <- c(sds,    sd(unlist(lapply(data, function(x) x[,var[i]])), na.rm = TRUE))
+      means <- c(means, mean(unlist(lapply(data, function(x) x[, var[i]])), na.rm = TRUE))
+      sds   <- c(sds,     sd(unlist(lapply(data, function(x) x[, var[i]])), na.rm = TRUE))
     }
     
     for(case in 1:N) {
       for(i in 1:length(var)) {
         if(center && scale)
-          data[[case]][,var[i]] <- (data[[case]][,var[i]] - means[i]) / sds[i] * sd + m
+          data[[case]][,var[i]] <- (data[[case]][, var[i]] - means[i]) / sds[i] * sd + m
         if(center && !scale)
-          data[[case]][,var[i]] <- (data[[case]][,var[i]] - means[i]) + m
+          data[[case]][,var[i]] <- (data[[case]][, var[i]] - means[i]) + m
         if(!center && scale)
-          data[[case]][,var[i]] <- ((data[[case]][,var[i]] - means[i]) / sds[i] * sd) + means[i]
+          data[[case]][,var[i]] <- ((data[[case]][, var[i]] - means[i]) / sds[i] * sd) + means[i]
       }
     }
   }
@@ -56,14 +58,14 @@ scaleSC <- function(data, var = NULL, center = TRUE, scale = FALSE, m = 0, sd = 
   if(!grand) {
     for(case in 1:N) {
       for(i in 1:length(var)) {
-        mCase  <- mean(data[[case]][,var[i]], na.rm = TRUE)
-        sdCase <- sd(data[[case]][,var[i]], na.rm = TRUE)
+        mCase  <- mean(data[[case]][, var[i]], na.rm = TRUE)
+        sdCase <-   sd(data[[case]][, var[i]], na.rm = TRUE)
         if(center && scale)
-          data[[case]][,var[i]] <- (data[[case]][,var[i]] - mCase) / sdCase[i] * sd + m
+          data[[case]][, var[i]] <- (data[[case]][, var[i]] - mCase) / sdCase[i] * sd + m
         if(center && !scale)
-          data[[case]][,var[i]] <- (data[[case]][,var[i]] - mCase) + m
+          data[[case]][, var[i]] <- (data[[case]][, var[i]] - mCase) + m
         if(!center && scale)
-          data[[case]][,var[i]] <- ((data[[case]][,var[i]] - mCase) / sdCase * sd) + mCase
+          data[[case]][, var[i]] <- ((data[[case]][, var[i]] - mCase) / sdCase * sd) + mCase
       }
     }
   }

@@ -27,16 +27,16 @@
 describeSC <- function(data, dvar, pvar, mvar) {
  
   # set attributes to arguments else set to defaults of scdf
-  if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
-  if (missing(pvar)) pvar <- attr(data, .opt$phase) else attr(data, .opt$phase) <- pvar
-  if (missing(mvar)) mvar <- attr(data, .opt$mt) else attr(data, .opt$mt) <- mvar
+  if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
+  if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
+  if (missing(mvar)) mvar <- scdf_attr(data, .opt$mt) else scdf_attr(data, .opt$mt) <- mvar
   
   data.list <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
   
   N <- length(data.list)
   case.names <- names(data.list)
 
-  design <- rle(as.character(data.list[[1]][,pvar]))$values
+  design <- rle(as.character(data.list[[1]][, pvar]))$values
 
   while (any(duplicated(design))) {
     design[anyDuplicated(design)] <-
@@ -44,7 +44,7 @@ describeSC <- function(data, dvar, pvar, mvar) {
   }
   
   VAR <- c("n","mis","m","md","sd","mad","min","max","trend")
-  VAR2 <- paste0(rep(VAR, each = length(design)),".",design)
+  VAR2 <- paste0(rep(VAR, each = length(design)),".", design)
   
   d.f <- as.data.frame(matrix(nrow = N, ncol = length(VAR2)))
   colnames(d.f) <- VAR2
@@ -59,15 +59,15 @@ describeSC <- function(data, dvar, pvar, mvar) {
       y <- data[phases$start[i]:phases$stop[i], dvar]
       phase <- design[i]
 
-      d.f[case, paste0("n.",phase)]     <- length(y)
-      d.f[case, paste0("mis.",phase)]   <- sum(is.na(y),na.rm = TRUE) 
-      d.f[case, paste0("m.",phase)]     <- mean(y,na.rm = TRUE) 
-      d.f[case, paste0("md.",phase)]    <- median(y,na.rm = TRUE) 
-      d.f[case, paste0("sd.",phase)]    <- sd(y,na.rm = TRUE)
-      d.f[case, paste0("mad.",phase)]   <- mad(y,na.rm = TRUE) 
-      d.f[case, paste0("min.",phase)]   <- min(y,na.rm = TRUE) 
-      d.f[case, paste0("max.",phase)]   <- max(y,na.rm = TRUE) 
-      d.f[case, paste0("trend.",phase)] <- coef(lm(y~I(x-x[1]+1)))[2]
+      d.f[case, paste0("n.", phase)]     <- length(y)
+      d.f[case, paste0("mis.", phase)]   <- sum(is.na(y), na.rm = TRUE) 
+      d.f[case, paste0("m.", phase)]     <- mean(y, na.rm = TRUE) 
+      d.f[case, paste0("md.", phase)]    <- median(y, na.rm = TRUE) 
+      d.f[case, paste0("sd.", phase)]    <- sd(y, na.rm = TRUE)
+      d.f[case, paste0("mad.", phase)]   <- mad(y, na.rm = TRUE) 
+      d.f[case, paste0("min.", phase)]   <- min(y, na.rm = TRUE) 
+      d.f[case, paste0("max.", phase)]   <- max(y, na.rm = TRUE) 
+      d.f[case, paste0("trend.", phase)] <- coef(lm(y ~ I(x - x[1] + 1)))[2]
     }
   }
   
@@ -75,9 +75,67 @@ describeSC <- function(data, dvar, pvar, mvar) {
               design = design,
               N = N)
   class(out) <- c("sc", "describe")
-  attr(out, "var.phase")  <- pvar
-  attr(out, "var.mt")     <- mvar
-  attr(out, "var.values") <- dvar
+  attr(out, .opt$phase)  <- pvar
+  attr(out, .opt$mt)     <- mvar
+  attr(out, .opt$dv)     <- dvar
+  
+  out
+}
+
+deprecated_describeSC <- function(data, dvar, pvar, mvar) {
+  
+  # set attributes to arguments else set to defaults of scdf
+  if (missing(dvar)) dvar <- attr(data, .opt$dv) else attr(data, .opt$dv) <- dvar
+  if (missing(pvar)) pvar <- attr(data, .opt$phase) else attr(data, .opt$phase) <- pvar
+  if (missing(mvar)) mvar <- attr(data, .opt$mt) else attr(data, .opt$mt) <- mvar
+  
+  data.list <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
+  
+  N <- length(data.list)
+  case.names <- names(data.list)
+  
+  design <- rle(as.character(data.list[[1]][, pvar]))$values
+  
+  while (any(duplicated(design))) {
+    design[anyDuplicated(design)] <-
+      paste0(design[anyDuplicated(design)], ".phase", anyDuplicated(design))
+  }
+  
+  VAR <- c("n","mis","m","md","sd","mad","min","max","trend")
+  VAR2 <- paste0(rep(VAR, each = length(design)),".", design)
+  
+  d.f <- as.data.frame(matrix(nrow = N, ncol = length(VAR2)))
+  colnames(d.f) <- VAR2
+  rownames(d.f) <- case.names
+  
+  for(case in 1:N) {
+    data <- data.list[[case]]
+    for(i in 1:length(design)) {
+      phases <- .phasestructure(data, pvar = pvar)
+      
+      x <- data[phases$start[i]:phases$stop[i], mvar]
+      y <- data[phases$start[i]:phases$stop[i], dvar]
+      phase <- design[i]
+      
+      d.f[case, paste0("n.", phase)]     <- length(y)
+      d.f[case, paste0("mis.", phase)]   <- sum(is.na(y), na.rm = TRUE) 
+      d.f[case, paste0("m.", phase)]     <- mean(y, na.rm = TRUE) 
+      d.f[case, paste0("md.", phase)]    <- median(y, na.rm = TRUE) 
+      d.f[case, paste0("sd.", phase)]    <- sd(y, na.rm = TRUE)
+      d.f[case, paste0("mad.", phase)]   <- mad(y, na.rm = TRUE) 
+      d.f[case, paste0("min.", phase)]   <- min(y, na.rm = TRUE) 
+      d.f[case, paste0("max.", phase)]   <- max(y, na.rm = TRUE) 
+      d.f[case, paste0("trend.", phase)] <- coef(lm(y ~ I(x - x[1] + 1)))[2]
+    }
+  }
+  
+  out <- list(descriptives = d.f,
+              design = design,
+              N = N)
+  class(out) <- c("sc", "describe")
+  attr(out, .opt$phase)  <- pvar
+  attr(out, .opt$mt)     <- mvar
+  attr(out, .opt$dv)     <- dvar
   
   out
 }

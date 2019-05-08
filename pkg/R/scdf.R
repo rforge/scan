@@ -6,11 +6,7 @@ methods::setOldClass(c("scdf", "list"))
 #' single-cases.
 #' 
 #' The \code{scdf} class is a wrapper for a list containing a dataframe for
-#' each case. Each of these dataframes has to contain columns with the names
-#' 'phase' and 'values'. A third column 'mt' contains the mesaurement times and
-#' if not provided is set to \code{1:nrow} by all \code{scan} functions.
-#' Methods for the \code{sdf} class are \code{print}, \code{summary}, and
-#' \code{plot}.
+#' each case.
 #' 
 #' @aliases scdf scdf-class as.scdf checkSCDF
 #' makeSCDF
@@ -39,8 +35,8 @@ methods::setOldClass(c("scdf", "list"))
 #'  \code{author} Information on the author of the data.
 #'  \code{info} Further information on the data. E.g., a publication.
 #'  \code{dvar, phase, and mt} are the defaults most of the \code{scan} function
-#'  use. You can change the values of the attributes with the \code{attr} function 
-#'  (e.g., \code{attr(exampleAB_add, "dvar") <- "depression"} defines depression
+#'  use. You can change the values of the attributes with the \code{scdf_attr} function 
+#'  (e.g., \code{scdf_attr(exampleAB_add, "dvar") <- "depression"} defines depression
 #'  as the dependent variable. Please notice that all \code{scan} functions 
 #'  have arguments to define \code{dvar, phase, and mt} for a given analysis.
 #' @author Juergen Wilbert
@@ -49,7 +45,10 @@ methods::setOldClass(c("scdf", "list"))
 #' 
 #' ## Scores on a letter naming task were collected on eleven days in a row. The intervention
 #' ## started after the fifth measurement, so the first B phase measurement was 6 (B.start = 6).
-#' klaas <- scdf(c(5, 7, 8, 5, 7, 12, 16, 18, 15, 14, 19), B.start = 6, name = "Klaas")
+#' klaas <- scdf(
+#'   c(5, 7, 8, 5, 7, 12, 16, 18, 15, 14, 19), 
+#'   B.start = 6, name = "Klaas"
+#' )
 #' plot(klaas)
 #' 
 #' #Alternative coding 1:
@@ -59,8 +58,10 @@ methods::setOldClass(c("scdf", "list"))
 #' )
 #' 
 #' #Alternative coding 2:
-#' klaas <- scdf(c(5, 7, 8, 5, 7, 12, 16, 18, 15, 14, 19), 
-#'   phase.design = c(A = 5, B = 6), name = "Klaas")
+#' klaas <- scdf(
+#'   c(5, 7, 8, 5, 7, 12, 16, 18, 15, 14, 19), 
+#'   phase.design = c(A = 5, B = 6), name = "Klaas"
+#' )
 #' 
 #' ## Unfortunately in a similar SCDR there were no data collected on days 3 and 9. Use NA to
 #' ## pass them to the package.
@@ -81,8 +82,10 @@ methods::setOldClass(c("scdf", "list"))
 #' ## In a classroom-based intervention it was not possible to measure outcomes every day, but
 #' ## only on schooldays. The sequence of measurements is passed to the package by using a
 #' ## vector of measurement times.
-#' frida <- scdf(c(A = 3, 2, 4, 2, 2, 3, 5, 6, B = 8, 10, 8, 12, 14, 13, 12),
-#'   mt = c(1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18))
+#' frida <- scdf(
+#'   c(A = 3, 2, 4, 2, 2, 3, 5, 6, B = 8, 10, 8, 12, 14, 13, 12),
+#'   mt = c(1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18)
+#' )
 #' summary(frida)
 #' plot(frida)
 #' describeSC(frida)
@@ -113,7 +116,7 @@ scdf <- function (values, B.start, mt, phase, phase.design, name, dvar = "values
   # create phase.design from a named vector
   if (!is.null(names(df[[dvar]]))) {
     tmp.names <- names(df[[dvar]])
-    tmp <- c(which(tmp.names != ""),length(tmp.names) + 1)
+    tmp <- c(which(tmp.names != ""), length(tmp.names) + 1)
     phase.design <- tmp[-1] - tmp[-length(tmp)]  
     names(phase.design) <- tmp.names[which(tmp.names != "")]
   }
@@ -147,97 +150,23 @@ scdf <- function (values, B.start, mt, phase, phase.design, name, dvar = "values
   if (missing(phase.design)) {
     stop("Phase design not defined correctly!")
   }  
-  data[, pvar] <- factor(rep(names(phase.design), phase.design), levels = unique(names(phase.design)))
   
   if (!(mvar %in% names(data))){
     stop("Measurement-time variable not defined correctly!")
   }
+  
+  data[, pvar] <- factor(rep(names(phase.design), phase.design), levels = unique(names(phase.design)))
+  
   data <- list(data)
+  
   attributes(data) <- .defaultAttributesSCDF() 
-  
-  attr(data, .opt$dv)    <- dvar
-  attr(data, .opt$phase) <- pvar
-  attr(data, .opt$mt)    <- mvar
-  
-  if (!missing(name))
-    names(data) <- name
-  
-  data
-}
+ 
+  scdf_attr(data, .opt$dv)    <- dvar
+  scdf_attr(data, .opt$phase) <- pvar
+  scdf_attr(data, .opt$mt)    <- mvar
 
-scdf.old <- function (values, B.start, mt, phase, phase.design, name, dvar = "values", pvar = "phase", mvar = "mt", ...){
-  
-  add.var <- list(...)
-  if ("var.values" %in% names(add.var))
-    stop("'var.values' is deprecated. Please use 'dvar' instead.")
-  
-  add.var   <- as.data.frame(add.var)
-  
-  names.var <- names(add.var)
-  
-  if (missing(values))
-    data <- add.var
-  
-  if (!missing(values)) {
-    data <- data.frame(values = values)
-    if (nrow(add.var) > 0)
-      data <- cbind(data,add.var)
-  }
-  
-  if (!missing(phase))
-    data$phase <- phase
-  
-  if (!missing(mt))
-    data$mt <- mt
-  
-  ### for backward campatibility
-  #if (!missing(var.values)) {
-  #if ("var.values" %in% names.var)
-  #  warning("'var.values' is deprecated. Please use 'dvar' instead.")
-  #  dvar <- var.values
-  #}
-  
-  if (("MT" %in% names.var) && missing(mt) && mvar == "mt") {
-    warning("Variable is named 'MT' instead of 'mt'. Variable 'MT' renamed to 'mt'.")
-    #mt <- add.var$MT
-    #add.var <- add.var[ ,!names.var %in% "MT", drop = FALSE]
-    #names.var <- names(add.var)
-    names(data)[which(names(data) == "MT")] <- "mt"
-  }
-  ### END : for backward campatibility
-  
-  if (!(mvar %in% names(data))) data[, mvar] <- 1:nrow(data)
-  
-  if (!missing(B.start)) {
-    B.start <- match(B.start, data[, mvar])
-    if (is.na(B.start)) {
-      stop("No values provided at B.start.")
-    }
-    phase.design <- c("A" = B.start - 1, "B" = nrow(data) - B.start + 1)
-  }
-  
-  if (!missing(phase.design))
-    data[, pvar] <- rep(names(phase.design), phase.design)
-  
-  if (!(dvar %in% names(data))) {
-    stop("Independent variable not defined correctly!")
-  }
-  if (!(pvar %in% names(data))) {
-    stop("Phase variable not defined correctly!")
-  }
-  if (!(mvar %in% names(data))) {
-    stop("Measurement-time variable not defined correctly!")
-  }
-  data[,pvar] <- factor(data[, pvar], levels = unique(data[, pvar]))
-  
-  data <- list(data)
-  attributes(data) <- .defaultAttributesSCDF() 
-  
-  attr(data, .opt$dv)    <- dvar
-  attr(data, .opt$phase) <- pvar
-  attr(data, .opt$mt)    <- mvar
-  
   if (!missing(name)) names(data) <- name
   
   data
 }
+

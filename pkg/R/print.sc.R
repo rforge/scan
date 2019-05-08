@@ -13,8 +13,9 @@ print.sc <- function(x, ...) {
     cat("Baseline corrected tau\n\n")
     cat("Auto correlation in baseline:\n")
     cat("tau =", round(x$auto_tau$tau.b, 2))
-    cat("; p =", round(x$auto_tau$p, 3),"\n\n")
-    if (x$correction) cat("Baseline correction applied.\n\n")
+    cat("; p =", round(x$auto_tau$p, 3), "\n\n")
+    
+    if (x$correction)  cat("Baseline correction applied.\n\n")
     if (!x$correction) cat("Baseline correction not applied.\n\n")
     
     cat("Baseline corrected tau:\n")
@@ -78,9 +79,7 @@ print.sc <- function(x, ...) {
     out <- lapply(x$table, function(x) round(x, 3))
     arg <- list(...)
     complete <- FALSE
-    if (any(names(arg) == "complete")) {
-      complete <- arg$complete
-    }
+    if (any(names(arg) == "complete")) complete <- arg$complete
     if (!complete) {
       VAR <- c("S", "D", "Tau", "Tau.b", "Z", "p")
       out <- lapply(x$table, function(x) round(x[-1:-4, VAR], 3))

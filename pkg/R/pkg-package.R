@@ -1,8 +1,6 @@
 #' Single-Case Data Analyses
 #' 
-#' A package to analyze single-case data.
-#' 
-#' Most procedures also support multiple-baseline designs.
+#' A collection of procedures for analysing, visualising, and managing single-case data.
 #' 
 #' @name scan-package
 #' @aliases scan-package scan
@@ -14,7 +12,6 @@
 #' @import graphics
 #' @import knitr
 #' @import kableExtra
-#' @import htmlTable 
 #' @import mblm
 NULL
 
