@@ -2,7 +2,7 @@
 % Please edit documentation in R/shiftSC.R
 \name{shiftSC}
 \alias{shiftSC}
-\title{Shift values in a SCDF}
+\title{Shift values in a single-case data file}
 \usage{
 shiftSC(data, value, var)
 }

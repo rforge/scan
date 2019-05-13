@@ -1,4 +1,4 @@
-#' Shift values in a SCDF
+#' Shift values in a single-case data file
 #' 
 #' Shifting the values might be helpful in cases where the measurement time
 #' is given as a time variable (see example below).

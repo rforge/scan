@@ -283,13 +283,13 @@ export <- function(object, filename = NULL,
     }
   
     out$p <- .nice.p(out$p)
-    md$p  <- .nice.p(md$p)
-   
+    if (!is.null(md$p)) md$p  <- .nice.p(md$p)
+    
     out[, ] <- lapply(out[, ], function(x) 
       if (class(x) == "numeric") as.character(round(x, 2)) else x)
     out <- cbind(Parameter = rownames(out), out, stringsAsFactors = FALSE)
     rownames(out) <- NULL
-    md[, ] <- lapply(md[, ], function(x) 
+    md[, ] <- lapply(md, function(x) 
       if (class(x) == "numeric") as.character(round(x, 2)) else x)
     md <- cbind(" " = rownames(md), md, stringsAsFactors = FALSE)
     rownames(md) <- NULL
@@ -300,15 +300,16 @@ export <- function(object, filename = NULL,
     
     tmp.row <- (nrow_out + 1):(nrow_out + nrow(md) + 1)
     out[tmp.row, 1:ncol(md)] <- rbind(colnames(md), md, stringsAsFactors = FALSE)
-    
+
     out[nrow_out + nrow(md) + 2, 1:2] <- c("AIC", as.character(round(Summary$AIC, 1)))
     out[nrow_out + nrow(md) + 3, 1:2] <- c("BIC", as.character(round(Summary$BIC, 1)))
-    out[nrow_out + nrow(md) + 4, 1:4] <- 
-      c(
-        "ICC", as.character(round(object$ICC$value, 2)),
-        paste0("L = ", round(object$ICC$L, 1)),
-        paste0("p ", .nice.p(object$ICC$p))
-      )
+    if (!is.null(object$ICC))
+      out[nrow_out + nrow(md) + 4, 1:4] <- 
+        c(
+          "ICC", as.character(round(object$ICC$value, 2)),
+          paste0("L = ", round(object$ICC$L, 1)),
+          paste0("p ", .nice.p(object$ICC$p))
+        )
  
     kable_options$x <- out
     kable_options$align <- c("l", rep("r", ncol(out) - 1))

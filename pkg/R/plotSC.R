@@ -108,31 +108,32 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
   if (missing(mvar)) mvar <- scdf_attr(data, .opt$mt) else scdf_attr(data, .opt$mt) <- mvar
   
   data.list <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
+  
   N <- length(data.list)
-  if(N > 1) par(mfrow = c(N, 1))
+  if (N > 1) par(mfrow = c(N, 1))
   
 # define style ------------------------------------------------------------
   
-  if(is.list(style)) {
+  if (is.list(style)) {
     ref.style <- "default"
-    if("style" %in% names(style))
-      ref.style <- style$style
+    if ("style" %in% names(style)) ref.style <- style$style
     style <- c(style, style_plotSC(ref.style))
     style <- style[unique(names(style))]
   }
   
-  if(is.character(style))
+  if (is.character(style))
     style <- style_plotSC(style)
   
   #for pre style backwards compatibility
   sty.names <- c("fill","fill.bg","frame","grid","lwd","pch","text.ABlag","type")
-  if(any(names(dots) %in% sty.names))
-    stop("Using style parameters like 'fill' directly as arguments is deprectated. Please use the 'stlye' argument to provide these parameters. E.g., style = list(fill = 'blue', pch = 19)")
-  
+  if (any(names(dots) %in% sty.names)) {
+    stop("Using style parameters like 'fill' directly as arguments is deprectated. ",
+         "Please use the 'stlye' argument to provide these parameters. ",
+         "E.g., style = list(fill = 'blue', pch = 19)")
+  }
   annotations <- style$annotations
   
-  if(is.na(style$frame))
-    style$bty <- "n"
+  if (is.na(style$frame)) style$bty <- "n"
   
   par("bg"       = style$col.bg)
   par("col"      = style$col)
@@ -145,32 +146,31 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
   par("col.lab"  = style$col.text)
   par("col.axis" = style$col.text)
   
-  if(style$frame %in% "")   style$frame <- NA
-  if(style$grid %in% "")    style$grid  <- NA
-  if(style$fill.bg %in% "") style$fill.bg  <- NA
+  if (style$frame %in% "")   style$frame <- NA
+  if (style$grid %in% "")    style$grid  <- NA
+  if (style$fill.bg %in% "") style$fill.bg  <- NA
   
   ### END: define style
   
   # Marks on the outliers from outlierSC
-  if(identical(class(marks), c("sc","outlier")))
+  if (identical(class(marks), c("sc","outlier"))) 
     marks <- list(positions = marks$dropped.mt)
   
   # name cases
-  if(!is.null(case.names)) names(data.list) <- case.names
+  if (!is.null(case.names)) names(data.list) <- case.names
   case.names <- names(data.list)
   
   # set x ans y axis labels
-  if(is.null(xlab)) xlab <- mvar
-  if(is.null(ylab)) ylab <- dvar
-  if(is.null(xlab)) xlab <- "Measurement time"
-  if(is.null(ylab)) ylab <- "Score"
-  if(xlab == "mt") xlab <- "Measurement time"
+  if (is.null(xlab)) xlab <- mvar
+  if (is.null(ylab)) ylab <- dvar
+  if (is.null(xlab)) xlab <- "Measurement time"
+  if (is.null(ylab)) ylab <- "Score"
+  if (xlab == "mt") xlab <- "Measurement time"
   
   # prepare lines definitions
-  if(class(lines) != "list")
-    lines <- lapply(lines, function(x) x)
+  if (class(lines) != "list") lines <- lapply(lines, function(x) x)
   
-  if(!is.null(names(lines))) {
+  if (!is.null(names(lines))) {
     id <- which(names(lines) == "")
     names(lines)[id] <- lines[id]
     lines[id] <- NA
@@ -181,8 +181,8 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
   }
   
   # set xlim and ylim
-  values.tmp <- unlist(lapply(data.list, function(x) x[,dvar]))
-  mt.tmp     <- unlist(lapply(data.list, function(x) x[,mvar]))
+  values.tmp <- unlist(lapply(data.list, function(x) x[, dvar]))
+  mt.tmp     <- unlist(lapply(data.list, function(x) x[, mvar]))
   
   if (is.null(ylim))
     ylim <- c(min(values.tmp, na.rm = TRUE), max(values.tmp, na.rm = TRUE))
@@ -196,14 +196,14 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
   
   for(case in 1:N) {
     data <- data.list[[case]]
-    data <- data[!is.na(data[, dvar]), ] #maybe use the complete function later
+    #data <- data[!is.na(data[, dvar]), ] #maybe use the complete function later
     
     design <- .phasestructure(data, pvar)
     
     # plot ylim
     y.lim <- ylim
-    if(is.na(ylim[2])) y.lim[2] <- max(data[, dvar])
-    if(is.na(ylim[1])) y.lim[1] <- min(data[, dvar])
+    if (is.na(ylim[2])) y.lim[2] <- max(data[, dvar])
+    if (is.na(ylim[1])) y.lim[1] <- min(data[, dvar])
     
     # one plot
     if (N == 1) {
@@ -225,7 +225,7 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
     } 
     
     # multple plots, first to secondlast
-    if(N > 1 && case != N) {
+    if (N > 1 && case != N) {
       # first plot
       if (case == 1) {
         if (main != "") 
@@ -268,23 +268,23 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
 
     # plot styling
     
-    if(!is.na(style$fill.bg))
+    if (!is.na(style$fill.bg))
       rect(usr[1], usr[3], usr[2], usr[4], col = style$fill.bg, border = NA)#, border = par("fg"))
 
-    if(!is.na(style$grid))
+    if (!is.na(style$grid))
       grid(NULL, NULL, col = style$grid)
     
-    if(!is.na(style$frame))
+    if (!is.na(style$frame))
       rect(usr[1],usr[3],usr[2],usr[4], col = NA, border = style$frame)
     
-    if(is.na(style$frame) && !is.na(style$fill.bg))
+    if (is.na(style$frame) && !is.na(style$fill.bg))
       rect(usr[1],usr[3],usr[2],usr[4], col = NA, border = style$fill.bg)
     
-    if(is.na(style$frame) && is.na(style$fill.bg))
+    if (is.na(style$frame) && is.na(style$fill.bg))
       rect(usr[1],usr[3],usr[2],usr[4], col = NA, border = par("bg"))
     
     # fill array below lines
-    if(style$fill != "") {
+    if (style$fill != "") {
       for(i in 1:length(design$values)) {
         x <- data[design$start[i]:design$stop[i], mvar]
         y <- data[design$start[i]:design$stop[i], dvar]
@@ -300,17 +300,17 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
     for(i in 1:length(design$values)) {
       x <- data[design$start[i]:design$stop[i], mvar]
       y <- data[design$start[i]:design$stop[i], dvar]
-      if(style$col.lines != "")
+      if (style$col.lines != "")
         lines(x, y, type = "l", pch = style$pch, lwd = style$lwd, col = style$col.lines,...)
-      if(style$col.dots != "")
+      if (style$col.dots != "")
         lines(x, y, type = "p", pch = style$pch, lwd = style$lwd, col = style$col.dots,...)
     }
     
-    if(case == 1) title(main)
+    if (case == 1) title(main)
 
     # marks -------------------------------------------------------------------
 
-    if(!is.null(marks)) {
+    if (!is.null(marks)) {
       marks.cex <- 1
       marks.col <- "red"
       marks.pch <- style$pch
@@ -329,7 +329,7 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
         marks.pch <- marks[[which(names(marks) == "pch")]]
       }
       
-      if(class(marks.pos) == "numeric") {
+      if (class(marks.pos) == "numeric") {
         mks <- marks.pos
       } else {
         mks <- marks.pos[[case]]
@@ -341,7 +341,7 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
 
     # annotations -------------------------------------------------------------
     
-    if(!is.null(annotations)) {
+    if (!is.null(annotations)) {
       annotations.cex <- 1
       annotations.round <- 1
       annotations.col <- "black"
@@ -368,7 +368,7 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
       ### not yet implemented
       #if (any(names(annotations) == "label")) {
       #  id <- which(names(annotations) == "label")
-      #  if(annotations[[id]]=="values") {
+      #  if (annotations[[id]]=="values") {
       #  } else {
       #  }
       #}
@@ -379,7 +379,7 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
 
     # lines -------------------------------------------------------------------
     
-    if(!is.null(lines)) {
+    if (!is.null(lines)) {
       #label <- ""
       #labelxy <- c(0,0)
       lty.line <- "dashed"
@@ -508,23 +508,26 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
     
 
     # phase names -------------------------------------------------------------
-    if (is.null(phase.names))
-      phase.names <- design$values
+    if (is.null(phase.names)) phase.names <- design$values
     for(i in 1:length(design$values)) {
-      mtext(phase.names[i], side = 3, at = (data[design$stop[i],mvar] - data[design$start[i],mvar]) / 2 + data[design$start[i],mvar], cex = style$cex.text, ...)
+      mtext(
+        phase.names[i], side = 3, 
+        at = (data[design$stop[i], mvar] - data[design$start[i], mvar]) / 2 + data[design$start[i], mvar], 
+        cex = style$cex.text, ...
+      )
     }
     
     # line between phases -----------------------------------------------------
-    if(is.null(style$text.ABlag)) {
+    if (is.null(style$text.ABlag)) {
       for(i in 1:(length(design$values) - 1)) {
-        abline(v = data[design$stop[i]+1,mvar] - 0.5, lty = 2,lwd = style$lwd, col = style$col.seperators)
+        abline(v = data[design$stop[i] + 1, mvar] - 0.5, lty = 2, lwd = style$lwd, col = style$col.seperators)
       }
     }
     
-    if(!is.null(style$text.ABlag)) {
+    if (!is.null(style$text.ABlag)) {
       for(i in 1:(length(design$values) - 1)) {
-        tex <- paste(unlist(strsplit(style$text.ABlag[i], "")), collapse ="\n")
-        text(data[design$stop[i] + 1, mvar] - 0.5, (y.lim[2]-y.lim[1])/2 + y.lim[1], labels = tex, cex = 0.8, ...)
+        tex <- paste(unlist(strsplit(style$text.ABlag[i], "")), collapse = "\n")
+        text(data[design$stop[i] + 1, mvar] - 0.5, (y.lim[2] - y.lim[1]) / 2 + y.lim[1], labels = tex, cex = 0.8, ...)
       }
       
     }

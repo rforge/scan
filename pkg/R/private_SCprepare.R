@@ -15,14 +15,14 @@
   
   pvar       <- scdf_attr(data, .opt$phase)
   var.mt     <- scdf_attr(data, .opt$mt)
-  var.values <- scdf_attr(data, .opt$dv)
+  dvar <- scdf_attr(data, .opt$dv)
   
   names(data) <- .case.names(names(data), length(data))
   
   for(case in 1:length(data)) {
     VARS <- names(data[[case]])
-    if (!all(var.values %in% VARS)){
-      stop("No variable for values with the name ", var.values, " in the scdf.")
+    if (!all(dvar %in% VARS)){
+      stop("No variable for values with the name ", dvar, " in the scdf.")
     }
     if (!(pvar %in% VARS)) {
       stop("No variable for phase with the name ", pvar, " in the scdf.")
@@ -30,15 +30,15 @@
     if (!(var.mt %in% VARS)) {
       stop("No variable for mt with the name ",var.mt, " in the scdf.")
     }
-    if (na.rm) data[[case]] <- data[[case]][!is.na(data[[case]][, var.values]), ]
+    if (na.rm) data[[case]] <- data[[case]][!is.na(data[[case]][, dvar]), ]
     if (!is.factor(data[[case]][, pvar])) data[[case]][, pvar] <- as.factor(data[[case]][, pvar])
     
-    if (change.var.values && var.values != "values") {
+    if (change.var.values && dvar != "values") {
       if ("values" %in% VARS) {
         warning("Original values variable was renamed to values_renamed for this analysis.")
         names(data[[case]])[match("values", VARS)] <- "values_renamed"
       }
-      names(data[[case]])[match(var.values, VARS)] <- "values"
+      names(data[[case]])[match(dvar, VARS)] <- "values"
     }
     
     if (change.var.mt && !(var.mt %in% VARS)) {

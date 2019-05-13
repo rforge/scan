@@ -39,12 +39,12 @@ is regressed by its surrounding data points.
 
 ## Use the three different smoothing functions and compare the results
 study <- c(
-  Huber2014$Berta,
-  smoothSC(Huber2014$Berta, FUN = "movingMedian"),
-  smoothSC(Huber2014$Berta, FUN = "movingMean"),
-  smoothSC(Huber2014$Berta, FUN = "localRegression")
+ "Original"         = Huber2014$Berta,
+ "Moving Median"    = smoothSC(Huber2014$Berta, FUN = "movingMedian"),
+ "Moving Mean"      = smoothSC(Huber2014$Berta, FUN = "movingMean"),
+ "Local Regression" = smoothSC(Huber2014$Berta, FUN = "localRegression")
 )
-plot(study, case.names = c("Original","Moving Median","Moving Mean", "Local Regression"))
+plot(study)
 
 }
 \seealso{

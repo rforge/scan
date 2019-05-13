@@ -4,16 +4,21 @@
 \alias{truncateSC}
 \title{Truncate single-case data}
 \usage{
-truncateSC(data, pvar, truncate = list(A = c(0, 0), B = c(0, 0)))
+truncateSC(data, dvar, pvar, truncate = list(A = c(0, 0), B = c(0, 0)),
+  na = TRUE)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
+
+\item{dvar}{Character string with the name of the dependent variable. Defaults to the attributes in the scdf file.}
 
 \item{pvar}{Character string with the name of the phase variable. Defaults to the attributes in the scdf file.}
 
 \item{truncate}{A list with a vector of two (beginning and end) values for each phase defining the number of data points to be deleted.
 For lists of single-case data frames, the truncation is adapted to the length 
 of each phase for each single case.}
+
+\item{na}{If FALSE, the truncated measurement times are deletet. If TRUE, NAs are set for the dependent variable.}
 }
 \value{
 A truncated data frame (for each single-case).
@@ -24,8 +29,10 @@ This function truncates data points at the beginning and / or end each phase.
 \examples{
 
 # Truncate the first two data points of both phases and compare the two data sets
-study <- c(byHeart2011[1], truncateSC(byHeart2011[1], truncate = list(A = c(2,0), B = c(2,0))))
-names(study) <- c("Original","Selected")
+study <- c(
+  "Original" = byHeart2011[1], 
+  "Selected" = truncateSC(byHeart2011[1], truncate = list(A = c(2,0), B = c(2,0)))
+)
 plot(study)
 
 }
