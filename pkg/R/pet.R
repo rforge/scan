@@ -33,7 +33,7 @@ pet <- function(data, dvar, pvar, mvar, ci = 0.95, decreasing = FALSE, phases = 
   if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
   if (missing(mvar)) mvar <- scdf_attr(data, .opt$mt) else scdf_attr(data, .opt$mt) <- mvar
   
-  data <- .SCprepareData(data, na.rm = TRUE, change.var.values = FALSE, change.var.phase = FALSE,change.var.mt = FALSE)
+  data <- .SCprepareData(data, na.rm = TRUE)
   data <- .keepphasesSC(data, phases = phases, pvar = pvar)$data
   
   N <- length(data)
@@ -51,13 +51,13 @@ pet <- function(data, dvar, pvar, mvar, ci = 0.95, decreasing = FALSE, phases = 
     res <- predict(model, B, se.fit = TRUE)
     nB <- nrow(B)
     if(!decreasing) {
-      pet.ci[i] <- mean(B[, dvar] > (res$fit + res$se.fit * se.factor), na.rm = TRUE) * 100
-      pet[i]    <- mean(B[, dvar] > res$fit, na.rm = TRUE)*100
-      p[i]      <- binom.test(sum(B[, dvar] > res$fit, na.rm = TRUE), nB, alternative = "greater")$p.value
+      pet.ci[i] <- mean(B[, dvar] > (res$fit + res$se.fit * se.factor)) * 100
+      pet[i]    <- mean(B[, dvar] > res$fit)*100
+      p[i]      <- binom.test(sum(B[, dvar] > res$fit), nB, alternative = "greater")$p.value
     } else {
-      pet.ci[i] <- mean(B[, dvar] < (res$fit - res$se.fit * se.factor), na.rm = TRUE) * 100
-      pet[i]    <- mean(B[, dvar] < res$fit, na.rm = TRUE) * 100
-      p[i]      <- binom.test(sum(B[, dvar] < res$fit, na.rm = TRUE), nB, alternative = "greater")$p.value
+      pet.ci[i] <- mean(B[, dvar] < (res$fit - res$se.fit * se.factor)) * 100
+      pet[i]    <- mean(B[, dvar] < res$fit) * 100
+      p[i]      <- binom.test(sum(B[, dvar] < res$fit), nB, alternative = "greater")$p.value
     }
   }
 

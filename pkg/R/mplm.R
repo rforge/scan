@@ -33,7 +33,7 @@ mplm <- function(data, dvar, mvar, pvar, model = "B&L-B", trend = TRUE, level = 
   if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
   if (missing(mvar)) mvar <- scdf_attr(data, .opt$mt) else scdf_attr(data, .opt$mt) <- mvar
   
-  data <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
+  data <- .SCprepareData(data)
   
   N <- length(data)
   if(N > 1) {

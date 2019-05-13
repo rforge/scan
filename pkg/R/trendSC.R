@@ -44,50 +44,50 @@
 trendSC <- function(data, dvar, pvar, mvar, offset = -1,model = NULL) {
 
   # set attributes to arguments else set to defaults of scdf
-  if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
+  if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv)    else scdf_attr(data, .opt$dv)    <- dvar
   if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
-  if (missing(mvar)) mvar <- scdf_attr(data, .opt$mt) else scdf_attr(data, .opt$mt) <- mvar
+  if (missing(mvar)) mvar <- scdf_attr(data, .opt$mt)    else scdf_attr(data, .opt$mt)    <- mvar
   
-  data <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
+  data <- .SCprepareData(data)
 
   phase <- NULL
   N <- length(data)
-  if(N > 1)
+  if(N > 1) {
     stop("Multiple single-cases are given. Calculations can only be applied to one single-case data set.\n")
-  
+  }
   data <- data[[1]]
   
   design <- rle(as.character(data[, pvar]))$values
   while(any(duplicated(design))) {
-    design[anyDuplicated(design)] <- paste0(design[anyDuplicated(design)],".phase",anyDuplicated(design))
+    design[anyDuplicated(design)] <- paste0(design[anyDuplicated(design)], ".phase", anyDuplicated(design))
   }
   
   phases <- .phasestructure(data, pvar = pvar)
   
-  FORMULAS <- c(formula(paste0(dvar," ~ ",mvar)) , 
-                formula(paste0(dvar," ~ I(",mvar,"^2)")))
-  FORMULAS.NAMES <- c("Linear","Squared")
+  FORMULAS <- c(formula(paste0(dvar, " ~ "  , mvar)) , 
+                formula(paste0(dvar, " ~ I(", mvar, "^2)")))
+  FORMULAS.NAMES <- c("Linear", "Squared")
   if(!is.null(model)) {
     FORMULAS <- c(FORMULAS, model)
     FORMULAS.NAMES <- c(FORMULAS.NAMES, names(model))
   }
   tmp <- length(design) + 1
-  rows <- paste0( paste0(rep(FORMULAS.NAMES, each = tmp),".") ,c("ALL",design))
+  rows <- paste0( paste0(rep(FORMULAS.NAMES, each = tmp), ".") ,c("ALL", design))
   
   ma <- matrix(NA, nrow = length(rows), ncol = 3)
   row.names(ma) <- rows
-  colnames(ma) <- c("Intercept", "B","Beta")
+  colnames(ma) <- c("Intercept", "B", "Beta")
   ma <- as.data.frame(ma)
   
   for(f in 1:length(FORMULAS)) {
-    VAR <- paste0(FORMULAS.NAMES[f],".ALL")
+    VAR <- paste0(FORMULAS.NAMES[f], ".ALL")
     data.phase <- data
-    data.phase[,mvar] <- data.phase[,mvar] - min(data.phase[,mvar], na.rm = TRUE) + 1 + offset
+    data.phase[, mvar] <- data.phase[, mvar] - min(data.phase[, mvar], na.rm = TRUE) + 1 + offset
     ma[which(rows == VAR), 1:3] <- .SCbeta(lm(FORMULAS[[f]], data = data.phase))
     for(p in 1: length(design)) {
-      data.phase <- data[phases$start[p]:phases$stop[p],]
-      data.phase[,mvar] <- data.phase[,mvar] - min(data.phase[,mvar], na.rm = TRUE) + 1 + offset
-      VAR <- paste0(FORMULAS.NAMES[f],".", design[p])
+      data.phase <- data[phases$start[p]:phases$stop[p], ]
+      data.phase[, mvar] <- data.phase[,mvar] - min(data.phase[, mvar], na.rm = TRUE) + 1 + offset
+      VAR <- paste0(FORMULAS.NAMES[f], ".", design[p])
       ma[which(rows == VAR), 1:3] <- .SCbeta(lm(FORMULAS[[f]], data = data.phase))
     }
     

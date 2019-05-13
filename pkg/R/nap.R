@@ -35,7 +35,7 @@ nap <- function(data, dvar, pvar, decreasing = FALSE, phases = c(1,2)) {
   if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
   if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
 
-  data <- .SCprepareData(data, na.rm = TRUE, change.var.values = FALSE, change.var.phase = FALSE)
+  data <- .SCprepareData(data, na.rm = TRUE)
   data <- .keepphasesSC(data, phases = phases, pvar = pvar)$data
   
   N <- length(data)
@@ -55,15 +55,15 @@ nap <- function(data, dvar, pvar, decreasing = FALSE, phases = c(1,2)) {
     PAIRS[case] <- length(A) * length(B)
     
     if (!decreasing)
-      POS[case] <- PAIRS[case] - sum(sapply(A, function(x) x >= B), na.rm = TRUE)
+      POS[case] <- PAIRS[case] - sum(sapply(A, function(x) x >= B))
     if (decreasing)
-      POS[case] <- PAIRS[case] - sum(sapply(A, function(x) x <= B), na.rm = TRUE)
+      POS[case] <- PAIRS[case] - sum(sapply(A, function(x) x <= B))
     
-    test <- wilcox.test(A, B, alternative = ifelse(decreasing,"greater", "less"), exact = FALSE)
+    test <- wilcox.test(A, B, alternative = ifelse(decreasing, "greater", "less"), exact = FALSE)
     
     W[case] <- test$statistic
     p[case] <- test$p.value
-    TIES[case] <- sum(sapply(A, function(x) x == B), na.rm = TRUE)
+    TIES[case] <- sum(sapply(A, function(x) x == B))
     NAP[case]  <- (POS[case] + (0.5 * TIES[case])) / PAIRS[case]
     
   }  

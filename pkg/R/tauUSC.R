@@ -36,10 +36,10 @@
 tauUSC <- function (data, dvar, pvar, ties.method = "omit", method = "complete", phases = c(1, 2)) {
 
   # set attributes to arguments else set to defaults of scdf
-  if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
+  if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv)    else scdf_attr(data, .opt$dv)    <- dvar
   if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
 
-  data <- .SCprepareData(data, change.var.values = FALSE, change.var.phase = FALSE)
+  data <- .SCprepareData(data)
   data <- .keepphasesSC(data, phases = phases,pvar = pvar)$data
   
   N <- length(data)
@@ -50,10 +50,16 @@ tauUSC <- function (data, dvar, pvar, ties.method = "omit", method = "complete",
     N = N,
     method = method
   )
-  ROWS <- c("A vs. B","Trend A","Trend B","Trend B - Trend A","A vs. B - Trend A","A vs. B + Trend B", "A vs. B + Trend B - Trend A")
-  COLS <- c("pairs", "pos", "neg","ties","S","D","Tau","Tau.b","SD","VAR","Z","p")
+  ROWS <- c(
+    "A vs. B", "Trend A", "Trend B", "Trend B - Trend A", "A vs. B - Trend A", 
+    "A vs. B + Trend B", "A vs. B + Trend B - Trend A"
+  )
+  COLS <- c(
+    "pairs", "pos", "neg", "ties", "S", "D", "Tau", "Tau.b", "SD", 
+    "VAR","Z","p"
+  )
   for(i in 1:N) {
-    out <- matrix(NA,length(ROWS),length(COLS), dimnames= list(ROWS,COLS))
+    out <- matrix(NA, length(ROWS), length(COLS), dimnames = list(ROWS, COLS))
     out <- as.data.frame(out)
     
     A <- data[[i]][data[[i]][, pvar] == "A", dvar]
@@ -63,7 +69,7 @@ tauUSC <- function (data, dvar, pvar, ties.method = "omit", method = "complete",
     nB <- length(B)
     nAB <- nA + nB
     
-    tau_m <- matrix(NA, nrow = nAB, ncol = nAB, dimnames = list(AB,AB))
+    tau_m <- matrix(NA, nrow = nAB, ncol = nAB, dimnames = list(AB, AB))
     tmp <- t(sapply(AB, function(x) x > AB))
     tau_m[tmp] <- "-"
     tmp <- t(sapply(AB, function(x) x < AB))
@@ -81,14 +87,14 @@ tauUSC <- function (data, dvar, pvar, ties.method = "omit", method = "complete",
     if(ties.method == "negative") neg.s <- c("-", "T")
  
     AvBm <- tau_m[1:nA, (nA + 1):nAB]
-    AvBpos <- sum(AvBm%in%pos.s)
-    AvBneg <- sum(AvBm%in%neg.s)
-    AvBtie <- sum(AvBm%in%tie.s)
+    AvBpos <- sum(AvBm %in% pos.s)
+    AvBneg <- sum(AvBm %in% neg.s)
+    AvBtie <- sum(AvBm %in% tie.s)
     
     AvAm <- tau_m[1:nA, 1:nA]
-    AvApos <- sum(AvAm%in%pos.s)
-    AvAneg <- sum(AvAm%in%neg.s)
-    AvAtie <- sum(AvAm%in%tie.s)
+    AvApos <- sum(AvAm %in% pos.s)
+    AvAneg <- sum(AvAm %in% neg.s)
+    AvAtie <- sum(AvAm %in% tie.s)
     
     BvBm <- tau_m[(nA + 1):nAB, (nA + 1):nAB]
     BvBpos <- sum(BvBm %in% pos.s)
@@ -103,9 +109,9 @@ tauUSC <- function (data, dvar, pvar, ties.method = "omit", method = "complete",
     AvB_AKen    <- .kendall(AB, c(nA:1, rep(nA + 1, nB)))
     AvB_BKen    <- .kendall(AB, c(rep(0, nA), (nA + 1):nAB))
 
-    AvB_pair <- nA * nB
-    AvA_pair <- (nA * (nA - 1)) / 2
-    BvB_pair <- (nB * (nB - 1)) / 2
+    AvB_pair   <- nA * nB
+    AvA_pair   <- (nA * (nA - 1)) / 2
+    BvB_pair   <- (nB * (nB - 1)) / 2
     ABvAB_pair <- (nAB * (nAB - 1)) / 2
     
     pairs <- c(
@@ -118,36 +124,29 @@ tauUSC <- function (data, dvar, pvar, ties.method = "omit", method = "complete",
       AvB_pair + BvB_pair    # A vs. B + B vs. B
      )
     
-    if(method == "parker") {
-      out$pairs <- c(pairs, 
-        ABvAB_pair)  # A vs. B + B vs. B - A vs. A
-    }
-    
-    if(method == "complete") {
-      out$pairs <- c(pairs, 
-        AvB_pair + AvA_pair + BvB_pair)  # A vs. B + B vs. B - A vs. A)
-    }
+    if(method == "parker"  ) out$pairs <- c(pairs, ABvAB_pair)  # A vs. B + B vs. B - A vs. A
+    if(method == "complete") out$pairs <- c(pairs, AvB_pair + AvA_pair + BvB_pair)  # A vs. B + B vs. B - A vs. A)
     
     out$pos <- c(
       AvBpos,
       AvApos,
       BvBpos, 
-      BvBpos+AvAneg, 
+      BvBpos + AvAneg, 
       #AvApos+BvBpos+AvBpos, 
-      AvBpos+AvAneg, 
-      AvBpos+BvBpos, 
-      AvBpos+BvBpos+AvAneg
+      AvBpos + AvAneg, 
+      AvBpos + BvBpos, 
+      AvBpos + BvBpos + AvAneg
     )
     
     out$neg <- c(
       AvBneg,
       AvAneg,
       BvBneg, 
-      BvBneg+AvApos, 
+      BvBneg + AvApos, 
       #AvAneg+BvBneg+AvBneg, 
-      AvBneg+AvApos, 
-      AvBneg+BvBneg, 
-      AvBneg+BvBneg+AvApos
+      AvBneg + AvApos, 
+      AvBneg + BvBneg, 
+      AvBneg + BvBneg + AvApos
     )
     
     out$ties <- c(
@@ -156,12 +155,12 @@ tauUSC <- function (data, dvar, pvar, ties.method = "omit", method = "complete",
       BvBtie, 
       BvBtie+AvAtie, 
       #AvAtie+BvBtie+AvBtie, 
-      AvBtie+AvAtie, 
-      AvBtie+BvBtie, 
-      AvBtie+BvBtie+AvAtie
+      AvBtie + AvAtie, 
+      AvBtie + BvBtie, 
+      AvBtie + BvBtie + AvAtie
     )
     
-    out$S <- out$pos-out$neg
+    out$S <- out$pos - out$neg
     out$D <- c(
       out$pairs[1] - out$ties[1] / 2,
       AvAKen$D,
@@ -174,44 +173,44 @@ tauUSC <- function (data, dvar, pvar, ties.method = "omit", method = "complete",
     )
     
     
-    out$Tau <- out$S / out$pairs
+    out$Tau   <- out$S / out$pairs
     out$Tau.b <- out$S / out$D
     out$SD <- c(
-      sqrt((nA*nB)*(nA+nB+1)/12)*2,
-      sqrt(.kendall(sample(nA),1:nA)$varS),
-      sqrt(.kendall(sample(nB),1:nB)$varS),
-      sqrt(.kendall(sample(nA+nB), c(nA:1,1:nB))$varS),
+      sqrt((nA * nB) * (nA + nB + 1) / 12) * 2,
+      sqrt(.kendall(sample(nA), 1:nA)$varS),
+      sqrt(.kendall(sample(nB), 1:nB)$varS),
+      sqrt(.kendall(sample(nA + nB), c(nA:1, 1:nB))$varS),
       #NA,
       sqrt(AvB_AKen$varS),
       sqrt(AvB_BKen$varS),
       sqrt(AvB_B_AKen$varS)
     )
-    out$VAR <- out$SD^2
+    out$VAR      <- out$SD^2
     out$SE.Tau.b <- out$SD / out$D
     
     out$Z <- out$S / out$SD
     out$p <- pnorm(abs(out$Z), lower.tail = FALSE) * 2
     
-    ret$table[[i]] <- out		
+    ret$table[[i]]  <- out		
     ret$matrix[[i]] <- tau_m
-    ret$tau_u[[i]] <- c("A vs. B + Trend B - Trend A" = out["A vs. B + Trend B - Trend A","Tau"])
+    ret$tau_u[[i]]  <- c("A vs. B + Trend B - Trend A" = out["A vs. B + Trend B - Trend A","Tau"])
     
   }
   weight.t <- c()
   weight.v <- c()
   for(i in 1:N) {
-    weight.v <- c(weight.v,1/ret$table[[i]]["A vs. B + Trend B - Trend A","VAR"])
-    weight.t <- c(weight.t,ret$table[[i]]["A vs. B + Trend B - Trend A","Tau"])
+    weight.v <- c(weight.v, 1 / ret$table[[i]]["A vs. B + Trend B - Trend A","VAR"])
+    weight.t <- c(weight.t, ret$table[[i]]["A vs. B + Trend B - Trend A","Tau"])
   }
   ret$Overall_tau_u <- c("A vs. B + Trend B - Trend A" = sum(weight.v*weight.t)/sum(weight.v))
   
   weight.t <- c()
   weight.v <- c()
   for(i in 1:N) {
-    weight.v <- c(weight.v,1/ret$table[[i]]["A vs. B - Trend A","VAR"])
-    weight.t <- c(weight.t,ret$table[[i]]["A vs. B - Trend A","Tau"])
+    weight.v <- c(weight.v, 1 / ret$table[[i]]["A vs. B - Trend A","VAR"])
+    weight.t <- c(weight.t, ret$table[[i]]["A vs. B - Trend A","Tau"])
   }
-  ret$Overall_tau_u <- c(ret$Overall_tau_u, "A vs. B - Trend A" = sum(weight.v*weight.t)/sum(weight.v))
+  ret$Overall_tau_u <- c(ret$Overall_tau_u, "A vs. B - Trend A" = sum(weight.v * weight.t) / sum(weight.v))
   names(ret$table) <- names(data)
   names(ret$tau_u) <- names(data)
   

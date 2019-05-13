@@ -24,7 +24,7 @@ estimateSC <- function(data, dvar, pvar, mvar, s = NULL, rtt = NULL, model = "JW
   if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
   if (missing(mvar)) mvar <- scdf_attr(data, .opt$mt) else scdf_attr(data, .opt$mt) <- mvar
   
-  data <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
+  data <- .SCprepareData(data)
   cases <- length(data)
   case.names <- names(data)
   if (is.null(case.names)) case.names <- paste0("Case", 1:cases)

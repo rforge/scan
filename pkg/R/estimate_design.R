@@ -27,7 +27,7 @@ estimate_design <- function(data, dvar, pvar, mvar, m = NULL, s = NULL, rtt = NU
   if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
   if (missing(mvar)) mvar <- scdf_attr(data, .opt$mt) else scdf_attr(data, .opt$mt) <- mvar
   
-  data <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
+  data <- .SCprepareData(data)
   N <- length(data)
   case_names <- names(data)
   

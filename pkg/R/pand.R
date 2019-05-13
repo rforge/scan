@@ -62,7 +62,7 @@ pand <- function(data, dvar, pvar, decreasing = FALSE, correction = TRUE, phases
   if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
   if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
 
-  data <- .SCprepareData(data, na.rm = TRUE, change.var.values = FALSE, change.var.phase = FALSE)
+  data <- .SCprepareData(data, na.rm = TRUE)
   data <- .keepphasesSC(data, phases = phases,pvar = pvar)$data
   
   phase.expected <- list()
@@ -96,7 +96,7 @@ pand <- function(data, dvar, pvar, decreasing = FALSE, correction = TRUE, phases
   
   n <- nA + nB
   
-  OD.PP <- rep(NA,N)
+  OD.PP <- rep(NA, N)
   OD.A <- 0
   OD.B <- 0
   
@@ -107,12 +107,12 @@ pand <- function(data, dvar, pvar, decreasing = FALSE, correction = TRUE, phases
     n12 <- n1 + n2
     
     rang <- order(z, decreasing = decreasing)
-    AB <- sum(rang[1:n1]        > n1, na.rm = TRUE)
-    BA <- sum(rang[(n1+1):n12] <= n1, na.rm = TRUE)
+    AB <- sum(rang[1:n1] > n1)
+    BA <- sum(rang[(n1 + 1):n12] <= n1)
     if(correction) {
-      ord <- z[rang,]
-      AB <- AB + 0.5 * sum(ord[1:n1] == min(ord[(n1 + 1):n12], na.rm = TRUE), na.rm = TRUE)
-      BA <- BA + 0.5 * sum(ord[(n1 + 1):n12] == max(ord[1:n1], na.rm = TRUE), na.rm = TRUE)
+      ord <- z[rang, ]
+      AB <- AB + 0.5 * sum(ord[1:n1] == min(ord[(n1 + 1):n12]))
+      BA <- BA + 0.5 * sum(ord[(n1 + 1):n12] == max(ord[1:n1]))
     }
     OD.PP[i] <- AB + BA
     OD.A <- OD.A + AB

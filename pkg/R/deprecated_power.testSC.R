@@ -122,7 +122,7 @@ power.testSC <- function(data = NULL, dvar, pvar, mvar, parameters = NULL, stat 
     if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
     if (missing(mvar)) mvar <- scdf_attr(data, .opt$mt) else scdf_attr(data, .opt$mt) <- mvar
     
-    data    <- .SCprepareData(data)
+    data    <- .SCprepareData(data, change.var.phase = TRUE, change.var.values = TRUE, change.var.mt = TRUE)
     est     <- estimateSC(data, s = s, rtt = rtt)
     cases   <- length(data)
     B.start <- est$B.start

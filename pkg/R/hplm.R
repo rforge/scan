@@ -53,7 +53,7 @@ hplm <- function(data, dvar, pvar, mvar, model = "B&L-B", method = "ML", control
   if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
   if (missing(mvar)) mvar <- scdf_attr(data, .opt$mt) else scdf_attr(data, .opt$mt) <- mvar
 
-  dat <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
+  dat <- .SCprepareData(data)
   
   ATTRIBUTES <- attributes(dat)
   

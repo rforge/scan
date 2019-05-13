@@ -4,12 +4,12 @@
 \alias{rankSC}
 \title{Rank-transformation of single-case data files}
 \usage{
-rankSC(data, var = NULL, grand = TRUE, ...)
+rankSC(data, var, grand = TRUE, ...)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
 
-\item{var}{A charcter or character with the names of the variables to be ranked.}
+\item{var}{A string or string vector with the names of the variables to be ranked.}
 
 \item{grand}{If TRUE, ranks will be calculated across all cases. If FALSE ranks are calculated within each case.}
 

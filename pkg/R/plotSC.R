@@ -107,7 +107,7 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
   if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
   if (missing(mvar)) mvar <- scdf_attr(data, .opt$mt) else scdf_attr(data, .opt$mt) <- mvar
   
-  data.list <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
+  data.list <- .SCprepareData(data)
   
   N <- length(data.list)
   if (N > 1) par(mfrow = c(N, 1))
@@ -196,8 +196,7 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
   
   for(case in 1:N) {
     data <- data.list[[case]]
-    #data <- data[!is.na(data[, dvar]), ] #maybe use the complete function later
-    
+
     design <- .phasestructure(data, pvar)
     
     # plot ylim

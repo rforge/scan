@@ -32,27 +32,27 @@ pem <- function(data, dvar, pvar, decreasing = FALSE, binom.test = TRUE, chi.tes
   if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
   if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
  
-  data <- .SCprepareData(data, na.rm = TRUE, change.var.values = FALSE, change.var.phase = FALSE)
-  data <- .keepphasesSC(data, phases = phases,pvar = pvar)$data
+  data <- .SCprepareData(data, na.rm = TRUE)
+  data <- .keepphasesSC(data, phases = phases, pvar = pvar)$data
   
   N <- length(data)
   
-  PEM       <- rep(NA,N)
-  chi       <- rep(NA,N)
-  chi.df    <- rep(NA,N)
-  chi.p     <- rep(NA,N)
-  binom.p   <- rep(NA,N)
-  positives <- rep(NA,N)
-  total     <- rep(NA,N)
+  PEM       <- rep(NA, N)
+  chi       <- rep(NA, N)
+  chi.df    <- rep(NA, N)
+  chi.p     <- rep(NA, N)
+  binom.p   <- rep(NA, N)
+  positives <- rep(NA, N)
+  total     <- rep(NA, N)
   
   
   for(i in 1:N) {
     A <- data[[i]][, dvar][data[[i]][, pvar] == "A"]
     B <- data[[i]][, dvar][data[[i]][, pvar] == "B"]
     if (!decreasing)
-      PEM[i] <- mean(B > FUN(A, na.rm = TRUE,...), na.rm = TRUE) * 100
+      PEM[i] <- mean(B > FUN(A,...)) * 100
     if (decreasing)
-      PEM[i] <- mean(B < FUN(A, na.rm = TRUE,...), na.rm = TRUE) * 100
+      PEM[i] <- mean(B < FUN(A,...)) * 100
     if(binom.test) {
       nB <- length(B)
       bi <- binom.test(round(PEM[i] / 100  * nB), nB, alternative = "greater")
@@ -63,7 +63,7 @@ pem <- function(data, dvar, pvar, decreasing = FALSE, binom.test = TRUE, chi.tes
     if(chi.test) {
       nB <- length(B)
       exceeding <- PEM[i] / 100  * nB
-      res <- chisq.test(c(exceeding, nB - exceeding), p = c(0.5,0.5))
+      res <- chisq.test(c(exceeding, nB - exceeding), p = c(0.5, 0.5))
       chi[i]    <- res$statistic
       chi.df[i] <- res$parameter
       chi.p[i]  <- res$p.value

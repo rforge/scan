@@ -54,6 +54,7 @@
 #' could be combined by providing a list with two elements. E.g., \code{phases
 #' = list(A = c(1,3), B = c(2,4))} will compare phases 1 and 3 (as A) against 2
 #' and 4 (as B). Default is \code{phases = c("A","B")}.
+#' @param seed A seed number for the random generator.
 #' @return \item{statistic}{Character string from function call (see
 #' \code{Arguments} above).} \item{N}{Number of single-cases.} \item{n1}{Number
 #' of data points in phase A.} \item{n2}{Number of data points in phase B.}
@@ -82,22 +83,24 @@
 #' @examples
 #' 
 #' ## Compute a randomization test on the first case of the byHeart2011 data and include a graph
-#' randSC(byHeart2011[1], statistic = "Median B-A", graph = TRUE)
+#' randSC(byHeart2011[1], statistic = "Median B-A", graph = TRUE, seed = 123)
 #' 
 #' ## Compute a randomization test on the Grosche2011 data using complete permutation
-#' randSC(Grosche2011, statistic = "Median B-A", complete = TRUE, limit = 4)
+#' randSC(Grosche2011, statistic = "Median B-A", complete = TRUE, limit = 4, seed = 123)
 #' 
 #' @export
 randSC <- function (data, dvar, pvar, statistic = "Mean B-A", 
                     number = 500, complete = FALSE, limit = 5, 
                     startpoints = NA, exclude.equal = FALSE, 
-                    graph = FALSE, output = "c", phases = c("A","B")) {
+                    graph = FALSE, output = "c", phases = c("A","B"), seed = NULL) {
+  
+  if(!is.null(seed)) set.seed(seed)
   
   # set attributes to arguments else set to defaults of scdf
   if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
   if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
 
-  data <- .SCprepareData(data, change.var.values = FALSE, change.var.phase = FALSE)
+  data <- .SCprepareData(data)
   
   keep <- .keepphasesSC(data, phases = phases, pvar = pvar)
   data <- keep$data

@@ -73,7 +73,7 @@ plm <- function(data, dvar, pvar, mvar, AR = 0, model = "B&L-B", family = "gauss
   if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
   if (missing(mvar)) mvar <- scdf_attr(data, .opt$mt) else scdf_attr(data, .opt$mt) <- mvar
   
-  data <- .SCprepareData(data, na.rm = TRUE,change.var.values = FALSE, change.var.mt = FALSE, change.var.phase = FALSE)
+  data <- .SCprepareData(data, na.rm = TRUE)
   
   ATTRIBUTES <- attributes(data)[[.opt$scdf]]
   
@@ -115,10 +115,10 @@ plm <- function(data, dvar, pvar, mvar, AR = 0, model = "B&L-B", family = "gauss
   }
 
   if(AR > 0) {
-    full <- gls(formula.full, data = data, correlation=corARMA(p=AR), method="ML", na.action = na.action)
+    full <- gls(formula.full, data = data, correlation = corARMA(p = AR), method = "ML", na.action = na.action)
     restricted.models <- 
       lapply(formulas.ir, function(x) 
-        gls(model = x, data = data, correlation=corARMA(p = AR), method = "ML", na.action = na.action)
+        gls(model = x, data = data, correlation = corARMA(p = AR), method = "ML", na.action = na.action)
       )
     df2.full <- full$dims$N - full$dims$p
     df.int <- if ("(Intercept)" %in% names(full$parAssign)) 1 else 0

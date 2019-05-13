@@ -12,7 +12,6 @@
 #' column with corresponding case names.
 #' @param id Variable name of the Level 2 data frame that contains the case
 #' names.
-#' @param check Indicating whether the scdf is checked fpr incongruity.
 #' @return Returns one data frame with data of all single-cases structured by
 #' the case variable.
 #' @author Juergen Wilbert
@@ -31,16 +30,15 @@
 #' summary(Leidig2018_long)
 #' 
 #' @export
-longSCDF <- function(data, l2 = NULL, id = "case", check = FALSE) {
-  if(check) dat <- .SCprepareData(data) else dat <- data
-  
-  label <- .case.names(names(dat), length(dat))
+longSCDF <- function(data, l2 = NULL, id = "case") {
+
+  label <- .case.names(names(data), length(data))
 
   outdat <- vector()
   
-  for (case in 1:length(dat)) {
-    dat[[case]]$case <- label[case]
-    outdat <- rbind(outdat, dat[[case]])
+  for (case in 1:length(data)) {
+    data[[case]]$case <- label[case]
+    outdat <- rbind(outdat, data[[case]])
   }
   
   outdat <- cbind(outdat[, ncol(outdat)], outdat[, -ncol(outdat)])

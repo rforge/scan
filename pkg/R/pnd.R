@@ -22,7 +22,7 @@ pnd <- function(data, dvar, pvar, decreasing = FALSE, phases = c("A","B")) {
   if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
   if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
   
-  data <- .SCprepareData(data, na.rm = TRUE, change.var.values = FALSE, change.var.phase = FALSE)
+  data <- .SCprepareData(data, na.rm = TRUE)
   data <- .keepphasesSC(data, phases = phases, pvar = pvar)$data
   
   PND <- c()
@@ -33,9 +33,9 @@ pnd <- function(data, dvar, pvar, decreasing = FALSE, phases = c("A","B")) {
     B <- data[[i]][, dvar][data[[i]][, pvar] == "B"]
     n.B[i] <- length(B)
     if (!decreasing)
-      PND[i] <- sum(B > max(A, na.rm = TRUE), na.rm = TRUE) /  n.B[i] * 100
+      PND[i] <- sum(B > max(A)) /  n.B[i] * 100
     if (decreasing)
-      PND[i] <- sum(B < min(A, na.rm = TRUE), na.rm = TRUE) /  n.B[i] * 100
+      PND[i] <- sum(B < min(A)) /  n.B[i] * 100
   }
   
   out <- list(PND = PND, case.names = names(data), n.B = n.B)

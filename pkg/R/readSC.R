@@ -49,18 +49,18 @@
 #' 
 #' @export
 readSC <- function(filename = NULL, data = NULL, sep = ",", dec = ".", sort.labels = FALSE, cvar = "case", pvar = "phase", dvar = "values", mvar = "mt", phase.names = NULL, type = "csv", ...) {
-  if(is.null(filename) && is.null(data)) {
+  if (is.null(filename) && is.null(data)) {
     filename <- file.choose()
-    cat("Import file", filename,"\n\n")
+    cat("Import file", filename, "\n\n")
   }
-  if(!is.null(data)) {
+  if (!is.null(data)) {
     type <- "data"
     dat <- as.data.frame(data)
   }
   
-  if(type == "csv")
+  if (type == "csv")
     dat <- utils::read.table(filename, header = TRUE, sep = sep, dec = dec, stringsAsFactors = FALSE,...)
-  if(type == "excel") {
+  if (type == "excel") {
     if (!requireNamespace("readxl", quietly = TRUE)) {
       stop("Package readxl needed for this function to work. Please install it.",
            call. = FALSE)
@@ -76,24 +76,23 @@ readSC <- function(filename = NULL, data = NULL, sep = ",", dec = ".", sort.labe
   #pos.rest <- which(!(1:columns %in% pos))
   #dat <- dat[, c(pos, pos.rest)]
 
-  if(!sort.labels) 
+  if (!sort.labels) {
     dat[, cvar] <- factor(dat[, cvar], levels = unique(dat[, cvar]))
-  else
+  } else {
     dat[, cvar] <- factor(dat[, cvar])
+  }
   
   dat[, pvar] <- factor(dat[, pvar], levels = unique(dat[, pvar]))
   
-  if(!is.null(phase.names))
-    levels(dat[,pvar]) <- phase.names
+  if (!is.null(phase.names)) levels(dat[, pvar]) <- phase.names
 
   lab <- levels(dat[, cvar])
   dat <- split(dat, dat[, cvar])
-  dat <- lapply(dat, function(x) x[,2:columns])
-  for(i in 1:length(dat))
-    row.names(dat[[i]]) <- 1:nrow(dat[[i]])
+  dat <- lapply(dat, function(x) x[, 2:columns])
+  for(i in 1:length(dat)) row.names(dat[[i]]) <- 1:nrow(dat[[i]])
   names(dat) <- lab
-  cat("Imported",length(dat),"cases.\n")
-  #if(columns == 3) {
+  cat("Imported", length(dat), "cases.\n")
+  #if (columns == 3) {
   #  cat("Measurement-times are missing. Standard times were assigned.\n")
   #  dat <- .SCprepareData(dat)
   #}

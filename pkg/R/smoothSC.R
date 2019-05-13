@@ -39,30 +39,27 @@ smoothSC <- function(data, dvar, mvar, FUN = "movingMedian", intensity = NULL){
   if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
   if (missing(mvar)) mvar <- scdf_attr(data, .opt$mt) else scdf_attr(data, .opt$mt) <- mvar
   
-  data <- .SCprepareData(data, change.var.values = FALSE, change.var.mt = FALSE)
+  data <- .SCprepareData(data)
   ATTRIBUTES <- attributes(data)
   NAMES <- names(data)
   if (FUN == "movingMean") {
-    if(is.null(intensity)) 
-      intensity <- 1
+    if(is.null(intensity)) intensity <- 1
     out <-lapply(data, function(x) {
       x[, dvar] <- .SCmovingAverage(x[, dvar], intensity, mean)
       x})
   }
   if (FUN == "movingMedian") {
-    if(is.null(intensity)) 
-      intensity <- 1
+    if(is.null(intensity)) intensity <- 1
     out <- lapply(data, function(x) {
       x[, dvar] <- .SCmovingAverage(x[, dvar], intensity, median)
       x})
   }
   if (FUN == "localRegression") {
-    if(is.null(intensity)) 
-      intensity <- 0.2
+    if(is.null(intensity)) intensity <- 0.2
     out <- lapply(data, function(x) {
       xval <- x[!is.na(x[, dvar]), mvar]
       yval <- x[!is.na(x[, dvar]), dvar]
-      x[, dvar] <- lowess(yval~xval, f = intensity)$y
+      x[, dvar] <- lowess(yval ~ xval, f = intensity)$y
       x})
   }
   attributes(out) <- ATTRIBUTES

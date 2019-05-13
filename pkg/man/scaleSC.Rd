@@ -4,8 +4,8 @@
 \alias{scaleSC}
 \title{Scaling values of an scdf file}
 \usage{
-scaleSC(data, var = NULL, center = TRUE, scale = FALSE, m = 0,
-  sd = 1, grand = TRUE)
+scaleSC(data, var, center = TRUE, scale = FALSE, m = 0, sd = 1,
+  grand = TRUE)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about

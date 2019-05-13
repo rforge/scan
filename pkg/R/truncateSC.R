@@ -25,9 +25,9 @@ truncateSC <- function (data, dvar, pvar, truncate = list(A = c(0,0), B = c(0,0)
   
   # set attributes to arguments else set to defaults of scdf
   if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar
-  if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
+  if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv)    else scdf_attr(data, .opt$dv)    <- dvar
   
-  data <- .SCprepareData(data, change.var.values = FALSE, change.var.phase = FALSE)
+  data <- .SCprepareData(data)
   
   N = length(data)
   

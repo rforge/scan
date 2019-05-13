@@ -5,7 +5,7 @@
 \title{Creating a long format data frame from several single-case data frames
 (scdf).}
 \usage{
-longSCDF(data, l2 = NULL, id = "case", check = FALSE)
+longSCDF(data, l2 = NULL, id = "case")
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
@@ -16,8 +16,6 @@ column with corresponding case names.}
 
 \item{id}{Variable name of the Level 2 data frame that contains the case
 names.}
-
-\item{check}{Indicating whether the scdf is checked fpr incongruity.}
 }
 \value{
 Returns one data frame with data of all single-cases structured by

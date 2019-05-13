@@ -28,7 +28,7 @@
 #' @export
 makesingleSC <- function(data, scale = FALSE, type = "add") {
   warning(.opt$function_deprecated_warning)
-  data <- .SCprepareData(data)
+  data <- .SCprepareData(data, change.var.phase = TRUE, change.var.values = TRUE, change.var.mt = TRUE)
   N <- length(data)
   for(i in 1:N) {
     m  <- mean(data[[i]][data[[i]][,1] == "A",2], na.rm = TRUE)

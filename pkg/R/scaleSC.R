@@ -25,13 +25,9 @@
 #' 
 #' @export
 
-scaleSC <- function(data, var = NULL, center = TRUE, scale = FALSE, m = 0, sd = 1, grand = TRUE) {
-  
-  if(is.null(var)) {
-    stop("Please provide names of variables to be scaled.")
-  }
-  
-  data <- .SCprepareData(data, change.var.values = FALSE, change.var.phase = FALSE, change.var.mt = FALSE)
+scaleSC <- function(data, var, center = TRUE, scale = FALSE, m = 0, sd = 1, grand = TRUE) {
+
+  data <- .SCprepareData(data)
   
   N    <- length(data)
   
