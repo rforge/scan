@@ -19,6 +19,7 @@
 
 estimateSC <- function(data, dvar, pvar, mvar, s = NULL, rtt = NULL, model = "JW", ...) {
   
+  warning(.opt$function_deprecated_warning)
   # set attributes to arguments else set to defaults of scdf
   if (missing(dvar)) dvar <- scdf_attr(data, .opt$dv) else scdf_attr(data, .opt$dv) <- dvar
   if (missing(pvar)) pvar <- scdf_attr(data, .opt$phase) else scdf_attr(data, .opt$phase) <- pvar

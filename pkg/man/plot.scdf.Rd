@@ -115,8 +115,7 @@ plot(Grosche2011$Georg, style = "sienna", ylim = c(0,NA),
 ## Plot a random MBD over three cases and mark interesting MTs
 dat <- rSC(design = design_rSC(3))
 plot(dat, marks = list(positions = list(c(2,4,5),c(1,2,3),c(7,8,9)), col = "blue",
-       cex = 1.4),annotations = list(label = "values","col" = "red", cex = 0.75,
-       offset = 1, round = 0))
+       cex = 1.4), style = c("grid", "annotate", "tiny"))
 
 }
 \seealso{
