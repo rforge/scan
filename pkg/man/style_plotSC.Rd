@@ -10,7 +10,7 @@ style_plotSC(style = "default", ...)
 style.plotSC(...)
 }
 \arguments{
-\item{style}{Predefined styles. Posible values are: "default", "grid", "grid2", "nodots", "annotate", "dark", "dark2", "sienna"}
+\item{style}{Predefined styles.}
 
 \item{...}{Further arguments passed to the plot command.}
 }
@@ -54,6 +54,13 @@ are for example: 16 (filled circles) or "A" (uses the letter A).
 }
 \description{
 The \code{style_plotSC} function is used to create graphical styles for a single-case plot
+}
+\details{
+\code{style_plotSC("")} will return a list of predefined styles.
+Predefined styles can be combined \code{style_plotSC(style = c("grid2", "tiny"))} 
+where settings of a latter style overwrite settings of the former.
+Additional style paramters are set following the style argument and can be combined with those:
+\code{style_plotSC(style = "grid2", fill = "grey50", pch = 18)}.
 }
 \examples{
 newstyle <- style_plotSC(style = "default")

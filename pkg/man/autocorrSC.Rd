@@ -32,7 +32,6 @@ across all phases.
 \examples{
 ## Compute autocorrelations for a list of four single-cases with max.lag = 2
 autocorrSC(Huber2014, lag.max = 2)
-
 }
 \seealso{
 \code{\link{trendSC}}, \code{\link{plm}}, \code{\link{acf}}
@@ -41,4 +40,4 @@ autocorrSC(Huber2014, lag.max = 2)
 Juergen Wilbert
 }
 \concept{Autocorrelation}
-\concept{Seiral correlation}
+\concept{Serial correlation}

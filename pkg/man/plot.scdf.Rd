@@ -7,7 +7,7 @@
 \usage{
 \method{plot}{scdf}(...)
 
-plotSC(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL,
+plotSC(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, xinc = 1,
   lines = NULL, marks = NULL, phase.names = NULL, xlab = NULL,
   ylab = NULL, main = "", case.names = NULL, style = "grid", ...)
 }
@@ -33,6 +33,8 @@ a proper scale based on the given data.}
 you can use \code{ylim = c(0, NA)} to scale the x-axis from 0 to the maximum
 of each case. \code{xlim} is not set by default, which makes \code{scan} set
 a proper scale based on the given data.}
+
+\item{xinc}{An integer. Increment of the x-axis. 1 :each mt value will be printed, 2 : every other value, 3 : every third values etc.}
 
 \item{lines}{A character or list defining one or more lines or curves to be
 plotted. The argument is either passed as a character string (e.g.,

@@ -15,38 +15,38 @@ print.sc <- function(x, ...) {
     cat("tau =", round(x$auto_tau$tau.b, 2))
     cat("; p =", round(x$auto_tau$p, 3), "\n\n")
     
-    if (x$correction)  cat("Baseline correction applied.\n\n")
-    if (!x$correction) cat("Baseline correction not applied.\n\n")
-    
     cat("Baseline corrected tau:\n")
     cat("tau =", round(x$tau, 2))
     cat("; p =", round(x$p, 3),"\n\n")
-
+    if (x$correction)  cat("Baseline correction applied.\n\n")
+    if (!x$correction) cat("Baseline correction not applied.\n\n")
+    
   }
 
 # mpr ---------------------------------------------------------------------
 
-  if (value == "mpr") {
-    
-    cat("Multivariate piecewise linear model\n\n")
-    cat("Dummy model:",x$model,"\n\n")
-    
-    cof <- x$full.model$coefficients
-    rownames(cof) <- gsub("(Intercept)","Intercept",rownames(cof))
-    rownames(cof) <- gsub("mt","Trend",rownames(cof))
-    rownames(cof) <- gsub("phase","Level Phase ",rownames(cof))
-    rownames(cof) <- gsub("inter","Slope Phase ",rownames(cof))
-    cat("Coefficients:\n")
-    print(cof)
-    
-    res <- car::Anova(x$full.model, type = 3)
-    res$terms <- gsub("(Intercept)","Intercept",res$terms)
-    res$terms <- gsub("mt","Trend",res$terms)
-    res$terms <- gsub("phase","Level Phase ",res$terms)
-    res$terms <- gsub("inter","Slope Phase ",res$terms)
-    
-    print(res)
-  }
+if (value == "mpr") {
+  cat("Multivariate piecewise linear model\n\n")
+  cat("Dummy model:", x$model, "\n\n")
+
+  cof <- x$full.model$coefficients
+  rownames(cof) <- gsub("(Intercept)", "Intercept", rownames(cof))
+  rownames(cof) <- gsub("mt", "Trend", rownames(cof))
+  rownames(cof) <- gsub("phase", "Level Phase ", rownames(cof))
+  rownames(cof) <- gsub("inter", "Slope Phase ", rownames(cof))
+  cat("Coefficients:\n")
+  print(cof)
+  cat("\n")
+  cat("Formula: ")
+  print(x$formula, showEnv = FALSE)
+  res <- car::Anova(x$full.model, type = 3)
+  res$terms <- gsub("(Intercept)", "Intercept", res$terms)
+  res$terms <- gsub("mt", "Trend", res$terms)
+  res$terms <- gsub("phase", "Level Phase ", res$terms)
+  res$terms <- gsub("inter", "Slope Phase ", res$terms)
+
+  print(res)
+}
     
 # autocorr ----------------------------------------------------------------
 

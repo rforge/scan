@@ -40,25 +40,25 @@ corrected_tauSC <- function(data, dvar, pvar, mvar, phases = c(1,2), alpha = 0.0
   }
   data <- data[[1]] 
 
-  rowsA <- which(data[, pvar] == "A")
-  rowsB <- which(data[, pvar] == "B")
+  rowsA <- which(data[[pvar]] == "A")
+  rowsB <- which(data[[pvar]] == "B")
   A_data <- data[rowsA, ]
   B_data <- data[rowsB, ]
   
-  auto_tau <- .kendall(A_data[, dvar], A_data[, mvar], continuity_correction = continuity)
+  auto_tau <- .kendall(A_data[[dvar]], A_data[[mvar]], continuity_correction = continuity)
                        
   if (isTRUE(auto_tau$p <= alpha)) {
     formula  <- as.formula(paste0(dvar, "~", mvar))
     fit_mblm <- mblm(formula, dataframe = A_data, repeated = repeated)
     data$fit <- predict(fit_mblm, data, se.fit = FALSE)
-    data$res <- data[, dvar] - data$fit
+    data$res <- data[[dvar]] - data$fit
     corr_applied <- TRUE
   } else {
     corr_applied <- FALSE
-    data$res <- data[, dvar]
+    data$res <- data[[dvar]]
   }
   x <- data$res
-  y <- as.numeric(factor(data[, pvar]))
+  y <- as.numeric(factor(data[[pvar]]))
   base_corr_tau <- .kendall(x, y, continuity_correction = continuity)
   
   out <- list(

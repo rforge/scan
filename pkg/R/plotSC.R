@@ -16,6 +16,7 @@
 #' you can use \code{ylim = c(0, NA)} to scale the x-axis from 0 to the maximum
 #' of each case. \code{xlim} is not set by default, which makes \code{scan} set
 #' a proper scale based on the given data.
+#' @param xinc An integer. Increment of the x-axis. 1 :each mt value will be printed, 2 : every other value, 3 : every third values etc.
 #' @param style Either a character with the name of a pre-implemented style or a style object. See \code{\link{style.plotSC}} to learn about this format. 
 #' @param lines A character or list defining one or more lines or curves to be
 #' plotted. The argument is either passed as a character string (e.g.,
@@ -95,7 +96,7 @@ plot.scdf <- function(...) {
 
 #' @rdname plot.scdf
 #' @export
-plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NULL, marks = NULL, phase.names = NULL, xlab = NULL, ylab = NULL, main = "", case.names = NULL, style = "grid", ...) {
+plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, xinc = 1, lines = NULL, marks = NULL, phase.names = NULL, xlab = NULL, ylab = NULL, main = "", case.names = NULL, style = "grid", ...) {
   
   dots <- list(...)
   op <- par(no.readonly = TRUE)
@@ -145,8 +146,8 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
   par("col.axis" = style$col.text)
   
   if (style$frame %in% "")   style$frame <- NA
-  if (style$grid %in% "")    style$grid  <- NA
-  if (style$fill.bg %in% "") style$fill.bg  <- NA
+  if (style$grid %in% "")    style$grid  <- FALSE
+  if (style$fill.bg %in% "") style$fill.bg  <- FALSE
   
   ### END: define style
   
@@ -207,11 +208,27 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
       if (main != "") par(mai = c(style$mai[1:2], style$mai[3] + 0.4, style$mai[4]))
       if (main == "") par(mai = style$mai)
       plot(
-        data[, mvar], data[, dvar], type = "n", 
+        data[[mvar]], data[[dvar]], type = "n", 
         xlim = xlim, ylim = y.lim, ann = FALSE,
-        xaxp = c(xlim[1], xlim[2], xlim[2] - xlim[1]), ...
+        #xaxp = c(xlim[1], xlim[2], xlim[2] - xlim[1]), 
+        yaxt = "n", 
+        xaxt = "n", ...
       )
-
+      
+      xticks_pos <- seq(xlim[1], xlim[2], 1)
+      axis(side = 1, at = xticks_pos, labels = FALSE)
+      text(
+        seq(xlim[1], xlim[2], xinc),  par("usr")[3], cex = style$cex.axis, labels = seq(xlim[1], 
+        xlim[2], xinc), srt = 0, pos = 1, offset = style$cex.axis, xpd = TRUE
+      )
+      
+      yticks_pos <- axTicks(2, usr = c(y.lim[1], ylim[2]))
+      axis(side = 2, at = yticks_pos, labels = NA)
+      text(
+        par("usr")[1], yticks_pos, labels = yticks_pos, offset = style$cex.axis, srt = 0, pos = 2, 
+        cex = style$cex.axis, xpd = TRUE
+      )
+      
       if (style$ylab.orientation == 0) 
         mtext(ylab, side = 2, line = 2, las = 0, cex = style$cex.lab)
 
@@ -235,9 +252,17 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
         par(mai = c(style$mai[1] * 4 / 6, style$mai[2], style$mai[3] * 2, style$mai[4])) #par(mai = c(0.4, 0.82, 0.4, 0.42))
       
       plot(
-        data[, mvar], data[, dvar], xaxt = "n", type = "n", 
+        data[[mvar]], data[[dvar]], xaxt = "n", yaxt = "n", type = "n", 
         xlim = xlim, ylim = y.lim, ann = FALSE, ...
       )
+      
+      yticks_pos <- axTicks(2, usr = c(y.lim[1], ylim[2]))
+      axis(side = 2, at = yticks_pos, labels = NA)
+      text(
+        par("usr")[1], yticks_pos, labels = yticks_pos, offset = style$cex.axis, srt = 0, pos = 2, 
+        cex = style$cex.axis, xpd = TRUE
+      )
+      
       if (style$ylab.orientation == 0) 
         mtext(ylab, side = 2, line = 2, las = 0, cex = style$cex.lab)
       
@@ -248,10 +273,27 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
     if (N > 1 && case == N) {
       par(mai = style$mai)
       plot(
-        data[, mvar], data[, dvar], type = "n", 
+        data[[mvar]], data[[dvar]], type = "n", 
         xlim = xlim, ylim = y.lim, ann = FALSE,
-        xaxp = c(xlim[1], xlim[2], xlim[2] - xlim[1]),...
+        xaxp = c(xlim[1], xlim[2], xlim[2] - xlim[1]),
+        yaxt = "n", xaxt = "n",
+        ...
       )
+      
+      xticks_pos <- seq(xlim[1], xlim[2], 1)
+      axis(side = 1, at = xticks_pos, labels = FALSE)
+      text(
+        seq(xlim[1], xlim[2], xinc),  par("usr")[3], cex = style$cex.axis, labels = seq(xlim[1], 
+        xlim[2], xinc), srt = 0, pos = 1, offset = style$cex.axis, xpd = TRUE
+      )
+      
+      yticks_pos <- axTicks(2, usr = c(y.lim[1], ylim[2]))
+      axis(side = 2, at = yticks_pos, labels = NA)
+      text(
+        par("usr")[1], yticks_pos, labels = yticks_pos, offset = style$cex.axis, srt = 0, pos = 2, 
+        cex = style$cex.axis, xpd = TRUE
+      )
+      
       if (style$ylab.orientation == 0) 
         mtext(ylab, side = 2, line = 2, las = 0, cex = style$cex.lab)
       
@@ -265,30 +307,50 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
 
     # plot styling
     
-    if (!is.na(style$fill.bg))
-      rect(usr[1], usr[3], usr[2], usr[4], col = style$fill.bg, border = NA)#, border = par("fg"))
-
-    if (!is.na(style$grid))
-      grid(NULL, NULL, col = style$grid)
+    # fill bg
+    if(class(style$fill.bg) == "character") {
+      style$col.fill.bg <- style$fill.bg
+      style$fill.bg <- TRUE
+    }
+    if (isTRUE(style$fill.bg))
+      rect(usr[1], usr[3], usr[2], usr[4], col = style$col.fill.bg, border = NA)#, border = par("fg"))
+    
+    
+    # grid
+    if(class(style$grid) == "character") {
+      style$col.grid <- style$grid
+      style$grid <- TRUE
+    }
+    
+    if (isTRUE(style$grid)) 
+      grid(NULL, NULL, col = style$col.grid, lty = style$lty.grid, lwd = style$lwd.grid)
     
     if (!is.na(style$frame))
       rect(usr[1],usr[3],usr[2],usr[4], col = NA, border = style$frame)
     
-    if (is.na(style$frame) && !is.na(style$fill.bg))
-      rect(usr[1],usr[3],usr[2],usr[4], col = NA, border = style$fill.bg)
+    if (is.na(style$frame) && isTRUE(style$fill.bg))
+      rect(usr[1],usr[3],usr[2],usr[4], col = NA, border = style$col.fill.bg)
     
-    if (is.na(style$frame) && is.na(style$fill.bg))
+    if (is.na(style$frame) && !isTRUE(style$fill.bg))
       rect(usr[1],usr[3],usr[2],usr[4], col = NA, border = par("bg"))
     
     # fill array below lines
-    if (style$fill != "") {
+    
+    if (style$fill == "" || is.na(style$fill)) style$fill <- FALSE
+
+    if(class(style$fill) == "character") {
+      style$col.fill <- style$fill
+      style$fill <- TRUE
+    }
+    
+    if (isTRUE(style$fill)) {
       for(i in 1:length(design$values)) {
         x <- data[design$start[i]:design$stop[i], mvar]
         y <- data[design$start[i]:design$stop[i], dvar]
         for(i in 1:length(x)) {
           x_values <- c(x[i], x[i+1], x[i+1], x[i])
           y_values <- c(y.lim[1], y.lim[1], y[i+1], y[i])
-          polygon(x_values, y_values, col = style$fill, border = NA)      
+          polygon(x_values, y_values, col = style$col.fill, border = NA)      
         }
       }
     }
@@ -298,9 +360,9 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
       x <- data[design$start[i]:design$stop[i], mvar]
       y <- data[design$start[i]:design$stop[i], dvar]
       if (style$col.lines != "")
-        lines(x, y, type = "l", pch = style$pch, lwd = style$lwd, col = style$col.lines,...)
+        lines(x, y, type = "l", pch = style$pch, lty = style$lty, lwd = style$lwd, col = style$col.lines, ...)
       if (style$col.dots != "")
-        lines(x, y, type = "p", pch = style$pch, lwd = style$lwd, col = style$col.dots,...)
+        lines(x, y, type = "p", pch = style$pch, lty = style$lty, lwd = style$lwd, col = style$col.dots, ...)
     }
     
     if (case == 1) title(main)
@@ -517,7 +579,7 @@ plotSC <- function(data, dvar, pvar, mvar, ylim = NULL, xlim = NULL, lines = NUL
     # line between phases -----------------------------------------------------
     if (is.null(style$text.ABlag)) {
       for(i in 1:(length(design$values) - 1)) {
-        abline(v = data[design$stop[i] + 1, mvar] - 0.5, lty = 2, lwd = style$lwd, col = style$col.seperators)
+        abline(v = data[design$stop[i] + 1, mvar] - 0.5, lty = style$lty.seperators, lwd = style$lwd.seperators, col = style$col.seperators)
       }
     }
     

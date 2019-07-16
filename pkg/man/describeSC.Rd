@@ -36,7 +36,6 @@ describeSC(exampleABC)
 ## Write descriptive statistics to .csv-file
 study <- describeSC(Waddell2011)
 write.csv(study$descriptives, file = "descriptives.csv")
-
 }
 \seealso{
 \code{\link{overlapSC}}, \code{\link{plotSC}}

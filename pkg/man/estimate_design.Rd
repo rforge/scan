@@ -16,10 +16,10 @@ estimate_design(data, dvar, pvar, mvar, m = NULL, s = NULL,
 
 \item{mvar}{Character string with the name of the measurement time variable. Defaults to the attributes in the scdf file.}
 
-\item{m}{The mean depcting the overall distribution of which all cases are a random sample. 
+\item{m}{The mean depcting the overall distribution of which all cases are a random sample of.
 m is estimated when m = NULL.}
 
-\item{s}{The standard deviation depcting the between case variance of the overall performance. 
+\item{s}{The standard deviation depcting the between case variance of the overall performance.
 If more than two single-cases are included in the scdf, the variance is estimated if s is set to NULL.}
 
 \item{rtt}{The reliability of the measurements. The reliability is estimated when rtt = NULL.}
@@ -32,16 +32,16 @@ McKean, 2000). Default is \code{model = "B&L-B"}. Possible values are:
 \code{"B&L-B"}, \code{"H-M"}, \code{"Mohr#1"}, \code{"Mohr#2"}, \code{"JW"}, \code{"JW2"}, and
 \code{"Manly"}.}
 
-\item{...}{Further arguments passed to the lm function.}
+\item{...}{Further arguments passed to the lm function used for parameter estimation.}
 }
 \value{
-A list of parameters for each single-case. Parameters include name, length, and 
-starting measurementtime of each phase, trend level, and slope effects for each phase, mean, 
+A list of parameters for each single-case. Parameters include name, length, and
+starting measurementtime of each phase, trend level, and slope effects for each phase, mean,
 standarddeviation, and reliability for each case.
 }
 \description{
-This functions takes an scdf an extracts design parameters. The resulting in
+This functions takes an scdf and extracts design parameters. The resulting
 object can be unsed to randomly create new scdf files with the same
-underlying parameters. This might be usefull for monte-carlo studies and
+underlying parameters. This is usefull for monte-carlo studies and
 bootstrapping procedures.
 }

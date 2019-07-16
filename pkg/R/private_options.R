@@ -39,13 +39,15 @@
   )
 
 .opt$style$default = list(
-  frame = "black", fill = "", fill.bg = NA, grid = NA, annotations = NULL, 
-  text.ABlag = NULL, lwd = 2, pch = 17, font = "sans", 
+  frame = "black", annotations = NULL, las = 1, mai = c(0.6, 0.58, 0.2, 0.2), bty = "o", #mai = c(0.6, 0.82, 0.2, 0.42)
+  text.ABlag = NULL, pch = 17, font = "sans", ylab.orientation = 0, 
+  fill = FALSE, fill.bg = FALSE, grid = FALSE,  
+  lwd = 2, lwd.seperators = 1.5, lwd.grid = 1,
+  lty = "solid", lty.seperators = "dashed", lty.grid = "dotted",
   cex = 1, cex.axis = 0.8, cex.text = 1, cex.lab = 1,
-  las = 1, mai = c(0.6, 0.58, 0.2, 0.2), bty = "o", #mai = c(0.6, 0.82, 0.2, 0.42)
-  col.lines = "black", col.dots = "black", col.seperators = "black", 
-  col.bg = "white", col = "black", col.text = "black",
-  ylab.orientation = 0)
+  col.lines = "black", col.dots = "black", col.seperators = "black", col.fill = "grey75", col.fill.bg = "grey95", 
+  col.bg = "white", col = "black", col.text = "black", col.fill.bg = "grey95"
+)
 
 .opt$style$yaxis <- list(
   ylab.orientation = 1, mai = c(0.6, 0.85, 0.2, 0.2), cex.lab = 0.8,
@@ -54,35 +56,57 @@
 
 .opt$style$tiny <- list(
   cex.text = 0.5, cex = 0.5, cex.lab = 0.5, 
+  lwd = 0.7, lwd.seperators = 0.7, lwd.grid = 0.7,
   mai = c(0.3,0.3,0.1,0.05)
 )
 
+.opt$style$small <- list(
+  cex.text = 0.75, cex = 0.75, cex.lab = 0.75, 
+  lwd = 0.85, lwd.seperators = 0.85, lwd.grid = 0.85,
+  mai = c(0.5,0.5,0.15,0.1)
+)
+
+.opt$style$big <- list(
+  cex.text = 1.25, cex = 1.25, cex.lab = 1.25, 
+  lwd = 1.5, lwd.seperators = 1.5, lwd.grid = 1.5,
+  mai = c(0.8,1,0.2,0.2)
+)
+
+
+
+.opt$style$chart <- list(
+  fill.bg = TRUE, col.fill.bg = "grey98", fill = TRUE, col.fill = "grey50", 
+  annotations = list(cex = 0.6, col = "black", offset = 0.4), pch = 19, 
+  frame = NA, grid = "grey75", lwd = 0.7, cex.text = 0.8, cex.lab = 0.8 )
+
+
+.opt$style$ridge <- list(
+  fill = "grey50", fill.bg = TRUE, col.fill.bg = "grey95", pch = 20)
 
 .opt$style$annotate <- list(
-  annotations = list(cex = 0.6, col = "blue", offset = 0.4), pch = 19)
+  annotations = list(cex = 0.6, col = "black", offset = 0.4), pch = 19)
 
 .opt$style$grid <- list(
-  frame = NA, grid = "lightblue", fill.bg = "grey95", lwd = 0.7, cex = 1, 
-  pch = 19, las = 1, cex.axis = 0.8, las = 1)  
+  frame = NA, grid = TRUE, col.grid = "lightblue", fill.bg = TRUE, col.fill.bg = "grey95", lwd = 0.7, 
+  pch = 19, cex.axis = 0.8)  
 
 .opt$style$grid2 <- list(
-  frame = NA, fill = "white", grid = "lightgreen", frame = "black", 
-  fill.bg = "grey95", lwd = 0.7, cex = 1, pch =1, las = 1, cex.axis = 0.8, 
-  las = 1)  
+  frame = NA, fill = "white", grid = TRUE, col.grid = "lightgreen", frame = "black", 
+  fill.bg = TRUE, col.fill.bg = "grey95", lwd = 0.7, pch = 1, cex.axis = 0.8)  
 
 .opt$style$dark <- list(
-  fill.bg = "black", bty = "o", col.lines = "gold", col.bg = "grey10", 
+  fill.bg = TRUE, col.fill.bg = "black", bty = "o", col.lines = "gold", col.bg = "grey10", 
   col.dots = "red", col.seperators = "white", col = "white", 
   col.text = "white")
 
 .opt$style$nodots <- list(
-  type = "l", col.dots = "", fill = "grey95", grid = "grey80", las = 1, 
-  fill.bg = "grey99")
+  type = "l", col.dots = "", fill = TRUE, col.fill = "grey95", grid = TRUE, col.grid = "grey80",
+  fill.bg = TRUE, col.fill.bg = "grey99")
 
 .opt$style$sienna <- list(
-  grid = "orange", pch = 18, col.lines = "grey85", col.dots = "seagreen4", 
+  grid = TRUE, col.grid = "orange", pch = 18, col.lines = "grey85", col.dots = "seagreen4", 
   lwd = 2, col.bg = "seashell", fill.bg = "moccasin", col.text = "sienna4", 
-  col = "darkolivegreen", col.seperators = "sienna4", las = 1, cex = 1, 
+  col = "darkolivegreen", col.seperators = "sienna4", 
   cex.text = 0.8, cex.lab = 0.8, cex.axis = 0.7, frame = "darkseagreen", 
   font = "serif")
 

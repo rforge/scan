@@ -77,17 +77,17 @@ readSC <- function(filename = NULL, data = NULL, sep = ",", dec = ".", sort.labe
   #dat <- dat[, c(pos, pos.rest)]
 
   if (!sort.labels) {
-    dat[, cvar] <- factor(dat[, cvar], levels = unique(dat[, cvar]))
+    dat[[cvar]] <- factor(dat[[cvar]], levels = unique(dat[[cvar]]))
   } else {
-    dat[, cvar] <- factor(dat[, cvar])
+    dat[[cvar]] <- factor(dat[[cvar]])
   }
   
-  dat[, pvar] <- factor(dat[, pvar], levels = unique(dat[, pvar]))
+  dat[[pvar]] <- factor(dat[[pvar]], levels = unique(dat[[pvar]]))
   
-  if (!is.null(phase.names)) levels(dat[, pvar]) <- phase.names
+  if (!is.null(phase.names)) levels(dat[[pvar]]) <- phase.names
 
-  lab <- levels(dat[, cvar])
-  dat <- split(dat, dat[, cvar])
+  lab <- levels(dat[[cvar]])
+  dat <- split(dat, dat[[cvar]])
   dat <- lapply(dat, function(x) x[, 2:columns])
   for(i in 1:length(dat)) row.names(dat[[i]]) <- 1:nrow(dat[[i]])
   names(dat) <- lab

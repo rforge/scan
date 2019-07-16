@@ -11,7 +11,7 @@ shiftSC(data, value, var)
 
 \item{value}{Number by which to shift the values}
 
-\item{var}{Character string with the name of the target variable. 
+\item{var}{Character string with the name of the target variable.
 Defaults to the measurement time variable.}
 }
 \value{

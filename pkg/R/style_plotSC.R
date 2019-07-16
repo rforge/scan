@@ -5,7 +5,7 @@
 #' 
 #' @aliases style_plotSC
 #' 
-#' @param style Predefined styles. Posible values are: "default", "grid", "grid2", "nodots", "annotate", "dark", "dark2", "sienna"
+#' @param style Predefined styles.
 #' @param ... Further arguments passed to the plot command.
 #' 
 #' @return Returns a list to be provided or the style argument of the plot function.
@@ -43,6 +43,11 @@
 #' \item\code{"col"} General color setting for the plot
 #' \item\code{"col.text"} Color of all labels of the plot.
 #' }
+#' @details \code{style_plotSC("")} will return a list of predefined styles.
+#' Predefined styles can be combined \code{style_plotSC(style = c("grid2", "tiny"))} 
+#' where settings of a latter style overwrite settings of the former.
+#' Additional style paramters are set following the style argument and can be combined with those:
+#' \code{style_plotSC(style = "grid2", fill = "grey50", pch = 18)}. 
 #' @author Juergen Wilbert
 #' @seealso \code{\link{plot.scdf}}
 #' @examples
@@ -56,10 +61,16 @@
 
 style_plotSC <- function(style = "default", ...) {
   new <- list(...)
-  if (!(all(style %in% names(.opt$style)))) {
+  if (identical(style, "")) {
     cat("Available styles: \n")
-    cat(paste(names(.opt$style), collapse = ", "),"\n")
-    stop("Style '", paste(style), "' is unknown.")
+    cat(paste(names(.opt$style), collapse = ", "), "\n")
+    return(invisible(NULL))
+  }
+  if (!(all(style %in% names(.opt$style)))) {
+    cat("Style '", paste(style), "' is unknown.\n", sep = "")
+    cat("Available styles: \n")
+    cat(paste(names(.opt$style), collapse = ", "), "\n")
+    return(invisible(NULL))
   }
   
   styles <- list()
@@ -71,7 +82,7 @@ style_plotSC <- function(style = "default", ...) {
     out <- c(new, out)
     out <- out[unique(names(out))]
   }
-    invisible(out)
+  invisible(out)
 }
 
 #' @rdname style_plotSC

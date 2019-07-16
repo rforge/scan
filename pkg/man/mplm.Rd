@@ -41,7 +41,7 @@ for example to include further variables into the regression model.}
 }
 \value{
 \item{model}{Character string from function call (see
-\code{Arguments} above).} 
+\code{Arguments} above).}
 \item{full.model}{Full regression model list}
 }
 \description{
@@ -49,8 +49,8 @@ This function is in an experimental status.
 The \code{mplm} function computes a multivariate piecewise regression model.
 }
 \examples{
-## 
-mplm(exampleAB_add, dvar = c("wellbeing","depression"))
+##
+mplm(exampleAB_add, dvar = c("wellbeing", "depression"))
 }
 \seealso{
 Other regression functions: \code{\link{corrected_tauSC}},

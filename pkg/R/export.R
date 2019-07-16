@@ -21,7 +21,7 @@ export <- function(object, filename = NULL,
                    kable_styling_options = list(), kable_options = list(), 
                    cols, flip = FALSE, note = TRUE, ...) {
   
-  cat(.opt$function_debugging_warning)  
+  warning(.opt$function_debugging_warning)  
   
   default_kable_styling <- list(
     bootstrap_options = c("bordered", "condensed"),
