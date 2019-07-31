@@ -7,13 +7,13 @@
 #' @param lag.max The lag up to which autocorrelations will be computed.
 #' Default is \code{lag.max = 3}.
 #' @param ... Further arguments passed to the \code{\link{acf}} function
-#' @return autocorr A data frame containing separate autocorrelations for each
+#' @return A data frame containing separate autocorrelations for each
 #' phase and for all phases (for each single-case). If \code{lag.max} exceeds
 #' the length of a phase minus one, NA is returned for this cell.
 #' @author Juergen Wilbert
 #' @seealso \code{\link{trendSC}}, \code{\link{plm}}, \code{\link{acf}}
 #' @examples
-#' ## Compute autocorrelations for a list of four single-cases with max.lag = 2
+#' ## Compute autocorrelations for a list of four single-cases up to lag 2.
 #' autocorrSC(Huber2014, lag.max = 2)
 #' @concept Autocorrelation
 #' @concept Serial correlation
