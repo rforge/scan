@@ -1,7 +1,7 @@
 #' Scaling values of an scdf file
 #'
 #' This function scales the measured values of an scdf file. It allows for mean
-#' centering and standardization based on each scingle-case data set or a
+#' centering and standardization based on each s?ingle-case data set or a
 #' scaling across all cases included in an scdf.
 #'
 #' @param data A single-case data frame. See \code{\link{scdf}} to learn about

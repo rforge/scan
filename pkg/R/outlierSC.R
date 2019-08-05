@@ -27,7 +27,6 @@
 #' \item{case.names}{Case identifier.}
 #' @author Juergen Wilbert
 #' @family data manipulation functions
-#' \code{\link{plotSC}}
 #' @keywords manip
 #' @examples
 #' 

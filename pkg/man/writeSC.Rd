@@ -24,7 +24,7 @@ Default is \code{dec = "."}}
 This function restructures and exports single-case data into a .csv-file.
 }
 \examples{
-
+\dontrun{
 ## Write single-case data to a .csv-file
 jessica <- rSC(level = .5)
 writeSC(jessica, "SCdata_Jessica.csv")
@@ -39,7 +39,7 @@ dat <- readSC(filename, cvar = "case", pvar = "part", dvar = "zvt", mvar = "day"
 res1 <- describeSC(exampleA1B1A2B2_zvt)$descriptives
 res2 <- describeSC(dat)$descriptives
 identical(res1,res2)
-
+}
 }
 \seealso{
 \code{\link{write.table}}, \code{\link{readSC}},

@@ -27,9 +27,9 @@ plot(Huber2014_rank, style = "grid2")
 }
 \seealso{
 Other data manipulation functions: \code{\link{fillmissingSC}},
-  \code{\link{longSCDF}}, \code{\link{scaleSC}},
-  \code{\link{shiftSC}}, \code{\link{smoothSC}},
-  \code{\link{truncateSC}}
+  \code{\link{longSCDF}}, \code{\link{outlierSC}},
+  \code{\link{scaleSC}}, \code{\link{shiftSC}},
+  \code{\link{smoothSC}}, \code{\link{truncateSC}}
 }
 \author{
 Juergen Wilbert

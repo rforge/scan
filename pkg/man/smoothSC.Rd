@@ -49,9 +49,9 @@ plot(study)
 }
 \seealso{
 Other data manipulation functions: \code{\link{fillmissingSC}},
-  \code{\link{longSCDF}}, \code{\link{rankSC}},
-  \code{\link{scaleSC}}, \code{\link{shiftSC}},
-  \code{\link{truncateSC}}
+  \code{\link{longSCDF}}, \code{\link{outlierSC}},
+  \code{\link{rankSC}}, \code{\link{scaleSC}},
+  \code{\link{shiftSC}}, \code{\link{truncateSC}}
 }
 \author{
 Juergen Wilbert

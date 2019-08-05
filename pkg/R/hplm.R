@@ -37,12 +37,12 @@
 #' @examples
 #' 
 #' ## Compute hplm model on a MBD over fifty cases (restricted log-likelihood)
-#' hplm(exampleAB_50, method = "REML", random.slopes = TRUE)
+#' hplm(exampleAB_50, method = "REML", random.slopes = FALSE)
 #' 
 #' ## Analyzing with additional L2 variables
 #' hplm(Leidig2018, data.l2 = Leidig2018_l2, 
 #'      update.fixed = .~. + gender + migration + ITRF_TOTAL*phaseB, 
-#'      slope = FALSE, random.slopes = TRUE, lr.test = TRUE)
+#'      slope = FALSE, random.slopes = FALSE, lr.test = FALSE)
 #'      
 #' @export
 

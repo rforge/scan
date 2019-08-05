@@ -30,7 +30,7 @@ An scdf with the scaled values.
 }
 \description{
 This function scales the measured values of an scdf file. It allows for mean
-centering and standardization based on each scingle-case data set or a
+centering and standardization based on each s?ingle-case data set or a
 scaling across all cases included in an scdf.
 }
 \examples{
@@ -42,9 +42,9 @@ hplm(ex_sc)
 }
 \seealso{
 Other data manipulation functions: \code{\link{fillmissingSC}},
-  \code{\link{longSCDF}}, \code{\link{rankSC}},
-  \code{\link{shiftSC}}, \code{\link{smoothSC}},
-  \code{\link{truncateSC}}
+  \code{\link{longSCDF}}, \code{\link{outlierSC}},
+  \code{\link{rankSC}}, \code{\link{shiftSC}},
+  \code{\link{smoothSC}}, \code{\link{truncateSC}}
 }
 \author{
 Juergen Wilbert

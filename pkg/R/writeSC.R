@@ -15,7 +15,7 @@
 #' \code{\link{saveRDS}}
 #' @keywords manip
 #' @examples
-#' 
+#' \dontrun{
 #' ## Write single-case data to a .csv-file
 #' jessica <- rSC(level = .5)
 #' writeSC(jessica, "SCdata_Jessica.csv")
@@ -30,7 +30,7 @@
 #' res1 <- describeSC(exampleA1B1A2B2_zvt)$descriptives
 #' res2 <- describeSC(dat)$descriptives
 #' identical(res1,res2)
-#' 
+#' }
 #' @export
 writeSC <- function(data, filename = NULL, sep = ",", dec = ".", ...) {
   if(is.null(filename)) {
