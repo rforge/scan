@@ -4,8 +4,18 @@
 \alias{.inheritParams}
 \title{Dummy function to inherit global descriptions of parameters}
 \usage{
-.inheritParams(data, dvar, mvar, pvar, decreasing, phases, model, trend,
-  level, slope)
+.inheritParams(
+  data,
+  dvar,
+  mvar,
+  pvar,
+  decreasing,
+  phases,
+  model,
+  trend,
+  level,
+  slope
+)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}

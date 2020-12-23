@@ -55,10 +55,14 @@ plotSC(Grosche2011, marks = res.outlier)
 
 }
 \seealso{
-Other data manipulation functions: \code{\link{fillmissingSC}},
-  \code{\link{longSCDF}}, \code{\link{rankSC}},
-  \code{\link{scaleSC}}, \code{\link{shiftSC}},
-  \code{\link{smoothSC}}, \code{\link{truncateSC}}
+Other data manipulation functions: 
+\code{\link{fillmissingSC}()},
+\code{\link{longSCDF}()},
+\code{\link{rankSC}()},
+\code{\link{scaleSC}()},
+\code{\link{shiftSC}()},
+\code{\link{smoothSC}()},
+\code{\link{truncateSC}()}
 }
 \author{
 Juergen Wilbert

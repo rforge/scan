@@ -27,9 +27,13 @@ ex <- shiftSC(example_A24, value = -1996)
 plm(ex)
 }
 \seealso{
-Other data manipulation functions: \code{\link{fillmissingSC}},
-  \code{\link{longSCDF}}, \code{\link{outlierSC}},
-  \code{\link{rankSC}}, \code{\link{scaleSC}},
-  \code{\link{smoothSC}}, \code{\link{truncateSC}}
+Other data manipulation functions: 
+\code{\link{fillmissingSC}()},
+\code{\link{longSCDF}()},
+\code{\link{outlierSC}()},
+\code{\link{rankSC}()},
+\code{\link{scaleSC}()},
+\code{\link{smoothSC}()},
+\code{\link{truncateSC}()}
 }
 \concept{data manipulation functions}

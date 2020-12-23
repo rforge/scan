@@ -73,7 +73,7 @@ fillmissingSC <- function(data, dvar, mvar, interpolation = "linear", na.rm = TR
         }
       }
     }
-    data[[i]] <- new.dat[order(new.dat[, mvar]), ]
+    data[[i]] <- new.dat[sort.list(new.dat[[mvar]]), ]
   }
   attributes(data) <- ATTRIBUTES
   data

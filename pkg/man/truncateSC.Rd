@@ -4,8 +4,13 @@
 \alias{truncateSC}
 \title{Truncate single-case data}
 \usage{
-truncateSC(data, dvar, pvar, truncate = list(A = c(0, 0), B = c(0, 0)),
-  na = TRUE)
+truncateSC(
+  data,
+  dvar,
+  pvar,
+  truncate = list(A = c(0, 0), B = c(0, 0)),
+  na = TRUE
+)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
@@ -37,10 +42,14 @@ plot(study)
 
 }
 \seealso{
-Other data manipulation functions: \code{\link{fillmissingSC}},
-  \code{\link{longSCDF}}, \code{\link{outlierSC}},
-  \code{\link{rankSC}}, \code{\link{scaleSC}},
-  \code{\link{shiftSC}}, \code{\link{smoothSC}}
+Other data manipulation functions: 
+\code{\link{fillmissingSC}()},
+\code{\link{longSCDF}()},
+\code{\link{outlierSC}()},
+\code{\link{rankSC}()},
+\code{\link{scaleSC}()},
+\code{\link{shiftSC}()},
+\code{\link{smoothSC}()}
 }
 \author{
 Juergen Wilbert

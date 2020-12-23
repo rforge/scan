@@ -4,8 +4,7 @@
 \alias{scaleSC}
 \title{Scaling values of an scdf file}
 \usage{
-scaleSC(data, var, center = TRUE, scale = FALSE, m = 0, sd = 1,
-  grand = TRUE)
+scaleSC(data, var, center = TRUE, scale = FALSE, m = 0, sd = 1, grand = TRUE)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about
@@ -41,10 +40,14 @@ hplm(ex_sc)
 
 }
 \seealso{
-Other data manipulation functions: \code{\link{fillmissingSC}},
-  \code{\link{longSCDF}}, \code{\link{outlierSC}},
-  \code{\link{rankSC}}, \code{\link{shiftSC}},
-  \code{\link{smoothSC}}, \code{\link{truncateSC}}
+Other data manipulation functions: 
+\code{\link{fillmissingSC}()},
+\code{\link{longSCDF}()},
+\code{\link{outlierSC}()},
+\code{\link{rankSC}()},
+\code{\link{shiftSC}()},
+\code{\link{smoothSC}()},
+\code{\link{truncateSC}()}
 }
 \author{
 Juergen Wilbert

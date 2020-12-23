@@ -57,10 +57,14 @@ plot(study, marks = list(positions = replace.positions), style = "grid2")
 
 }
 \seealso{
-Other data manipulation functions: \code{\link{longSCDF}},
-  \code{\link{outlierSC}}, \code{\link{rankSC}},
-  \code{\link{scaleSC}}, \code{\link{shiftSC}},
-  \code{\link{smoothSC}}, \code{\link{truncateSC}}
+Other data manipulation functions: 
+\code{\link{longSCDF}()},
+\code{\link{outlierSC}()},
+\code{\link{rankSC}()},
+\code{\link{scaleSC}()},
+\code{\link{shiftSC}()},
+\code{\link{smoothSC}()},
+\code{\link{truncateSC}()}
 }
 \author{
 Juergen Wilbert

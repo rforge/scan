@@ -4,8 +4,16 @@
 \alias{corrected_tauSC}
 \title{Baseline corrected tau}
 \usage{
-corrected_tauSC(data, dvar, pvar, mvar, phases = c(1, 2), alpha = 0.05,
-  continuity = TRUE, repeated = TRUE)
+corrected_tauSC(
+  data,
+  dvar,
+  pvar,
+  mvar,
+  phases = c(1, 2),
+  alpha = 0.05,
+  continuity = TRUE,
+  repeated = TRUE
+)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
@@ -52,13 +60,19 @@ Tarlow, K. R. (2016). An Improved Rank Correlation Effect
 Size Statistic for Single-Case Designs: Baseline Corrected Tau. Behavior Modification, 41(4), 427–467. https://doi.org/10.1177/0145445516676750
 }
 \seealso{
-Other regression functions: \code{\link{hplm}},
-  \code{\link{mplm}}, \code{\link{plm}}
+Other regression functions: 
+\code{\link{hplm}()},
+\code{\link{mplm}()},
+\code{\link{plm}()}
 
-Other overlap functions: \code{\link{nap}},
-  \code{\link{overlapSC}}, \code{\link{pand}},
-  \code{\link{pem}}, \code{\link{pet}}, \code{\link{pnd}},
-  \code{\link{tauUSC}}
+Other overlap functions: 
+\code{\link{nap}()},
+\code{\link{overlapSC}()},
+\code{\link{pand}()},
+\code{\link{pem}()},
+\code{\link{pet}()},
+\code{\link{pnd}()},
+\code{\link{tauUSC}()}
 }
 \concept{overlap functions}
 \concept{regression functions}

@@ -4,8 +4,12 @@
 \alias{power_testSC}
 \title{Empirical power analysis for single-case data}
 \usage{
-power_testSC(design, stat = c("plm_level", "rand", "tauU"),
-  n_sim = 100, alpha = 0.05)
+power_testSC(
+  design,
+  stat = c("plm_level", "rand", "tauU"),
+  n_sim = 100,
+  alpha = 0.05
+)
 }
 \arguments{
 \item{design}{An object created by design_rSC}
@@ -31,7 +35,7 @@ estimated based on actual data.
 \examples{
 
 ## Assume you want to conduct a single-case study with 15 MTs, using a highly reliable test,
-## an expected level effect of \\eqn{d = 1.4}, and randomized start points between MTs 5
+## an expected level effect of \eqn{d = 1.4}, and randomized start points between MTs 5
 ## and 12 can you expect to identify the effect using plm or randomization test?
 design <- design_rSC(
   n = 1, phase.design = list(A = 6, B = 9), 

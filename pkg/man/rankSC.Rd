@@ -26,10 +26,14 @@ Huber2014_rank <- rankSC(Huber2014, var = "compliance")
 plot(Huber2014_rank, style = "grid2")
 }
 \seealso{
-Other data manipulation functions: \code{\link{fillmissingSC}},
-  \code{\link{longSCDF}}, \code{\link{outlierSC}},
-  \code{\link{scaleSC}}, \code{\link{shiftSC}},
-  \code{\link{smoothSC}}, \code{\link{truncateSC}}
+Other data manipulation functions: 
+\code{\link{fillmissingSC}()},
+\code{\link{longSCDF}()},
+\code{\link{outlierSC}()},
+\code{\link{scaleSC}()},
+\code{\link{shiftSC}()},
+\code{\link{smoothSC}()},
+\code{\link{truncateSC}()}
 }
 \author{
 Juergen Wilbert

@@ -4,10 +4,21 @@
 \alias{randSC}
 \title{Randomization Tests for single-case data}
 \usage{
-randSC(data, dvar, pvar, statistic = "Mean B-A", number = 500,
-  complete = FALSE, limit = 5, startpoints = NA,
-  exclude.equal = FALSE, graph = FALSE, output = "c",
-  phases = c("A", "B"), seed = NULL)
+randSC(
+  data,
+  dvar,
+  pvar,
+  statistic = "Mean B-A",
+  number = 500,
+  complete = FALSE,
+  limit = 5,
+  startpoints = NA,
+  exclude.equal = FALSE,
+  graph = FALSE,
+  output = "c",
+  phases = c("A", "B"),
+  seed = NULL
+)
 }
 \arguments{
 \item{data}{A single-case data frame. See \code{\link{scdf}} to learn about this format.}
